@@ -1,0 +1,62 @@
+\pagebreak
+\chapter{Algorithms}
+\label{appndx:algorithms}
+
+\begin{algorithm}[!ht]
+\SetAlgoLined
+\SetKwInOut{KwIn}{Input}
+\SetKwInOut{KwOut}{Output}
+
+\KwIn{Two lists $[e^1_{ij}]$ and $[e^2_{ij}]$, $i = 1, 2, \cdots, n$ and $j = 1, 2, 3$, where each element $i$ is a \texttt{float} of the respective electric field at the $j$ coordinate.}
+\KwOut{A list of \texttt{float} size $n$ containing the maximum envelope amplitude of the electric field at each point of input.}
+Set a list $[e^{am}_i]$, $i = 1, 2, \cdots, n$, of type \texttt{float} to save calculated result\;
+Calculate the dot product of $[e^1_{ij}]$ and $[e^2_{ij}]$ across $j$ and save it to a list $[dot_i$], $i = 1, 2, \cdots, n$, of type \texttt{float}\;
+Calculate the cross product of $[e^1_{ij}]$ and $[e^2_{ij}]$ across $j$ and save it to a list $[cross_i]$, $i = 1, 2, \cdots, n$, of type \texttt{float}\;
+\ForEach{$i \in [dot_i], [cross_i]$}{
+    Calculate the \textit{arctan} of $\dfrac{[cross_i]}{[dot_i]}$ and save it to a list $[angles_i]$, $i = 1, 2, \cdots, n$, of type \texttt{float}\;
+}
+\ForEach{$i,j \in [e^2_{ij}]$}{
+    \If{$[angles_i] \geq\pi/2$}{
+        $e^2_{ij} \longleftarrow -e^2_{ij}$\;
+    }
+}
+Execute the code section from lines $\boldsymbol{2 - 6}$ again\;
+$[cosangs_i] \longleftarrow \cos{[angles_i]}$\;
+Set a list $[e^{minus}_{ij}]$ as $[e^1_{ij}] - [e^2_{ij}]$, for all $\forall i,j$\;
+\ForEach{$i,j \in [e^2_{ij}]\;\text{across}\; j$}{
+    $[mag\_e^1_i] \longleftarrow$ Magnitude of $[e^1_{ij}]$\;
+    $[mag\_e^2_i] \longleftarrow$ Magnitude of $[e^2_{ij}]$\;
+    \uIf{$[e^2_{ij}] < [e^1_{ij}]\cdot[cosangs_i]$}{
+       $[e^{am}_i] \longleftarrow 2\cdot[e^2_{ij}]$\; 
+    }
+    \ElseIf{$[e^1_{ij}] > [e^2_{ij}]$}{
+       $[e^{am}_i] \longleftarrow 2\dfrac{\big|\big|\vec{E_2}\big|\times\big(\vec{E_1} - \vec{E_2}\big)\big|}{\big|\vec{E_1} - \vec{E_2}\big|}$\; 
+    }
+    \uIf{$[e^1_{ij}] < [e^2_{ij}]\cdot[cosangs_i]$}{
+       $[e^{am}_i] \longleftarrow 2\cdot[e^1_{ij}]$\; 
+    }
+    \ElseIf{$[e^2_{ij}] > [e^1_{ij}]$}{
+       $[e^{am}_i] \longleftarrow 2\dfrac{\big|\big|\vec{E_1}\big|\times\big(\vec{E_2} - \vec{E_1}\big)\big|}{\big|\vec{E_2} - \vec{E_1}\big|}$\; 
+    }
+}
+\caption{Calculate the maximum envelope modulation amplitude at all directions}
+\label{alg:max_modulation_amplitude}
+\end{algorithm}
+
+\pagebreak
+
+\begin{algorithm}[!ht]
+\SetAlgoLined
+\SetKwInOut{KwIn}{Input}
+\SetKwInOut{KwOut}{Output}
+
+\KwIn{$msh$ \gls{FE} mesh and $[init\_point_i]\;, i = 1..3$ as the initial point of the vector.}
+\KwOut{The unit normal vector of the electrode surface with respect to the \gls{FE} mesh.}
+$adj\_face\longleftarrow$ First adjacent face to $[init\_point_i]\in msh$\;
+$[end\_point^1_i]\longleftarrow$ Vertex corresponding to $adj\_face\;\neq [init\_point_i]$\;
+$[end\_point^2_i]\longleftarrow$ Vertex corresponding to $adj\_face\;\neq [init\_point_i]$ and different than $[end\_point^1_i]$\;
+$[normal_i]\longleftarrow ([end\_point^1_i] - [init\_point_i])\times([end\_point^2_i] - [init\_point_i])$\;
+$[normal_i]\longleftarrow [normal_i]/\big|[normal_i]\big|$\;
+\caption{Calculate the normal vector coordinates}
+\label{alg:electrode_orientation}
+\end{algorithm}

@@ -1,0 +1,132 @@
+
+\subsubsection{Domain Separation}
+Domain extraction is the basis operation of the domain operations done on the mesh and it is fundamental for making the \gls{FE} solver work. As straight forward as it may seem, tackling the problem of domain separation is not an easy task. Python makes the task a lot easier using the almighty library NumPy \cite{Harris2020_numpy}. The code snippet showcased in \autoref{lst:domain_extraction} achieves the separation of the domain bounded by the provided boundary.
+\begin{lstlisting}[language=Python,caption={Python code for bounded domain extraction},captionpos=b, label=lst:domain_extraction]
+import pymesh
+import numpy as np
+
+def domain_extract(mesh, boundary, direction='out', cary_zeros=True, keep_zeros=False):
+	distances = list(pymesh.signed_distance_to_mesh(boundary, mesh.vertices))
+	distances[0] = np.round(distances[0], 8)
+	
+	if direction == 'out':
+		vert_id_roi = np.where(distances[0] > 0)[0]
+		vert_id_rest = np.where(distances[0] < 0)[0]
+	elif direction == 'in':
+		vert_id_roi = np.where(distances[0] < 0)[0]
+		vert_id_rest = np.where(distances[0] > 0)[0]
+	else:
+		print("Wrong '%s' direction entered" % direction)
+		return -1
+	
+	# Get the region of interest voxels
+	vox_id_roi = np.isin(mesh.voxels, vert_id_roi)
+	vox_id_roi = np.where(vox_id_roi == True)[0]
+	vox_id_roi = np.unique(vox_id_roi)
+	
+	# Save the rest of the voxels
+	vox_id_rest = np.isin(mesh.voxels, vert_id_rest)
+	vox_id_rest = np.where(vox_id_rest == True)[0]
+	vox_id_rest = np.unique(vox_id_rest)
+	
+	if cary_zeros:
+		vox_id_rest_0 = np.isin(mesh.voxels, np.where(distances[0] == 0)[0])
+		vox_id_rest_0 = np.where(np.sum(vox_id_rest_0, axis=1) == 4)[0]
+		vox_id_rest = np.unique(np.hstack((vox_id_rest, vox_id_rest_0)))
+	
+	if keep_zeros:
+		vox_id_roi_0 = np.isin(mesh.voxels, np.where(distances[0] == 0)[0])
+		vox_id_roi_0 = np.where(np.sum(vox_id_roi_0, axis=1) == 4)[0]
+		vox_id_roi = np.unique(np.hstack((vox_id_roi, vox_id_roi_0)))
+	
+	if vox_id_rest.size == 0:
+		return [pymesh.submesh(mesh, vox_id_roi, 0), 0]
+	else:
+		return [pymesh.submesh(mesh, vox_id_roi, 0), pymesh.submesh(mesh, vox_id_rest, 0)]
+\end{lstlisting}
+
+To better describe the domain extraction operation in a more abstract way, a high level algorithm is provided at \autoref{appndx:algorithms} in \autoref{alg:domain_extraction}. The process described here works for any geometry as long as the boundary provided bounds the volume of interest from below, in the case of outwards extraction, or from above in the case of inwards extraction.
+
+Sometimes from the extraction process there are duplicate elements across the extracted domains which will later cause issues, when it comes to solving the \gls{FE} problem. So a simple check for duplicates and the sequent removal of those is a process that shall take place.
+
+Finally, to correctly separate all the domains of interest from the whole \gls{FE} mesh, the extraction process shall begin from the most superficial boundary to the most inner one \textit{(when outwards extraction is used)} and the opposite for the inwards extraction. The complement of the extracted region in each iteration is used in the net iteration as the mesh to apply the domain extraction on.
+
+\subsubsection{Electrode Separation}
+\label{subsec:elec_separation}
+
+Before the meshed electrodes can be used, it is required to identify each individual one giving a unique identification number (see \ref{subsec:elec_annotation}) and to do that the region of each electrode must be known. Splitting or separating the electrodes from the mesh refers to the process of identifying each electrode and keeping the \gls{ROI}. To understand why this is necessary, the procedure of the electrode creation must be clarified. At first, after the electrodes are placed on the skull, the tetrahedral model is generated with the newly placed electrodes, along with it the tetrahedral model \textit{without} the electrodes is generated. The latter is used to extract the electrode domains, since all electrodes will have a positive or zero distance from all the points of the electrode-free mesh.
+
+Along with the generation of the electrode positions and the electrodes, as described in \ref{subsec:elec_placement}, the \gls{ROI} is also calculated for each individual entry, containing the maximum and minimum values of the $x,y,z$ coordinates. Those values serve as the identifiers of the correct region, thus correctly separating each electrode. In \autoref{lst:electrode_separation} the code of each individual electrode separation is provided. The logic behind the code is a simple boolean operation where all coordinates shall be a match in order for the domain to be considered as valid.
+\begin{lstlisting}[language=Python,caption={Python code for electrode separation},captionpos=b, label=lst:electrode_separation]
+import numpy as np
+import pymesh
+
+def electrode_separate(mesh, bounding_roi):
+	# Bounding ROI
+	vert_x = np.logical_and(mesh.vertices[:, 0] >= bounding_roi['x_min'], mesh.vertices[:, 0] <= bounding_roi['x_max'])
+	vert_y = np.logical_and(mesh.vertices[:, 1] >= bounding_roi['y_min'], mesh.vertices[:, 1] <= bounding_roi['y_max'])
+	vert_z = np.logical_and(mesh.vertices[:, 2] >= bounding_roi['z_min'], mesh.vertices[:, 2] <= bounding_roi['z_max'])
+	
+	# Get the ROI vertex indices
+	vert_id_roi = np.arange(mesh.num_vertices)
+	roi_ids = (vert_x * vert_y * vert_z > 0)
+
+	# Calculate the resulting voxels ROI
+	vox_id_roi = np.isin(mesh.voxels, vert_id_roi[roi_ids])
+	vox_id_roi = np.where(vox_id_roi == True)[0]
+	vox_id_roi = np.unique(vox_id_roi)
+
+	# Calculate the rest voxels
+	vox_id_rest = np.isin(mesh.voxels, vert_id_roi[roi_ids], invert=True)
+	vox_id_rest = np.where(vox_id_rest == True)[0]
+	vox_id_rest = np.unique(vox_id_rest)
+
+	if vox_id_rest.size == 0:
+		return [pymesh.submesh(mesh, vox_id_roi, 0), 0]
+	else:
+		return [pymesh.submesh(mesh, vox_id_roi, 0), pymesh.submesh(mesh, vox_id_rest, 0)]
+\end{lstlisting}
+
+\noindent After the separation, the next step is the annotation of each domain which is described in \ref{subsec:elec_annotation}.
+
+
+\begin{algorithm}[!ht]
+\SetAlgoLined
+\SetKwInOut{KwIn}{Input}
+\SetKwInOut{KwOut}{Output}
+
+\KwIn{A \gls{FE} mesh named $msh$, a \gls{BE} mesh named $boundary$ and $dir$ the direction of preference \textit{(the direction, \texttt{out} or \texttt{in}, towards which to consider the separation. In distance it translates to a \texttt{+} or \texttt{-} sign respectively.)}}
+\KwOut{A list $[extracted_i]$, $i = 1, 2$ with the boundary separated meshes.}
+\ForEach{$i \in\; msh$, where $i$ is the vertex index}{
+    $[distances_i]\longleftarrow$ Distance of the $boundary$ closest vertex from $msh$\;
+    \uIf{$dir$ is \texttt{out}}{
+        \uIf{$[distance_i] > 0$}{
+            $[vertex\_id\_roi_i]\longleftarrow i$\;
+        }\Else{
+            $[vertex\_id\_rest_i]\longleftarrow i$\;
+        }
+    }\uElseIf{$dir$ is \texttt{in}}{
+        \uIf{$[distance_i] < 0$}{
+            $[vertex\_id\_roi_i]\longleftarrow i$\;
+        }\Else{
+            $[vertex\_id\_rest_i]\longleftarrow i$\;
+        }
+    }\Else{
+        Indicate wrong input\;
+    }
+}
+\ForEach{$i \in [vertex\_id\_roi_i]$}{
+    \If{$vertex\_id\_roi\in msh.voxels$}{
+        $[voxel\_id\_roi_i]\longleftarrow$ Index of the voxel vector where all four are included\;
+    }
+}
+\ForEach{$i \in [vertex\_id\_rest_i]$}{
+    \If{$vertex\_id\_rest\in msh.voxels$}{
+        $[voxel\_id\_rest_i]\longleftarrow$ Index of the voxel vector where all four are included\;
+    }
+}
+Generate the submesh of $msh$ based on $[voxel\_id\_rest_i]$ and $[voxel\_id\_rest_i]$\;
+Save the submeshes in $[extracted_i]$\;
+\caption{Calculate the domain extraction}
+\label{alg:domain_extraction}
+\end{algorithm}
