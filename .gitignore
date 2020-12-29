@@ -380,5 +380,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+### JupyterNotebooks ###
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
 # End of https://www.gitignore.io/api/latex,python,jabref
 
