@@ -166,7 +166,7 @@ As it can be seen in \autoref{fig:mesh_comparison}, the mesh generated with $q =
 
 Having better mesh quality always comes at a cost of computational time both for the mesh generation and the subsequent solution, as well as computational resources. Meshing with too many elements can prohibit the solver from running even on average desktop computers due to very high \gls{RAM} requirements. Keeping the computational time and resources in mind, there is always a trade-off to select the best balance between the desired and the actual solution. Such an assessment is conducted through a mesh convergence study in which the problem is solved for the same model by varying the mesh parameters in each run. Details about the mesh convergence run for this work can be found in \ref{sec:mesh_quality}.
 
-Before assessing the mesh quality by solving the problem, there are some ground rules ti be followed for a good mesh. One of those rules is that the \gls{tetrahedron aspect ratio}, the ratio between the circumference of each tetrahedron and the shortest edge length, should be as low as possible, meaning that more symmetric tetrahedra will exist. Lowering this ratio has a direct impact on another metric, the dihedral angle. Comparing the graphs in \autoref{fig:mesh_quality_graphs} for the two different $q$ values, it is evident that the mesh with the lower $q$ is better, since the \gls{tetrahedron aspect ratio} is accumulated in lower valued areas. This ratio is key as the lower the value the more symmetric each tetrahedron is, thus eliminating potential degenerate elements in the mesh.
+Before assessing the mesh quality by solving the problem, there are some ground rules to be followed for a good mesh. One of those rules is that the \gls{tetrahedron aspect ratio}, the ratio between the circumference of each tetrahedron and the shortest edge length, should be as low as possible, meaning that more symmetric tetrahedra will exist. Lowering this ratio has a direct impact on another metric, the dihedral angle. Comparing the graphs in \autoref{fig:mesh_quality_graphs} for the two different $q$ values, it is evident that the mesh with the lower $q$ is better, since the \gls{tetrahedron aspect ratio} is accumulated in lower valued areas. This ratio is key as the lower the value the more symmetric each tetrahedron is, thus eliminating potential degenerate elements in the mesh.
 
 \begin{figure}[H]
     \centering
@@ -176,7 +176,7 @@ Before assessing the mesh quality by solving the problem, there are some ground 
     \label{fig:mesh_quality_graphs}
 \end{figure}
 
-To complete the mesh quality assessment, check \autoref{sec:mesh_quality} where the mesh convergence study is presented and the meshing values for this work are chosen.
+To complete the mesh quality assessment, the mesh convergence study is presented in \autoref{sec:mesh_quality} and the meshing values for this work are chosen.
 
 \subsection{Region \& Electrode Annotation}
 \label{subsec:elec_annotation}
@@ -201,33 +201,11 @@ The final step before having the mesh elements ready to be imported by the solve
 	\end{tabular}
 \end{table}
 
-\draft{
-	\begin{itemize}
-		\item Write about the electrode labels
-		\item Connect with the following subsection
-	\end{itemize}
-}
+Regarding the electrode labels the count starts from \textbf{10} \textit{(assigned to Fp1)} and the direction of labelling is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
 
 \subsection{Viewing the Mesh}
-\draft{
-	\begin{itemize}
-		\item Write that paraview is used to vie the mesh and generate all figures
-		\item Refer to VTK file usage
-	\end{itemize}
-}Ab
 
-\subsection{Mesh Quality Assessment}
-\label{sec:mesh_quality}
-\draft{
-	\begin{itemize}
-		\item Maybe this section can serve as the explanation and analysis of the mesh quality and mesh convergence thing
-	\end{itemize}
-}
-\draft{
-	\begin{itemize}
-		\item Mesh quality and convergence study presentation
-	\end{itemize}
-}
+The visual assessment of the mesh quality and the visualization of the solution, can be done using Paraview \cite{paraview} which supports the \gls{VTK} file format used in this work for all meshed models.
 
 \section{Solver}
 \label{sec:fem_solver}
@@ -250,6 +228,7 @@ After successfully meshing the model, the next step is to solve the problem nume
 }
 
 \subsection{Meshing Impact}
+\label{sec:mesh_quality}
 
 As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps to outline detailed shapes. Here the impact on the solution is being assessed. As it is obvious from \autoref{fig:solved_mesh_comparison}, having a more fine mesh gives a better result in the problem solution too and the main question is if this difference is significant or not.
 
@@ -266,6 +245,8 @@ As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps t
 		\item Clearly describe the impact of mesh quality on the solution results
 		\item Showcase the mesh convergence study
 		\item Maybe this can go in the Meshing section
+		\item Mesh quality and convergence study presentation
+		\item Maybe this section can serve as the explanation and analysis of the mesh quality and mesh convergence thing
 	\end{itemize}
 }
 
