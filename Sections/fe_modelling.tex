@@ -96,7 +96,7 @@ Before proceeding with the detailed explanation of each process involved in the 
     \label{fig:mesh_modelling}
 \end{figure}
 
-\noindent Each step in \autoref{fig:mesh_modelling} describes a single process, except from the annotation steps. To recognize each mesh domain from the meshed model and then annotate it, is a key process allowing different material definition later in the solver. During the meshing procedure a volumetric mesh is generated with no labels on each individual domain, thus the need to recognize each region \textit{(domain)} arises. The recognition and subsequent labeling is accomplished by splitting the domains with the help of the boundary surfaces and finding the enclosed tetrahedra, processes described in \ref{subsec:elec_annotation}.
+\noindent Each step in \autoref{fig:mesh_modelling} describes a single process, except from the annotation steps. To recognize each mesh domain from the meshed model and then annotate it, is a key process allowing different material definition later in the solver. During the meshing procedure a volumetric mesh is generated with no labels on each individual domain, thus the need to recognize each region \textit{(domain)} arises. The recognition and subsequent labeling is accomplished by splitting the domains with the help of the boundary surfaces and finding the enclosed tetrahedra, as described in \ref{subsec:elec_annotation}.
 
 Finally, as it is evident from \autoref{fig:mesh_modelling} the meshed model, with all required annotations included, is saved in \gls{VTK} format which is a very common and robust file format for \gls{FE} meshes.
 
@@ -210,7 +210,9 @@ The visual assessment of the mesh quality and the visualization of the solution,
 \section{Solver}
 \label{sec:fem_solver}
 
-After successfully meshing the model, the next step is to solve the problem numerically using a \gls{FEM} solver. The chosen package, containing a plethora of solvers, is SfePy \cite{Cimrman2019} since it interfaces with Python making it easy to install and it is kind of intuitive to use once some familiarity has been established. In the following sections an overview about the boundary conditions used, as well as the different solvers tested will be provided.
+After successfully meshing the model, the next step is to solve the problem numerically using a \gls{FEM} solver. The chosen package, containing a plethora of solvers, is SfePy \cite{Cimrman2019}. In the following sections an overview about the boundary conditions used, as well as the different solvers tested will be provided.
+
+Getting to a solution is a multi-step process and the specifics steps are shown in \autoref{fig:solver_high_level}. The mesh loaded here is the one generated with the procedure described in \ref{subsec:mesh_generation}.
 
 \begin{figure}[H]
     \centering
@@ -220,17 +222,15 @@ After successfully meshing the model, the next step is to solve the problem nume
 \end{figure}
 
 \subsection{Loading the Mesh \& Settings}
-\draft{
-	\begin{itemize}
-		\item State that the mesh shall have the groups in an array called \texttt{mat\_id} in order for SfePy to work
-		\item Define the settings format 
-	\end{itemize}
-}
+
+There are two important files to be loaded in the solver. One is the meshed model in \gls{VTK} format and the other is the settings for the simulation in \gls{YAML} format. The settings file includes the path of the meshed model, the path for the different scripts and the region labels for both the model regions (e.g. brain, skin), as well as the electrode regions, with the corresponding conductivity values per region.
+
+It should be noted that if the built-in mesh importer from SfePy is used, the region labels array in the meshed model file shall be named as \texttt{mat\_id}, otherwise the labels are not imported. For the purposes of this work, this has been abstracted and more details regarding the implementation can be found in \autoref{chap:soft_arch}.
 
 \subsection{Meshing Impact}
 \label{sec:mesh_quality}
 
-As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps to outline detailed shapes. Here the impact on the solution is being assessed. As it is obvious from \autoref{fig:solved_mesh_comparison}, having a more fine mesh gives a better result in the problem solution too and the main question is if this difference is significant or not.
+As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps to outline detailed shapes. Not only the outline is important, but also the actual field distribution upon solution. It is clearly visible from \autoref{fig:solved_mesh_comparison} that having a more fine mesh produces a better result in the problem's solution. The main question is if this difference is significant or not.
 
 \begin{figure}[H]
     \centering
@@ -239,32 +239,23 @@ As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps t
     \label{fig:solved_mesh_comparison}
 \end{figure}
 
-\draft{More details to be added.}
-\draft{
-	\begin{itemize}
-		\item Clearly describe the impact of mesh quality on the solution results
-		\item Showcase the mesh convergence study
-		\item Maybe this can go in the Meshing section
-		\item Mesh quality and convergence study presentation
-		\item Maybe this section can serve as the explanation and analysis of the mesh quality and mesh convergence thing
-	\end{itemize}
-}
+In the case of the presented $q$ values on \autoref{fig:solved_mesh_comparison}, the difference between the field distribution is prominent. The mesh with a lower $q$ value, meaning more tetrahedra are closer to being regular, has a smoother field distribution hence this difference can be considered significant compared to the $q=2.0$ mesh. One way to find a suitable value is through reviewing the changes between different runs of a solved model with varying $q$ values. In \draft{fig:mesh\_conv\_study} a solved model with different mesh densities can be found.
+
+\draft{Add the figure of the mesh convergence study.}
+
+Progressing with $0.1$ step size from $q=2.0$ to $q=1.0$ on \draft{fig:mesh\_conv\_study}, it can be seen that up to \draft{q=1.6} there is a difference between the patterns of the solved model, while below \draft{q=1.4} there is no visible difference in the field distribution. To find the suitable value, the next step is to repeat the process of solving with varying $q$ values, but now with a finer step in the region that has been identified as "converged" \textit{(no significant change from one value to the next)}. The final range shall be tested on at least one more model and if there is less than \textbf{2\%} difference in the values obtained from the solver, then the mesh can be considered converged and the final $q$ value is chosen. However for simplicity reasons here the value of $\boldsymbol{q=1.5}$ will be used for all the model meshes.
 
 \subsection{Solver Set-up \& Selection}
-\draft{
-	\begin{itemize}
-		\item Define the two major solver categories, iterative and direct
-		\item State their strengths and weaknesses
-		\item Describe the solver specifics, why this specific was chosen here
-		\item Clearly state that in each solution run, the model is actually solved two times, one for the base potential and the other for the DF potential
-	\end{itemize}
-}
+
+One of the important factors in having a successful solution of the model is using the correct solver for the problem. Depending on the mathematical nature of the physical problem, different solvers can give more accurate results and in shorter time.
+
+Generally there are two major solver categories, the direct and the iterative each of which is explained below. In this work an iterative solver is the most suitable with the specific algorithms presented in \ref{subsec:iterative_solvers}, since as described in \ref{sec:e_ohmic_qs} the problem faced here is solving the Laplace equation, a second-order partial differential equation.
 
 \subsubsection{Direct Solution}
 
-The most accurate solution of a \gls{FEM} problem is evaluated through a direct solver. This kind of solvers tries to approach the solution by using traditional linear algebra techniques, like inverse matrix calculation, to find the matrix of unknowns. Direct solvers can take huge amounts of \gls{RAM} which makes them unsuitable for problem with a few million elements since complete access to the whole matrix is required. In the case of realistic brain models the element count can sometimes reach the order of 6 million in a square matrix. Apart from the huge amount of \gls{RAM}, these solvers are not suitable since most of the times the \gls{FE} matrices are heavily sparse, meaning most of their elements are zero, thus having many unnecessary zero by zero multiplication.
+The most accurate solution of a \gls{FEM} problem is evaluated through a direct solver. This kind of solvers try to approach the solution by using traditional linear algebra techniques, like inverse matrix calculation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM} which makes them unsuitable for problem with a few million elements since complete access to the whole matrix is required. In the case of realistic brain models the element count can sometimes reach the order of 6 million in a square matrix. Apart from the \gls{RAM} issues, these solvers are not suitable since most of the times the \gls{FE} matrices are heavily sparse, meaning most of their elements are zero, thus having many unnecessary operations resulting to zero.
 
-As it is obvious direct solvers are out of question for realistic brain models, since they can only be used on a grid of computers. Just to benchmark the performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve the \texttt{126325} model from the \gls{PHM} repository \cite{ErikG.Lee2016}. Results are summarized below on \autoref{tab:direct_solver_bench}. All the direct solver benchmarks were obtained though running the code on the \gls{HPC} gird of \gls{AUTh} \gls{IT} center.
+As it is obvious direct solvers are out of question for realistic brain models, since they can only be used on a grid of computers. Just to benchmark the performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve the \texttt{126325} model from the \gls{PHM} repository \cite{ErikG.Lee2016}. Results are summarized below on \autoref{tab:direct_solver_bench}. All the direct solver benchmarks were obtained though running the code on the \gls{HPC} grid of \gls{AUTh} \gls{IT} center.
 
 \begin{table}[!ht]
 	\centering
@@ -282,21 +273,25 @@ As it is obvious direct solvers are out of question for realistic brain models, 
 \end{table}
 
 \subsubsection{Iterative Solution}
+\label{subsec:iterative_solvers}
 
-The other category of solvers contains the iterative solvers. The logic behind this type of solvers is that initially a guess is made for the solution, following iterations afterwards to find the exact solution based on convergence criteria.
+The logic behind this type of solvers is that initially a guess is made for the solution, following iterations afterwards to find the exact solution based on the provided convergence criteria.
 
-In this work iterative solvers were used and specifically the \gls{CG} solver with the \gls{HYPRE} \cite{hypre-web-page}, using Boomer\gls{AMG} \cite[chapter 4]{McCormick1987_amg} with the \gls{HMIS} algorithm for matrix coarsening. All these packages are included in the python version of the \gls{PETSc} \cite{petsc-web-page,petsc-user-ref,petsc-efficient}, called \texttt{petsc4py} \cite{Dalcin2011}.
+In this work iterative solvers were used and specifically the \gls{CG} solver. Before solving the actual problem the matrix first is passed through a preconditioner which transforms the matrix in a more suitable form for numerical solution. Here the \gls{HYPRE} \cite{hypre-web-page} suite was used with the Boomer\gls{AMG} \cite[chapter 4]{McCormick1987_amg} preconditioner. The multigrid method is used in solving partial differential equations by hierarchical discretization of the problem. Algebraic Multigird specifically is construct the hierarchy from the system matrix instead of directly using the differential equations. 
+
+Furthermore, to make the system matrix less heavy in terms of elements a coarsening algorithm is utilized along with the preconditioner and that is the \gls{HMIS}, which again belongs in the \gls{HYPRE} family of tools. All these packages are included in the python version of the \gls{PETSc} \cite{petsc-web-page,petsc-user-ref,petsc-efficient}, called \texttt{petsc4py} \cite{Dalcin2011}. \gls{PETSc} is a toolset which can be used to parallelize the problems and includes many solvers for sparse matrices \textit{(matrices with most elements zero)}, as this is the case for our problem.
 
 \subsection{Boundary Conditions}
 \label{subsec:solver_boundary_conditions}
 
-Through all simulations, the Neumann boundary condition $\big(\sigma\nabla\phi\cdot n = 0\big)$ is used on the surface of the skull and the Dirichlet boundary condition $\big(\phi = \phi_0$, $\phi = -\phi_0\big)$ is used in the active electrode and the non-active electrode accordingly. The magnitude of $\phi_0$ is determined by the desired injected current.
+Through all simulations, the Neumann boundary condition \textit{(flux through a surface)} $\big(\sigma\nabla\phi\cdot\vec{n} = 0\big)$ is used on the whole domain of and the Dirichlet boundary condition \textit{(potential on a surface)} $\big(\phi = \phi_0$, $\phi = -\phi_0\big)$ is used in the active electrode and the non-active electrode accordingly. The magnitude of $\phi_0$ is determined by the desired injected current.
 
 \subsection{Post-processing Steps}
-\draft{
-	\begin{itemize}
-		\item What happens after individual potentials are solved
-		\item Algorithm to calculate the temporal interference
-		\item Solver specifics for the saving of the data in VTK (4 times the same values)
-	\end{itemize}
-}
+
+To get the desired results at the end of the problem solution, there is the need to further process the solved equations.
+
+Solving the Laplace equation yields the potential at each node and to calculate the electric field the derivative of the potential is taken as:
+\begin{equation}
+	\vec{E} = -\nabla\phi
+\end{equation}
+where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination if two different solutions, with different electrode pairs, is what is of interest and after calculating the potentials for each case, the electric field of the maximum as well as the directional modulation envelope is calculated using the \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
