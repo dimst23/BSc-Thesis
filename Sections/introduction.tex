@@ -2,6 +2,25 @@
 \pagenumbering{arabic}
 \chapter{Introduction}
 
+Since neurons are driven by electric currents, altering the surrounding electrical conditions can modify their behavior. Both electrically and magnetically induced stimulation has been in use for many years, with the latter being studied a couple of years earlier. Different physics underlie each method with the end effects being similar.
+
+\begin{wrapfigure}{l}{0.40\textwidth}
+    \centering
+    \includegraphics[width = 0.3\textwidth]{assets/images/cortical_layers.pdf}
+    \caption{Cellular structure of the neocortex. (Purves et al.\cite{Purves2012}, Figure 27.1(B) p.628)}
+    \label{fig:cortical_layers}
+\end{wrapfigure}
+
+Due to the layered structure (\autoref{fig:cortical_layers}) of the neocortex, \gls{TMS} induced electric fields affect mostly interneurons and collaterals of the tangentially aligned pyramidal cells, whereas the overall electric field induced by electrical stimulation is normal to the cortical surface thus affecting mostly \textit{layer V} pyramidal neurons as most of them are perpendicular to the cortex. The edn result is that \gls{TMS} induced fields have short penetration depth, while \gls{tES} induced fields can reach deep in the brain, at a cost of spatial resolution. As such \gls{tES} is mostly used to try and reach deep targets.
+
+\gls{DBS} and especially the non-invasive methods to achieve it is an emerging need, since most of the functionality of key brain components lies deep in the brain. Although there are successful invasive method that can alleviate Parkinson's symptoms, non-invasive methods can offer greater scalability and less risk for the patient. The challenge posed by the non-invasive methods though is the lack of spatial resolution and pin-point targeting of the desired area, usually a small enough area in the order of tens of millimeter (e.g. pituitary gland \cite{Yadav2017_pituitary}).
+
+At 2017 a new method first brought to light by Nir Grossman and his team \cite{Grossman2017} which seemingly revolutionizes the way non-invasive \gls{DBS} is accomplished, by accommodating clever tricks \textit{"hacking"} the physics of neurons. The \paper{Grossman}{Grossman2017} method uses a pair of electrodes, injected with a high frequency alternating current, which envelope oscillates at the desired frequency, set by the difference between the frequency difference between the electrode pairs. The great advantage as a result is the ability to reach deep targets and stimulate only the areas of interest, without stimulating the surrounding areas or the whole brain.
+
+The Grossman's method shows promise in the future of \gls{DBS} and it is studied in this work to assess the potential use in humans, since in the original work \cite{Grossman2017} only spherical models and simple phantom models were used, in conjunction with successful test runs in murine subjects. Further study on realistic human brain models will aid in the understanding of the \gls{tTIS} specifics and testing on healthy individuals will consolidate the method's effectiveness.
+
+Lastly, this work's goal is to aid in creating optimized and personalized treatment planning for humans, through detailed computer simulations. The greatest benefit to science and the society comes from open knowledge sharing and abiding to this belief this work's code, designs, texts and any material originally produced is publicly available on the GitLab repository \cite{thesis_repo}.
+
 \section{Methods of Electrical Stimulation}
 
 In this section the methods which will help to better grasp the inner workings of \gls{tTIS} will be presented and it should be noted that there are various other methods with different effects. First the \gls{tDCS} method will be presented in order to understand the electrical conduction in the human head, followed by the \gls{tACS} which will act as a pivot point to expand on and get to the \gls{tTIS} method, as it is the one studied in the current work. 
@@ -27,7 +46,7 @@ In this section the methods which will help to better grasp the inner workings o
 \subsubsection{Uses cases \& Limitations}
 
 
-\section{Transcranial Temporal Interference Stimulation (tTIS) Theory}
+\section{Theoretical Background}
 
 To better understand the physics behind the simulations, a brief explanation regarding the conduction within the media is presented in \autoref{sec:e_ohmic_qs}, followed by an analysis regarding the \gls{tTIS} hypothesis based on Grossman et al.\cite{Grossman2017} work.
 
@@ -124,32 +143,3 @@ What is of interest is the maximum amplitude of modulation at a specific locatio
 \end{equation}
 where $\alpha$ is the angle between $\vec{E_1}$ and $\vec{E_2}$, while \autoref{eq:max_mod_amplitude} holds true only if $\alpha < 90\si{\degree}$. Whenever $\alpha \geq 90\si{\degree}$, the sign of one of the two fields can be flipped \textit{(it must be done is a consistent fashion)} since reaching peak field strength at different time points across different areas, is what makes the $< 90\si{\degree}$ rule to be violated. Such a change is possible considering that \autoref{eq:max_mod_amplitude} calculates the maximum effect over one oscillation, so the overall effect is the one that we care. The calculation of $\vec{E}_{AM}^{max}$ can be seen in \autoref{alg:max_modulation_amplitude} at \autoref{appndx:algorithms}.
 
-
-% Since neurons are driven by electric currents, altering the surrounding electrical conditions can modify their behavior. Both electrically and magnetically induced stimulation has been in use for many years, with the latter being studied a couple of years earlier. Different physics underlie each method with the end effect being similar.
-% \\\vspace{1pt}
-
-% \begin{wrapfigure}{l}{0.35\textwidth}
-%     \centering
-%     \includegraphics[width = 0.3\textwidth]{assets/images/cortical_layers.pdf}
-%     \caption{Cellular structure of the neocortex. (Purves et al.\cite{Purves2012}, Figure 27.1(B) p.628)}
-%     \label{fig:cortical_layers}
-% \end{wrapfigure}
-
-% Due to the layered structure (\autoref{fig:cortical_layers}) of the neocortex, \gls{TMS} induced electric fields affect mostly interneurons and collaterals of the tangentially aligned pyramidal cells, whereas the overall electric field induced by electrical stimulation is normal to the cortical surface thus affecting mostly \textit{layer V} pyramidal neurons as most of them are perpendicular to the cortex.
-
-% Apart from the difference the two methods have from the physics perspective, they are also different in terms of excitability and effective stimulation depth. \gls{TMS} induces electric fields capable of directly eliciting action potentials, while \gls{tES} electric fields are not capable to directly trigger action potentials \textit{subthreshold stimulation}, since weak ($\leq 2$ \si{mA}) currents are applied via the electrodes placed on the scalp \cite{Reed2018}. When it come to effective stimulation depth, \gls{tES} has the lead and as illustrated in (\autoref{fig:electrical_vs_magnetic}) \gls{TMS} has short penetration depth compared to the \gls{tDCS}, one of the methods to electrically stimulate the brain.
-% \\\vspace{1pt}
-
-% \begin{wrapfigure}{r}{0.48\textwidth}
-%     \centering
-%     \includegraphics[width = 0.46\textwidth]{assets/images/electrical_vs_magnetic.png}
-%     \caption{E-field magnitude induced during \gls{TMS} (A,B) and \gls{tDCS} (C,D) with $35$\si{cm^2} electrode patches. (Salvador et al.\cite{Salvador2015}, Figure 2)}
-%     \label{fig:electrical_vs_magnetic}
-% \end{wrapfigure}
-
-% The ability to reach deep targets is what makes \gls{tES} suitable for studying ways to achieve subthreshold \gls{DBS}. As it will be prevalent later, most of the \gls{tES} methods lack temporal resolution thus making targeted deep brain stimulation much harder. A new approach was presented by Grossman et al.\cite{Grossman2017} which takes advantage of \gls{tACS} to create temporal interference at \si{kHz} range frequencies, making neurons follow the envelope of modulation. 
-
-% The modified \gls{tACS} method is called \gls{tTIS} and it is an emerging technique, as of 2020, in the field of applied neuroscience, showing promising results \cite{Grossman2017,Rampersad2019} and the potential benefits of this method can be utilized to study the response pattern through \gls{EEG} signals by stimulating a very small \gls{ROI} non-invasively. Further study on realistic human brain models will aid in the understanding of the \gls{tTIS} specifics and testing on healthy individuals will consolidate the method's effectiveness.
-% \\\vspace{1pt}
-
-% This work presents the development of an open source software tool capable of importing realistic human head models derived from medical imaging data and simulating the effect of \gls{tTIS} using the \gls{FEM}.
