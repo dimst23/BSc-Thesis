@@ -23,16 +23,42 @@ Lastly, this work's goal is to aid in creating optimized and personalized treatm
 
 \section{Methods of Electrical Stimulation}
 
-In this section the methods which will help to better grasp the inner workings of \gls{tTIS} will be presented and it should be noted that there are various other methods with different effects. First the \gls{tDCS} method will be presented in order to understand the electrical conduction in the human head, followed by the \gls{tACS} which will act as a pivot point to expand on and get to the \gls{tTIS} method, as it is the one studied in the current work. 
+To better understand the major advantages of the \gls{tTIS} method, the different methods for achieving electrical stimulation shall be presented. An overview of the two main methods is presented in this section, as these are the most commonly used ones and also they are the basis for almost all the other electrical stimulation method variations.
 
 \subsection{Transcranial Direct Current Stimulation \textit{(tDCS)}}
-\cite{Nitsche2008}
-\subsubsection{Uses cases \& Limitations}
+
+\gls{tDCS} delivers constant current via electrodes placed on the head, targeting to stimulate the cortical areas. There are numerous studies showing promising results in depression treatment \cite{Moffa2020,Brunoni2016} and \gls{tDCS} is increasingly used in such cases \cite{Nitsche2008}.
+
+Although \gls{tDCS} is good for an overall cortical stimulation, the lack of focality is one of the key issues. As it can be seen in \draft{fig:tcds\_pattern} the electric current flows though a particularly large area, potentially affecting unwanted areas.
+
+\draft{figure for tDCS pattern goes here}
+
+Furthermore, achieving neural firing synchronization is impossible through \gls{tDCS}, since achieving this kind of effect requires alternating current. The method that can have such an impact is \gls{tACS}.
 
 \subsection{Transcranial Alternating Current Stimulation \textit{(tACS)}}
-\subsubsection{Uses cases \& Limitations}
+
+In many aspects \gls{tACS} and \gls{tDCS} are the same. As mentioned before, the key component where \gls{tACS} \draft{arises} is the neural firing synchronization. Same as \gls{tDCS}, this method also lacks focality as shown in \draft{fig:tacs\_pattern} and there is one more issue in the game now.
+
+\draft{figure with the tACS pattern goes here}
+
+\gls{tACS} requires using low frequency currents, at the tens of Hz range, since at those frequencies the neurons are firing the action potentials. The problem arising here is the stimulation of large area, synchronized at the stimulating current frequency. Such a synchronization can have adverse effects, i.e. stimulating and synchronizing unwanted areas.
+
+\draft{refer why stimulating with low frequency currents in not the best}
+Stimulating with higher frequency currents, renders the method useless since the neuronal membrane is either not able to follow the oscillation or the frequency is too high for the desired synchronization. This problem is solved by the \gls{tTIS} method, studied in this work.
 
 \subsection{Transcranial Temporal Interference Stimulation \textit{(tTIS)}}
+
+\gls{tTIS} is essentially \gls{tACS} with a small, but important modification.
+
+\draft{
+    \begin{itemize}
+        \item Refer to the physics behind the method
+        \item Provide interference diagrams to back it up
+        \item Provide some initial diagrams showing the field distribution in the head, both mine and from Grossman
+        \item Refer to the potential utilization, targets, methods, improvement
+    \end{itemize}
+}
+
 % \cite{Esmaeilpour2019} tTIS targets
 
 % Write why
@@ -42,9 +68,6 @@ In this section the methods which will help to better grasp the inner workings o
 
 
 % \cite{Dmochowski2017}
-\subsubsection{The great advantage}
-\subsubsection{Uses cases \& Limitations}
-
 
 \section{Theoretical Background}
 
@@ -142,4 +165,3 @@ What is of interest is the maximum amplitude of modulation at a specific locatio
     \end{cases}
 \end{equation}
 where $\alpha$ is the angle between $\vec{E_1}$ and $\vec{E_2}$, while \autoref{eq:max_mod_amplitude} holds true only if $\alpha < 90\si{\degree}$. Whenever $\alpha \geq 90\si{\degree}$, the sign of one of the two fields can be flipped \textit{(it must be done is a consistent fashion)} since reaching peak field strength at different time points across different areas, is what makes the $< 90\si{\degree}$ rule to be violated. Such a change is possible considering that \autoref{eq:max_mod_amplitude} calculates the maximum effect over one oscillation, so the overall effect is the one that we care. The calculation of $\vec{E}_{AM}^{max}$ can be seen in \autoref{alg:max_modulation_amplitude} at \autoref{appndx:algorithms}.
-
