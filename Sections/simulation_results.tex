@@ -5,27 +5,41 @@ The entirety of this work is based on the method introduced by \paper{Grossman}{
 
 \paper{Grossman}{Grossman2017} simulation models were based on a simple spherical layered model, with uniform density of the material. Such an approach is working for small brains, like murine brain, but it fails for human models where the structure is very complex and greatly varying between subjects. One way to better approach the problem on humans is to use detailed models, capturing the non-uniformities and geometric details, giving results closer to reality.
 
-The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the road blocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in the \draft{section for discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed and the method is further extended for human models, where the results are seen in \draft{section realistic huamn models}.
+The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the road blocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in \autoref{sec:discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed and the method is further extended for human models, where the results are seen in \autoref{sec:realistic_human_models}.
 
 \section{Simple Spherical Layered Model}
 
-\draft{
-    \begin{itemize}
-        \item Use the spherical model to compare the results with the ones from Grossman
-        \item Generate figures from Paraview
-        \item Model with the same configuration as in Grossman
-    \end{itemize}
-}
+The simple model is comprized of 4 layers in total, with varying thickness each. The layer thickness is included in \autoref{tab:spherical_layers} as a radius fraction and the values for each layer come from Grossman et al. \cite[Figure S2, J and K]{Grossman2017} \textit{(referred hereafter as paper)}. Additionally, the conductivity values used in the paper are summarized in \autoref{tab:grossman_conductivity_vals}.
 
-\subsection{Software Benchmarking}
-\gls{TI}
-%%% My work citations
-\cite{Grossman2017}
-\cite{Hsu2019}
-\cite{Rampersad2019}
-%%% My work citations
+\begin{table}[!ht]
+\centering
+\caption{Conductivity values for the simple model taken from \cite{ITstissue}}
+\label{tab:grossman_conductivity_vals}
+\begin{tabular}{|c|c|c|}
+    \hline
+    \rowcolor[HTML]{C0C0C0} 
+    {\color[HTML]{000000} \textbf{Layer}} & {\color[HTML]{000000} \textbf{Conductivity {[}S/m{]}}} \\ \hline
+    Skin & 0.17 \\ \hline
+    Skull & 0.003504 \\ \hline
+    CSF & 1.776 \\ \hline
+    Brain & 0.234 \\ \hline
+\end{tabular}
+\end{table}
+
+To benchmark this work's software the same configurations as in the paper were used and the results can be seen in \autoref{fig:grossman_thesis_comparison}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.75\textwidth]{assets/images/grosman_benchmark.png}
+    \caption[Modulation envelope on the y-direction for the spherical layered model]{Modulation envelope on the y-direction for the spherical layered model, same as on Gross et al. \cite[Figure 2B]{Grossman2017}.}
+    \label{fig:grossman_thesis_comparison}
+\end{figure}
+
+It is clear from the figures above that the software can be considered accurate, based on the paper's results, so the analysis can proceed on the realistic human head models in the following section.
+
 
 \section{Realistic Human Models}
+\label{sec:realistic_human_models}
 
 \draft{
     \begin{itemize}
@@ -48,3 +62,7 @@ The scope of this work is to try and investigate the potential use of the \paper
 \cite{Lee2018}
 \cite{ErikG.Lee2016}
 %%% PHM model citations
+%%% My work citations
+\cite{Hsu2019}
+\cite{Rampersad2019}
+%%% My work citations
