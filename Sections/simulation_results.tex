@@ -1,8 +1,22 @@
 \pagebreak
 \chapter{Simulation Results}
 
+The entirety of this work is based on the method introduced by \paper{Grossman}{Grossman2017}, which has been tested on murine brains and the results where very close with the simulated ones. Although on murine brain the method can produce the desired results, on the human brain it is much more difficult to achieve the required outcome and much more difficult to accurately simulate it.
+
+\paper{Grossman}{Grossman2017} simulation models were based on a simple spherical layered model, with uniform density of the material. Such an approach is working for small brains, like murine brain, but it fails for human models where the structure is very complex and greatly varying between subjects. One way to better approach the problem on humans is to use detailed models, capturing the non-uniformities and geometric details, giving results closer to reality.
+
+The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the road blocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in the \draft{section for discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed and the method is further extended for human models, where the results are seen in \draft{section realistic huamn models}.
 
 \section{Simple Spherical Layered Model}
+
+\draft{
+    \begin{itemize}
+        \item Use the spherical model to compare the results with the ones from Grossman
+        \item Generate figures from Paraview
+        \item Model with the same configuration as in Grossman
+    \end{itemize}
+}
+
 \subsection{Software Benchmarking}
 \gls{TI}
 %%% My work citations
@@ -12,6 +26,19 @@
 %%% My work citations
 
 \section{Realistic Human Models}
+
+\draft{
+    \begin{itemize}
+        \item Run a sweep analysis on the different models to get some statistics for the effect of the model anatomy
+        \item Run a same model, varying electrode position analysis to show the pattern change when the electrode pairing changes
+        \item Show the granularity, if any, of the 10-10 and 10-20 systems for stimulation
+        \item Run 1 optimization to show the preliminary results of convergence
+        \item Write about the model assumptions, such as uniform white matter in most models, no specific areas on the white matter, no spongiform bone included
+        \item Write about potential improvements from having a conductivity calibrated for spongiform bone too
+        \item Write some potential approximations that can be used \cite{Rampersad2013_skull_approximations}
+    \end{itemize}
+}
+
 \subsection{Effects of Model Anatomy}
 \subsection{Varying Electrode Position}
 \gls{tACS}
