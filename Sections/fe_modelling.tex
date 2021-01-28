@@ -1,12 +1,12 @@
 \pagebreak
 \chapter{Finite Element Modelling}
 
-All models are discritized using a \gls{FE} mesh, before being passed to the solver. While there are numerous \gls{FEM} solver tools out there, the one being used in this work is \textit{SfePy} \cite{Cimrman2019}, since it provides all the necessary means for the solution of the problem in question and it interfaces directly with Python. In this section a detailed overview of the models used (\autoref{sec:fem_models}), the meshing strategy (\autoref{sec:fem_meshing}) and the solver configuration (\autoref{sec:fem_solver}) is provided.
+All models are discretized using a \gls{FE} mesh, before being passed to the solver. While there are numerous \gls{FEM} solver tools out there, the one being used in this work is \textit{SfePy} \cite{Cimrman2019}, since it provides all the necessary means for the solution of the problem in question and it interfaces directly with Python. In this section a detailed overview of the models used (\autoref{sec:fem_models}), the meshing strategy (\autoref{sec:fem_meshing}) and the solver configuration (\autoref{sec:fem_solver}) is provided.
 
 \section{Models}
 \label{sec:fem_models}
 
-A tricky part in simulations involving the brain is to choose the correct or the most representative model for the desired work. While spherical models are used just for a proof of concept, very complex models on the other hand increase computational time by a lot. This section describes the generation of the spherical model as well as the use of publicly available realistic human head models.
+A tricky part in simulations involving the brain is to choose the correct or the most representative model for the desired work. While spherical models are used just for a proof of concept, very complex models on the other hand increase computational time a lot. This section describes the generation of the spherical model as well as the use of publicly available realistic human head models.
 
 \subsection{Simple Models}
 \begin{wrapfigure}{r}{0.35\textwidth}
