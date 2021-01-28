@@ -17,7 +17,7 @@ A tricky part in simulations involving the brain is to choose the correct or the
     \label{fig:sphere_brain}
 \end{wrapfigure}
 
-A good approximation of the layered structure of the human head, using the spherical model, is to use four layers in total with varying widths. These four layers as seen on \autoref{fig:sphere_brain} are the same ones described in \paper{Grossman}{Grossman2017}. To generate the spherical model Gmsh \cite{gmsh}, a 3D modeling software, was used with the layer radius values as shown in \autoref{tab:spherical_layers}. The script to generate these models can be seen in \autoref{lst:sphere_code} and it can also be found on the GitLab repository \cite{thesis_repo} as a snippet.
+A good approximation of the layered structure of the human head is to use the spherical model, divided to a total of four layers with varying widths. These four layers as seen on \autoref{fig:sphere_brain} are the same ones described in \paper{Grossman}{Grossman2017}. To generate the spherical model Gmsh \cite{gmsh}, a 3D modeling software, was used with the layer radius values as shown in \autoref{tab:spherical_layers}. The script to generate these models can be seen in \autoref{lst:sphere_code} and it can also be found on the GitLab repository \cite{thesis_repo} as a snippet.
 \begin{table}[!ht]
 \begin{minipage}{.62\linewidth}
 \centering
@@ -78,16 +78,16 @@ RefineMesh;
 \subsection{Realistic Human Head Models}
 \label{sec:phm_models}
 
-Realistic brain models are really hard to draw in a \gls{CAD} program and be anatomically accurate, so they are usually generated using medical imaging data from \gls{MRI} and \gls{CT} scans. The models used in the simulations of this work are taken from the \gls{PHM} repository of \gls{IT'IS} \cite{ErikG.Lee2016,Lee2018,ITstissue}. Each model contains a total of 7 (seven) 3D triangular surface meshes \textit{(skin, skull, \gls{CSF}, grey matter, white matter, cerebellum and ventricles)} in \gls{STL} format, which were generated from \gls{MRI} data. Sometimes the surface meshes are called \gls{BE} meshes and from now on this term might be used interchangeably with the \gls{STL} format.
+Realistic brain models are really hard to construct in a \gls{CAD} program and be anatomically accurate at the same time, so they are usually generated using medical imaging data from \gls{MRI} and \gls{CT} scans. The models used in the simulations of this work are taken from the \gls{PHM} repository of \gls{IT'IS} \cite{ErikG.Lee2016,Lee2018,ITstissue}. Each model contains a total of 7 (seven) 3D triangular surface meshes \textit{(skin, skull, \gls{CSF}, grey matter, white matter, cerebellum and ventricles)} in \gls{STL} format, which were generated from \gls{MRI} data. Sometimes the surface meshes are called \gls{BE} meshes and from now on this term will be used interchangeably with the \gls{STL} format.
 
-There are also other ways to model the brain and the head, by directly utilizing \gls{MRI} data and generating the corresponding tetrahedral mesh from the medical imaging segmentation. One streamlined and easy way to achieve this is by using \texttt{Brain2Mesh}, a tool developed by Tran et al.\cite{Tran2020}, which can generate tetrahedral meshes from segmented \gls{MR} images.
+There are also other ways to model the brain and the head by directly utilizing \gls{MRI} data and generating the corresponding tetrahedral mesh from the medical imaging segmentation. One streamlined and easy way to achieve this is by using \texttt{Brain2Mesh}, a tool developed by Tran et al.\cite{Tran2020}, which can generate tetrahedral meshes from segmented \gls{MR} images.
 
 \section{Meshing}
 \label{sec:fem_meshing}
 
-Correct meshing is key to obtaining correct results from the solution of a \gls{FEM} problem, so in this section the mesh quality criteria are described, as well as a basic mesh convergence analysis is presented. Apart from the analysis the meshing strategy followed is presented in detail, with specific code examples and the algorithms developed and used. For all meshing operations the tool in use is PyMesh \cite{pymesh}, which is includes all the necessary \gls{STL} file and geometry operations used in this work. Specifically for all volume meshing TetGen \cite{tetgen}, a software library specifically targeted in tetrahedral meshing, is used throughout this work.
+Correct meshing is key to obtaining correct results from the solution of a \gls{FEM} problem, so in this section the mesh quality criteria are described, as well as a basic mesh convergence analysis is presented. Apart from the analysis, the meshing strategy followed is presented in detail, with specific code examples and the algorithms developed and employed. For all meshing operations the tool in use is PyMesh \cite{pymesh}, which includes all the necessary \gls{STL} file and geometry operations needed in this work. Specifically, for all volume meshing TetGen \cite{tetgen}, a software library specifically targeted to tetrahedral meshing, is utilized throughout this thesis.
 
-Before proceeding with the detailed explanation of each process involved in the final meshed model generation, a high level diagram of the steps involved can be seen in \autoref{fig:mesh_modelling}. The order of the explanation will be in-line with this diagram.
+Before proceeding with the detailed explanation of each process involved in the final meshed model generation, a high level diagram of the steps involved can be seen in \autoref{fig:mesh_modelling}.
 
 \begin{figure}[H]
     \centering
@@ -96,22 +96,22 @@ Before proceeding with the detailed explanation of each process involved in the 
     \label{fig:mesh_modelling}
 \end{figure}
 
-\noindent Each step in \autoref{fig:mesh_modelling} describes a single process, except from the annotation steps. To recognize each mesh domain from the meshed model and then annotate it, is a key process allowing different material definition later in the solver. During the meshing procedure a volumetric mesh is generated with no labels on each individual domain, thus the need to recognize each region \textit{(domain)} arises. The recognition and subsequent labeling is accomplished by splitting the domains with the help of the boundary surfaces and finding the enclosed tetrahedra, as described in \ref{subsec:elec_annotation}.
+\noindent To recognize each mesh domain from the meshed model and then annotate it is a key process allowing different material definition in the solver, which is useful for later stages of the analysis. During the meshing procedure, a volumetric mesh is generated with no labels on each individual domain, thus the need to recognize each region \textit{(domain)} arises. The recognition and subsequent labeling is accomplished by splitting the domains with the help of the boundary surfaces and finding the enclosed tetrahedra, as described in \ref{subsec:elec_annotation}.
 
-Finally, as it is evident from \autoref{fig:mesh_modelling} the meshed model, with all required annotations included, is saved in \gls{VTK} format which is a very common and robust file format for \gls{FE} meshes.
+Finally, as it is evident from \autoref{fig:mesh_modelling}, the meshed model with all required annotations included is saved in \gls{VTK} format, which is a very common and robust file format for \gls{FE} meshes.
 
-\subsection{Data Required}
+\subsection{Loading Required Data}
 
-The first step in the meshing pipeline is to import all the necessary files for the geometry and the electrode placement. The geometry files from the \gls{PHM} repository \cite{ErikG.Lee2016} are loaded as \gls{STL} format, which contains the surface boundaries of each region, as described in \ref{sec:phm_models}.
+The first step in the meshing pipeline is to import all the necessary files for the geometry and the electrode placement. The geometry files from the \gls{PHM} repository \cite{ErikG.Lee2016} are loaded in \gls{STL} format, which contains the surface boundaries of each region, as described in \ref{sec:phm_models}.
 
-Apart from the geometry files, the electrode coordinate files are also loaded. The electrode coordinates are generated using \texttt{Mesh2EEG} \cite{Giacometti2014}, a tool developed by Thayer School of Engineering at Dartmouth \cite{mesh2eeg_web}, and more details are provided in \ref{subsec:elec_placement}.
+Apart from the geometry files, the electrode coordinate files are also loaded. The electrode coordinates are generated using \texttt{Mesh2EEG} \cite{Giacometti2014}, a tool developed by Thayer School of Engineering at Dartmouth \cite{mesh2eeg_web}.
 
 \subsection{Electrode Array Generation \& Placement}
 \label{subsec:elec_placement}
 
-The term electrode array generation means the creation of the electrode cluster from the coordinates to having the actual \gls{FE} meshes of each individual electrode. Securing repeatability across different heads \textit{(varying geometry)} is key to having comparable results and drawing conclusions, thus the standard electrode positioning systems widely used in \gls{EEG} studies have been utilized here too. In particular the \textbf{10-20 international system} \cite[chapter 13]{Malmivuo1995} is used throughout this work, as it is the most common system in the clinical setting. 
+The term "electrode array generation" implies the creation of an electrode cluster from the coordinates of each electrode, in order to subsequently acquire the actual \gls{FE} meshes of each individual electrode. Securing repeatability across different heads \textit{(varying geometry)} is key to having comparable results and drawing conclusions, thus the standard electrode positioning systems widely used in \gls{EEG} studies have been utilized here too. In particular, the \textbf{10-20 international system} \cite[chapter 13]{Malmivuo1995} is adopted, as it is the most common system in the clinical setting. 
 
-To understand where the naming convention \textbf{10-20} comes from, it is mandatory to define the landmarks used. These are the \textit{\gls{nasion}}, \textit{\gls{inion}}, \textit{left} and \textit{right \gls{preauricular}s} and define the start of measurement for the electrode placement on the head. The numbers in the name of the system refer to the percentile arch length of the arch formed by the \gls{nasion} and \gls{inion}, as well as the left and right \gls{preauricular}s. More specifically the number \textbf{10} denotes that the placement shall start at $10\%$ of the arch length, while the number \textbf{20} denotes the arch length that each individual electrode shall have, after the placement of the first one. Denser systems than the \textbf{10-20} exist, namely the \textbf{10-10} and \textbf{10-5}, following the same placement rules.Lastly, it should be noted that the electrodes are placed in a circular fashion and to aid in the visualization of the placement, some details are shown on \autoref{fig:10_20_explanation}.
+To understand where the naming convention \textbf{10-20} comes from, it is mandatory to define the landmarks used. These are the \textit{\gls{nasion}}, \textit{\gls{inion}}, \textit{left} and \textit{right \gls{preauricular}s} and define the start of measurement for the electrode placement on the head. The numbers in the name of the system refer to the percentile arch length of the arch formed by the \gls{nasion} and \gls{inion}, as well as the left and right \gls{preauricular}s. More specifically, the number \textbf{10} denotes that the placement shall start at $10\%$ of the arch length, while the number \textbf{20} denotes the arch length that each individual electrode shall have, after the placement of the first one. Denser systems than the 10-20 exist, namely the 10-10 and 10-5, following the same placement rules. Lastly, it should be noted that the electrodes are placed in a circular fashion and to aid in the visualization of the placement, some details are shown on \autoref{fig:10_20_explanation}.
 
 \begin{figure}[H]
     \centering
@@ -120,9 +120,9 @@ To understand where the naming convention \textbf{10-20} comes from, it is manda
     \label{fig:10_20_explanation}
 \end{figure}
 
-As in real life, to calculate the individual electrode position the landmarks have to identified. This process is done manually by reviewing the 3D geometry of the each model and identifying the 4 (four) required landmarks. Having the coordinates of each landmark, in the coordinate system of the \gls{STL} file in question, the positions can be easily calculated with the help of the \texttt{Mesh2EEG} \cite{Giacometti2014} tool, running on \gls{MATLAB}. This tool takes as an input the 3D surface mesh in \gls{STL} format and the coordinates of the four landmarks on the model. The output then is the coordinates of each point in all three aforementioned systems, the \textbf{10-20}, \textbf{10-10} and the \textbf{10-5}.
+As in a real life electrode placement scenario, these landmarks have to identified to calculate the individual electrode position. This process is done manually by reviewing the 3D geometry of each model and identifying the 4 (four) required landmarks. Having the coordinates of each landmark in the coordinate system of the \gls{STL} file in question, the positions can be easily calculated with the help of the \texttt{Mesh2EEG} \cite{Giacometti2014} tool, which runs on \gls{MATLAB}. This tool takes as an input the 3D surface mesh in \gls{STL} format and the coordinates of the four landmarks on the model. The output is then the coordinates of each point in all three aforementioned systems, the 10-20, 10-10 and the 10-5.
 
-Using the output coordinates from the \texttt{Mesh2EEG} \cite{Giacometti2014} tool, the final step for creating the actual electrodes is to generate a cylindrical mesh for each individual one by using the calculated coordinates as the center point and orienting the cylinder normally to the surface of the head \textit{(skin)}.
+Using the output coordinates from the \texttt{Mesh2EEG} \cite{Giacometti2014} tool, the final step for creating the electrodes is to generate a cylindrical mesh for each individual one by using the calculated coordinates as the center point and orienting the cylinder normally to the surface of the head \textit{(skin)}.
 \\\vspace{1pt}
 
 \begin{wrapfigure}{l}{0.48\textwidth}
@@ -134,7 +134,7 @@ Using the output coordinates from the \texttt{Mesh2EEG} \cite{Giacometti2014} to
     \label{fig:electrodes_10-20}
 \end{wrapfigure}
 
-Upon the generation of the electrode array, placing them on the head surface is next, one of the most important factors of making \gls{tTIS} work properly. The positioning affects the stimulation pattern inside the brain, thus selecting the right electrodes, one can achieve the desired stimulation.
+Upon the generation of the electrode array, placing them on the head surface is next, a procedure consisting one of the most important factors of making \gls{tTIS} work properly. The positioning affects the stimulation pattern inside the brain, therefore by selecting the right electrodes one can achieve the desired stimulation.
 
 The spatial distribution of the electrodes is shown in \autoref{fig:electrodes_10-20} and the orange highlighted positions showcase the \textbf{10-20} system electrodes. Before the whole mesh can be generated, each electrode has to be oriented such that it is normal at the area of interest, where the orientation is calculated based on \autoref{alg:electrode_orientation} at \autoref{appndx:algorithms}. Finally, the electrode placement on the surface of the head model is completed with the successful orientation of all electrodes and the consequent surface mesh merge of the electrode array and the skin.
 
