@@ -29,45 +29,46 @@ To better understand the major advantages of the \gls{tTIS} method, the differen
 
 \gls{tDCS} delivers constant current via electrodes placed on the head, targeting to stimulate the cortical areas. There are numerous studies showing promising results in depression treatment \cite{Moffa2020,Brunoni2016} and \gls{tDCS} is increasingly used in such cases \cite{Nitsche2008}.
 
-Although \gls{tDCS} is good for an overall cortical stimulation, the lack of focality is one of the key issues. As it can be seen in \draft{fig:tcds\_pattern} the electric current flows though a particularly large area, potentially affecting unwanted areas.
+Although \gls{tDCS} is good for an overall cortical stimulation, the lack of focality is one of the key issues. As it can be seen in \autoref{fig:tdcs_pattern} the electric current flows though a particularly large area, potentially affecting unwanted areas.
 
-\draft{figure for tDCS pattern goes here}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.75\textwidth]{assets/images/tdcs_pattern.png}
+    \caption{\gls{tDCS} pattern showcase with \draft{electrodes} based on the 10-20 system.}
+    \label{fig:tdcs_pattern}
+\end{figure}
 
 Furthermore, achieving neural firing synchronization is impossible through \gls{tDCS}, since achieving this kind of effect requires alternating current. The method that can have such an impact is \gls{tACS}.
 
 \subsection{Transcranial Alternating Current Stimulation \textit{(tACS)}}
 
-In many aspects \gls{tACS} and \gls{tDCS} are the same. As mentioned before, the key component where \gls{tACS} \draft{arises} is the neural firing synchronization. Same as \gls{tDCS}, this method also lacks focality as shown in \draft{fig:tacs\_pattern} and there is one more issue in the game now.
-
-\draft{figure with the tACS pattern goes here}
+In many aspects \gls{tACS} and \gls{tDCS} are the same. As mentioned before, the key component where \gls{tACS} differs is the neural firing synchronization. Same as \gls{tDCS}, this method also lacks focality and there is one more issue in the game.
 
 \gls{tACS} requires using low frequency currents, at the tens of Hz range, since at those frequencies the neurons are firing the action potentials. The problem arising here is the stimulation of large area, synchronized at the stimulating current frequency. Such a synchronization can have adverse effects, i.e. stimulating and synchronizing unwanted areas.
 
-\draft{refer why stimulating with low frequency currents in not the best}
 Stimulating with higher frequency currents, renders the method useless since the neuronal membrane is either not able to follow the oscillation or the frequency is too high for the desired synchronization. This problem is solved by the \gls{tTIS} method, studied in this work.
 
 \subsection{Transcranial Temporal Interference Stimulation \textit{(tTIS)}}
 
-\gls{tTIS} is essentially \gls{tACS} with a small, but important modification.
+\gls{tTIS} is essentially \gls{tACS} with a small, but important modification. Taking advantage of the superposition principle of the electric field, utilizing the interference patterns is key for this method. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS} where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the temporal interference of the two electric fields, since the envelope modulates at the difference of the two frequencies from the electrode.
 
-\draft{
-    \begin{itemize}
-        \item Refer to the physics behind the method
-        \item Provide interference diagrams to back it up
-        \item Provide some initial diagrams showing the field distribution in the head, both mine and from Grossman
-        \item Refer to the potential utilization, targets, methods, improvement
-    \end{itemize}
-}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.95\textwidth]{assets/images/modulation_envelope.pdf}
+    \caption{Wave superposition pattern with equal amplitude waves}
+    \label{fig:modulation_showcase}
+\end{figure}
 
-% \cite{Esmaeilpour2019} tTIS targets
+This method was tested by \paper{Grossman}{Grossman2017} on murine brains and the results were spot on with the respective simulation. Targeted neuro-modulation was achieved, with a much better focality and depth than the traditional methods. Although this method works well on murine brains, it poses a great challenge for the human models as the geometry and the volume changes dramatically. A sample image from this work can be seen on \autoref{fig:ttis_pattern}, where the focality and depth achieved by the Grossman method in comparison with \autoref{fig:tdcs_pattern} is clearly visible.
 
-% Write why
-% \cite{Cagnan2019} DBS
-% \cite{Bao2020} Stroke Case
-% \cite{Polania2018} Brain function modification with non-invasive DBS
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.75\textwidth]{assets/images/ttis_pattern.png}
+    \caption{Electric field pattern of the \gls{tTIS} method using \draft{electrodes} as the base frequency electrodes and \draft{electrodes} as the second frequency electrodes. The base frequency is $f = 1\; kHz$ and $\Delta f=40\; kHz$.}
+    \label{fig:ttis_pattern}
+\end{figure}
 
-
-% \cite{Dmochowski2017}
+This methods shows real promise and it is yet to be discovered by follow-up works and real experiments on human subjects in the clinical setting, potentially aiding in the treatment of some diseases.
 
 \section{Theoretical Background}
 
@@ -134,7 +135,7 @@ with $\sigma$ being the electrical conductivity of each medium. Finally, based o
 
 \pagebreak
 \subsection{Temporal Interference}
-The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced by Grossman et al.\cite{Grossman2017}. This technique takes advantage of the spatial electromagnetic wave interference, using frequencies at the \si{kHz} range, having almost no effect on neurons since it is known that they do not respond to higher than 1\si{kHz} \draft{(citation needed)} frequencies.
+The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced by Grossman et al.\cite{Grossman2017}. This technique takes advantage of the spatial electromagnetic wave interference, using frequencies at the \si{kHz} range, having almost no effect on neurons since it is known that they do not respond to higher than 1\si{kHz} frequencies \cite{Hutcheon2000}.
 \\\vspace{1pt}
 
 \begin{wrapfigure}{r}{0.48\textwidth}
