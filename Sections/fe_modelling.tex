@@ -136,20 +136,20 @@ Using the output coordinates from the \texttt{Mesh2EEG} \cite{Giacometti2014} to
 
 Upon the generation of the electrode array, placing them on the head surface is next, a procedure consisting one of the most important factors of making \gls{tTIS} work properly. The positioning affects the stimulation pattern inside the brain, therefore by selecting the right electrodes one can achieve the desired stimulation.
 
-The spatial distribution of the electrodes is shown in \autoref{fig:electrodes_10-20} and the orange highlighted positions showcase the \textbf{10-20} system electrodes. Before the whole mesh can be generated, each electrode has to be oriented such that it is normal at the area of interest, where the orientation is calculated based on \autoref{alg:electrode_orientation} at \autoref{appndx:algorithms}. Finally, the electrode placement on the surface of the head model is completed with the successful orientation of all electrodes and the consequent surface mesh merge of the electrode array and the skin.
+The spatial distribution of the electrodes is shown in \autoref{fig:electrodes_10-20} and the orange highlighted positions showcase the \textbf{10-20} system electrodes. Before the whole mesh can be generated, each electrode has to be oriented normally to the area of interest, whith the orientation calculated based on \autoref{alg:electrode_orientation} at \autoref{appndx:algorithms}. Finally, the electrode placement on the surface of the head model is completed with the successful orientation of all electrodes and the subsequent surface mesh merge of the electrode array and the skin.
 
-For the electrodes to be usable by the solver later they have to be annotated, meaning a number \textit{(ID)} shall be assigned to each individual electrode. The details of the annotation procedure are discussed in \ref{subsec:elec_annotation}.
+For the electrodes to be usable by the solver, they have to be annotated, meaning a number \textit{(ID)} shall be assigned to each individual electrode. The details of the annotation procedure are discussed in \ref{subsec:elec_annotation}.
 
 \subsection{Mesh Generation}
 \label{subsec:mesh_generation}
 
 For each model the tetrahedral mesh was generated using TetGen \cite{tetgen}, which provides the ability to specifically choose the parameters necessary for the modeling. TetGen \cite{tetgen} is a C++ program that can generate tetrahedral meshes from any 3D surface provided. To control the mesh quality, TetGen \cite{tetgen} uses the following parameters:
 \begin{itemize}
-	\item the \textit{radius-to-edge-ration} $(q)$
+	\item the \textit{radius-to-edge-ratio} $(q)$
 	\item the maximum tetrahedron volume $(V_{max})$
 \end{itemize}
-with $q$ being the ratio of the circumference and the shortest edge length of each tetrahedron, while $V_{max}$ is the maximum allowable volume that an element can have. All the quantities are in the units each model is designed with. Specifically, the command line arguments used are shown in \autoref{lst:tetgen_commands}. More details on the software compilation and the integration with all the other tools, can be found in \autoref{chap:soft_arch}.
-
+with $q$ being the ratio of the circumference and the shortest edge length of each tetrahedron, while $V_{max}$ being the maximum allowable volume that an element can have. All the quantities are in the units each model is designed with. Specifically, the command line arguments used are shown in \autoref{lst:tetgen_commands}. More details on the software compilation and the integration with all the other tools, can be found in \autoref{chap:soft_arch}.
+% Is this listing really necesary? 
 \begin{lstlisting}[language=bash,caption={Command to run TetGen},captionpos=b, label=lst:tetgen_commands]
 	./tetgen -zpq1.414/0O4a30kANEFVV filename_merged.stl
 \end{lstlisting}
@@ -159,14 +159,14 @@ As it can be seen in \autoref{fig:mesh_comparison}, the mesh generated with $q =
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/mesh_comparison.pdf}
-    \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlights an area where differences are clearly visible, in regards to mesh quality and number of elements.}
+    \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlight an area where differences are clearly visible, in regards to mesh quality and number of elements.}
     % \vspace{-1.2cm}
     \label{fig:mesh_comparison}
 \end{figure}
 
-Having better mesh quality always comes at a cost of computational time both for the mesh generation and the subsequent solution, as well as computational resources. Meshing with too many elements can prohibit the solver from running even on average desktop computers due to very high \gls{RAM} requirements. Keeping the computational time and resources in mind, there is always a trade-off to select the best balance between the desired and the actual solution. Such an assessment is conducted through a mesh convergence study in which the problem is solved for the same model by varying the mesh parameters in each run. Details about the mesh convergence run for this work can be found in \ref{sec:mesh_quality}.
+Having better mesh quality always comes at a cost of computational time, both for the mesh generation and the subsequent solution, as well as computational resources. Meshing with too many elements can prohibit the solver from running even on average desktop computers due to very high \gls{RAM} requirements. Keeping the computational time and resources in mind, there is always a trade-off to select the best balance between the desired and the actual solution. Such an assessment is conducted through a mesh convergence study in which the problem is solved for the same model by varying the mesh parameters in each run. Details about the mesh convergence run for this work can be found in \ref{sec:mesh_quality}.
 
-Before assessing the mesh quality by solving the problem, there are some ground rules to be followed for a good mesh. One of those rules is that the \gls{tetrahedron aspect ratio}, the ratio between the circumference of each tetrahedron and the shortest edge length, should be as low as possible, meaning that more symmetric tetrahedra will exist. Lowering this ratio has a direct impact on another metric, the dihedral angle. Comparing the graphs in \autoref{fig:mesh_quality_graphs} for the two different $q$ values, it is evident that the mesh with the lower $q$ is better, since the \gls{tetrahedron aspect ratio} is accumulated in lower valued areas. This ratio is key as the lower the value the more symmetric each tetrahedron is, thus eliminating potential degenerate elements in the mesh.
+Before assessing the mesh quality by solving the problem, there are some ground rules to be followed for a good mesh. One of those rules is that the \gls{tetrahedron aspect ratio}, the ratio between the circumference of each tetrahedron and the shortest edge length, should be as low as possible, meaning that more symmetric tetrahedra will exist. Lowering this ratio has a direct impact on another metric, the dihedral angle. Comparing the graphs in \autoref{fig:mesh_quality_graphs} for the two different $q$ values, it is evident that the mesh with the lower $q$ is better, since the \gls{tetrahedron aspect ratio} is accumulated in lower valued areas. This ratio is key as the lower the value, the more symmetric each tetrahedron is, thus eliminating potential degenerate elements in the mesh.
 
 \begin{figure}[H]
     \centering
@@ -176,7 +176,7 @@ Before assessing the mesh quality by solving the problem, there are some ground 
     \label{fig:mesh_quality_graphs}
 \end{figure}
 
-To complete the mesh quality assessment, the mesh convergence study is presented in \autoref{sec:mesh_quality} and the meshing values for this work are chosen.
+To complete the mesh quality assessment, the mesh convergence study is presented in \autoref{sec:mesh_quality}, where the meshing values for this work are chosen.
 
 \subsection{Region \& Electrode Annotation}
 \label{subsec:elec_annotation}
@@ -201,7 +201,7 @@ The final step before having the mesh elements ready to be imported by the solve
 	\end{tabular}
 \end{table}
 
-Regarding the electrode labels the count starts from \textbf{10} \textit{(assigned to Fp1)} and the direction of labelling is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
+Regarding the electrode labels, the count starts from \textbf{10} \textit{(assigned to Fp1)} and the direction of labelling is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
 
 \subsection{Viewing the Mesh}
 
@@ -239,23 +239,23 @@ As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps t
     \label{fig:solved_mesh_comparison}
 \end{figure}
 
-In the case of the presented $q$ values on \autoref{fig:solved_mesh_comparison}, the difference between the field distribution is prominent. The mesh with a lower $q$ value, meaning more tetrahedra are closer to being regular, has a smoother field distribution hence this difference can be considered significant compared to the $q=2.0$ mesh. One way to find a suitable value is through reviewing the changes between different runs of a solved model with varying $q$ values. In \draft{fig:mesh\_conv\_study} a solved model with different mesh densities can be found.
+In the case of the presented $q$ values in \autoref{fig:solved_mesh_comparison}, the difference between the field distribution is prominent. The mesh with a lower $q$ value, meaning more tetrahedra are closer to being regular, has a smoother field distribution hence this difference can be considered significant compared to the $q=2.0$ mesh. One way to find a suitable value is through reviewing the changes between different runs of a solved model with varying $q$ values. In \draft{fig:mesh\_conv\_study} a solved model with different mesh densities can be found.
 
 \draft{Add the figure of the mesh convergence study.}
 
 Progressing with $0.1$ step size from $q=2.0$ to $q=1.0$ on \draft{fig:mesh\_conv\_study}, it can be seen that up to \draft{q=1.6} there is a difference between the patterns of the solved model, while below \draft{q=1.4} there is no visible difference in the field distribution. To find the suitable value, the next step is to repeat the process of solving with varying $q$ values, but now with a finer step in the region that has been identified as "converged" \textit{(no significant change from one value to the next)}. The final range shall be tested on at least one more model and if there is less than \textbf{2\%} difference in the values obtained from the solver, then the mesh can be considered converged and the final $q$ value is chosen. However for simplicity reasons here the value of $\boldsymbol{q=1.5}$ will be used for all the model meshes.
-
+% Maybe you should give a small justification on the 2 percent value
 \subsection{Solver Set-up \& Selection}
 
-One of the important factors in having a successful solution of the model is using the correct solver for the problem. Depending on the mathematical nature of the physical problem, different solvers can give more accurate results and in shorter time.
+One of the most important factors in having a successful solution of the model is using the correct solver for the problem. Depending on the mathematical nature of the physical problem, different solvers can give more accurate results and in shorter time.
 
-Generally there are two major solver categories, the direct and the iterative each of which is explained below. In this work an iterative solver is the most suitable with the specific algorithms presented in \ref{subsec:iterative_solvers}, since as described in \ref{sec:e_ohmic_qs} the problem faced here is solving the Laplace equation, a second-order partial differential equation.
+Generally there are two major solver categories, the direct and the iterative, each of which is explained below. In this work an iterative solver is the most suitable with the specific algorithms presented in \ref{subsec:iterative_solvers}, since as described in \ref{sec:e_ohmic_qs} the problem faced here is solving the Laplace equation, a second-order partial differential equation.
 
 \subsubsection{Direct Solution}
 
-The most accurate solution of a \gls{FEM} problem is evaluated through a direct solver. This kind of solvers try to approach the solution by using traditional linear algebra techniques, like inverse matrix calculation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM} which makes them unsuitable for problem with a few million elements since complete access to the whole matrix is required. In the case of realistic brain models the element count can sometimes reach the order of 6 million in a square matrix. Apart from the \gls{RAM} issues, these solvers are not suitable since most of the times the \gls{FE} matrices are heavily sparse, meaning most of their elements are zero, thus having many unnecessary operations resulting to zero.
+The most accurate solution of a \gls{FEM} problem is evaluated through a direct solver. This kind of solvers try to approach the solution by using traditional linear algebra techniques, like inverse matrix calculation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM} which makes them unsuitable for a problem with a few million elements, since access to the whole matrix is required. In the case of realistic brain models the element count can sometimes reach the order of 6 million in a square matrix. Apart from the \gls{RAM} issues, these solvers are not suitable, given that most of the times the \gls{FE} matrices are heavily sparse, meaning most of their elements are zero, thus having many unnecessary operations resulting to zero.
 
-As it is obvious direct solvers are out of question for realistic brain models, since they can only be used on a grid of computers. Just to benchmark the performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve the \texttt{126325} model from the \gls{PHM} repository \cite{ErikG.Lee2016}. Results are summarized below on \autoref{tab:direct_solver_bench}. All the direct solver benchmarks were obtained though running the code on the \gls{HPC} grid of \gls{AUTh} \gls{IT} center.
+It should be obvious that direct solvers are out of the question for realistic brain models, since they can only be used on a grid of computers. Just to benchmark the performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve the \texttt{126325} model from the \gls{PHM} repository \cite{ErikG.Lee2016}. Results are summarized below on \autoref{tab:direct_solver_bench}. All the direct solver benchmarks were obtained though running the code on the \gls{HPC} grid of \gls{AUTh} \gls{IT} center.
 
 \begin{table}[!ht]
 	\centering
@@ -277,21 +277,21 @@ As it is obvious direct solvers are out of question for realistic brain models, 
 
 The logic behind this type of solvers is that initially a guess is made for the solution, following iterations afterwards to find the exact solution based on the provided convergence criteria.
 
-In this work iterative solvers were used and specifically the \gls{CG} solver. Before solving the actual problem the matrix first is passed through a preconditioner which transforms the matrix in a more suitable form for numerical solution. Here the \gls{HYPRE} \cite{hypre-web-page} suite was used with the Boomer\gls{AMG} \cite[chapter 4]{McCormick1987_amg} preconditioner. The multigrid method is used in solving partial differential equations by hierarchical discretization of the problem. Algebraic Multigird specifically is construct the hierarchy from the system matrix instead of directly using the differential equations. 
+In this work iterative solvers were used, specifically the \gls{CG} solver. Before solving the actual problem, the matrix is at first passed through a preconditioner which transforms the matrix in a more suitable form for numerical solution. Here the \gls{HYPRE} \cite{hypre-web-page} suite was used with the Boomer\gls{AMG} \cite[chapter 4]{McCormick1987_amg} preconditioner. The multigrid method is used in solving partial differential equations by hierarchical discretization of the problem. Algebraic Multigird in particular constructs the hierarchy from the system matrix instead of directly using the differential equations. 
 
 Furthermore, to make the system matrix less heavy in terms of elements a coarsening algorithm is utilized along with the preconditioner and that is the \gls{HMIS}, which again belongs in the \gls{HYPRE} family of tools. All these packages are included in the python version of the \gls{PETSc} \cite{petsc-web-page,petsc-user-ref,petsc-efficient}, called \texttt{petsc4py} \cite{Dalcin2011}. \gls{PETSc} is a toolset which can be used to parallelize the problems and includes many solvers for sparse matrices \textit{(matrices with most elements zero)}, as this is the case for our problem.
 
 \subsection{Boundary Conditions}
 \label{subsec:solver_boundary_conditions}
 
-Through all simulations, the Neumann boundary condition \textit{(flux through a surface)} $\big(\sigma\nabla\phi\cdot\vec{n} = 0\big)$ is used on the whole domain of and the Dirichlet boundary condition \textit{(potential on a surface)} $\big(\phi = \phi_0$, $\phi = -\phi_0\big)$ is used in the active electrode and the non-active electrode accordingly. The magnitude of $\phi_0$ is determined by the desired injected current.
+Through all simulations, the Neumann boundary condition \textit{(flux through a surface)} $\big(\sigma\nabla\phi\cdot\vec{n} = 0\big)$ is used on the whole model domain and the Dirichlet boundary condition \textit{(potential on a surface)} $\big(\phi = \phi_0$, $\phi = -\phi_0\big)$ is used for the active electrode and the non-active electrode accordingly. The magnitude of $\phi_0$ is determined by the desired injected current.
 
 \subsection{Post-processing Steps}
 
-To get the desired results at the end of the problem solution, there is the need to further process the solved equations.
+To get the desired results at the end of the problem's solution, there is the need to further process the solved equations.
 
 Solving the Laplace equation yields the potential at each node and to calculate the electric field the derivative of the potential is taken as:
 \begin{equation}
 	\vec{E} = -\nabla\phi
 \end{equation}
-where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination if two different solutions, with different electrode pairs, is what is of interest and after calculating the potentials for each case, the electric field of the maximum as well as the directional modulation envelope is calculated using the \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
+where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination of two different solutions with different electrode pairs is what is of interest and after calculating the potentials for each case, the electric field of the maximum as well as the directional modulation envelope is calculated using the \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
