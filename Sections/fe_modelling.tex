@@ -1,12 +1,12 @@
 \pagebreak
 \chapter{Finite Element Modelling}
 
-All models are discretized using a \gls{FE} mesh, before being passed to the solver. While there are numerous \gls{FEM} solver tools out there, the one being used in this work is \textit{SfePy} \cite{Cimrman2019}, since it provides all the necessary means for the solution of the problem in question and it interfaces directly with Python. In this section, a detailed overview of the models used (\autoref{sec:fem_models}), the meshing strategy (\autoref{sec:fem_meshing}) and the solver configuration (\autoref{sec:fem_solver}) is provided.
+All models are discretized with a \gls{FE} mesh, before being passed to the solver. Although there are numerous \gls{FEM} solver tools, \textit{SfePy} is used in this work \cite{Cimrman2019}, since it provides all the necessary means for solving the problem in question and it has direct interface to Python. In this section, a detailed overview of the models used (\autoref{sec:fem_models}), the meshing strategy (\autoref{sec:fem_meshing}) and the solver configuration (\autoref{sec:fem_solver}) is given.
 
 \section{Models}
 \label{sec:fem_models}
 
-A tricky part in simulations involving the brain is to choose the correct or the most representative model for the desired work. While spherical models are used just for proof of concept, very complex models on the other hand increase the computational time a lot. This section describes the generation of the spherical model as well as the use of publicly available realistic human head models.
+A tricky part in simulations involving the brain is choosing the right or most representative model for the desired work. While spherical models are only used for proof of concept, very complex models on the other hand, increase computation time significantly. This section describes the generation of the spherical model as well as the use of publicly available realistic human head models.
 
 \subsection{Simple Models}
 \begin{wrapfigure}{r}{0.35\textwidth}
@@ -17,7 +17,7 @@ A tricky part in simulations involving the brain is to choose the correct or the
     \label{fig:sphere_brain}
 \end{wrapfigure}
 
-A good approximation of the layered structure of the human head is to use the spherical model, divided into a total of four layers with varying widths. These four layers as seen in \autoref{fig:sphere_brain} are the same ones described in \paper{Grossman}{Grossman2017}. To generate the spherical model Gmsh \cite{gmsh}, a 3D modeling software, was used with the layer radius values as shown in \autoref{tab:spherical_layers}. The script to generate these models can be seen in \autoref{lst:sphere_code} and it can also be found on the GitLab repository \cite{thesis_repo} as a snippet.
+A good approximation of the layered structure of the human head is to use the spherical model, which is divided into a total of four layers with different widths. These four layers, as seen in \autoref{fig:sphere_brain}, are the same as described in \paper{Grossman}{Grossman2017}. To generate the spherical model Gmsh \cite{gmsh}, a 3D modeling software, was used with the layer radius values as shown in \autoref{tab:spherical_layers}. The script to generate these models can be seen in \autoref{lst:sphere_code} and can also be found in the GitLab repository \cite{thesis_repo} as a snippet.
 \begin{table}[!ht]
 \begin{minipage}{.62\linewidth}
 \centering
@@ -35,7 +35,7 @@ Brain & 72.21 \\ \hline
 \end{minipage}
 \end{table}
 
-\noindent The radius of each layer \textit{(lower bound)} comes from the normalized layer thickness provided by Grossman et al.\cite[Figure S2, J and K]{Grossman2017}, having as an outer radius (base radius) the surface of the skin.
+\noindent The radius of each layer \textit{(lower bound)} comes from the normalized layer thickness given by Grossman et al.\cite[Figure S2, J and K]{Grossman2017}, using the surface of the skin as the outer radius (base radius).
 
 \begin{lstlisting}[language=C,caption={Sphere \gls{CAD} model generation code in \texttt{geo} format},captionpos=b, label=lst:sphere_code]
 SetFactory("OpenCASCADE");
@@ -78,40 +78,40 @@ RefineMesh;
 \subsection{Realistic Human Head Models}
 \label{sec:phm_models}
 
-Realistic brain models are really hard to construct in a \gls{CAD} program and be anatomically accurate at the same time, so they are usually generated using medical imaging data from \gls{MRI} and \gls{CT} scans. The models used in the simulations of this work are taken from the \gls{PHM} repository of \gls{IT'IS} \cite{ErikG.Lee2016,Lee2018,ITstissue}. Each model contains a total of 7 (seven) 3D triangular surface meshes \textit{(skin, skull, \gls{CSF}, grey matter, white matter, cerebellum and ventricles)} in \gls{STL} format, which were generated from \gls{MRI} data. Sometimes the surface meshes are called \gls{BE} meshes and from now on this term will be used interchangeably with the \gls{STL} format.
+Realistic brain models are difficult to construct in a \gls{CAD} software and be anatomically correct at the same time, so they are usually generated using medical imaging data from \gls{MRI} and \gls{CT} scans. The models used in the simulations of this work are from the \gls{PHM} repository of \gls{IT'IS} \cite{ErikG.Lee2016,Lee2018,ITstissue}. Each model contains a total of 7 (seven) triangular 3D surface meshes \textit{(skin, skull, \gls{CSF}, grey matter, white matter, cerebellum and ventricles)} in \gls{STL} format, generated from \gls{MRI} data. Sometimes the surface meshes are referred to as \gls{BE} meshes, and hereafter this term will be used interchangeably with \gls{STL} format.
 
-There are also other ways to model the brain and the head by directly utilizing \gls{MRI} data and generating the corresponding tetrahedral mesh from the medical imaging segmentation. One streamlined and easy way to achieve this is by using \texttt{Brain2Mesh}, a tool developed by Tran et al.\cite{Tran2020}, which can generate tetrahedral meshes from segmented \gls{MR} images.
+There are also other ways, not included in this work, to model the brain and head, using \gls{MRI} data directly and generating the corresponding tetrahedral mesh from medical imaging segmentation. One streamlined and simple way to achieve this is to use \texttt{Brain2Mesh}, a tool developed by Tran et al.\cite{Tran2020}, that can generate tetrahedral meshes from segmented \gls{MR} images.
 
 \section{Meshing}
 \label{sec:fem_meshing}
 
-Correct meshing is key to obtaining correct results from the solution of a \gls{FEM} problem, so in this section, the mesh quality criteria are described, as well as a basic mesh convergence analysis is presented. Apart from the analysis, the meshing strategy followed is presented in detail, with specific code examples and the algorithms developed and employed. For all meshing operations, the tool in use is PyMesh \cite{pymesh}, which includes all the necessary \gls{STL} file and geometry operations needed in this work. Specifically, for all volume meshing TetGen \cite{tetgen}, a software library specifically targeted to tetrahedral meshing, is utilized throughout this thesis.
+Proper meshing is key to obtaining correct results when solving a \gls{FEM} problem, so in this section, the mesh quality criteria are described, as well as a basic mesh convergence analysis is presented. Besides the analysis, the followed meshing strategy is presented in detail, with specific code examples and the algorithms developed and employed. For all meshing operations, the tool PyMesh \cite{pymesh} is used, which contains all the necessary \gls{STL} file and geometry operations needed in this work. Specifically for volume meshing, this work uses TetGen \cite{tetgen}, a software library specifically designed for tetrahedral meshing.
 
-Before proceeding with the detailed explanation of each process involved in the final meshed model generation, a high-level diagram of the steps involved can be seen in \autoref{fig:mesh_modelling}.
+Before proceeding with the detailed explanation of each process involved in the final generation of the meshed model, an overview diagram of the steps involved can be seen in \autoref{fig:mesh_modelling}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{assets/images/fem_meshing_high_level.pdf}
-    \caption{High level description of the \gls{FEM} meshing procedure}
+    \caption{High-level description of the \gls{FEM} meshing procedure}
     \label{fig:mesh_modelling}
 \end{figure}
 
-\noindent To recognize each mesh domain from the meshed model and then annotate it is a key process allowing different material definitions in the solver, which is useful for later stages of the analysis. During the meshing procedure, a volumetric mesh is generated with no labels on each domain, thus the need to recognize each region \textit{(domain)} arises. The recognition and subsequent labeling are accomplished by splitting the domains with the help of the boundary surfaces and finding the enclosed tetrahedra, as described in \ref{subsec:elec_annotation}.
+\noindent The recognition of the individual mesh domains from the meshed model and subsequent labeling, is a key process that allows different material definitions in the solver, which is useful for later stages of the analysis. During the meshing procedure, a volumetric mesh is generated without labeling each domain, creating the need to recognize each area \textit{(domain)}. The recognition and subsequent labeling is done by partitioning the domains using the boundary surfaces and finding the enclosed tetrahedra, as described in \ref{subsec:elec_annotation}.
 
-Finally, as it is evident from \autoref{fig:mesh_modelling}, the meshed model with all required annotations included is saved in \gls{VTK} format, which is a very common and robust file format for \gls{FE} meshes.
+Finally, as shown in \autoref{fig:mesh_modelling}, the meshed model is saved with all necessary annotations in \gls{VTK} format, which is a very common and robust file format for \gls{FE} meshes.
 
 \subsection{Loading Required Data}
 
-The first step in the meshing pipeline is to import all the necessary files for the geometry and the electrode placement. The geometry files from the \gls{PHM} repository \cite{ErikG.Lee2016} are loaded in \gls{STL} format, which contains the surface boundaries of each region, as described in \ref{sec:phm_models}.
+The first step in the meshing pipeline is to import all the necessary files for geometry and electrode placement. The geometry files from the \gls{PHM} repository \cite{ErikG.Lee2016} are loaded in \gls{STL} format, which contains the surface boundaries of each region, as described in \ref{sec:phm_models}.
 
-Apart from the geometry files, the electrode coordinate files are also loaded. The electrode coordinates are generated using \texttt{Mesh2EEG} \cite{Giacometti2014}, a tool developed by Thayer School of Engineering at Dartmouth \cite{mesh2eeg_web}.
+In addition to the geometry files, the electrode coordinate files are also loaded. The electrode coordinates are generated using \texttt{Mesh2EEG} \cite{Giacometti2014}, a tool developed by Thayer School of Engineering at Dartmouth \cite{mesh2eeg_web}.
 
 \subsection{Electrode Array Generation \& Placement}
 \label{subsec:elec_placement}
 
-The term "electrode array generation" implies the creation of an electrode cluster from the coordinates of each electrode, to subsequently acquire the actual \gls{FE} meshes of each electrode. Securing repeatability across different heads \textit{(varying geometry)} is key to having comparable results and drawing conclusions, thus the standard electrode positioning systems widely used in \gls{EEG} studies have been utilized here too. In particular, the \textbf{10-20 international system} \cite[chapter 13]{Malmivuo1995} is adopted, as it is the most common system in the clinical setting. 
+The term "electrode array generation" implies the creation of an electrode cluster from the coordinates of each electrode, to subsequently acquire the actual \gls{FE} meshes of each electrode. Ensuring repeatability across different heads \textit{(different geometries)} is key to having comparable results and drawing conclusions, thus the standard electrode positioning systems widely used in \gls{EEG} studies have been utilized here too. In particular, the \textbf{international 10-20 system} \cite[chapter 13]{Malmivuo1995} is adopted, as it is the most common system in the clinical setting.
 
-To understand where the naming convention \textbf{10-20} comes from, it is mandatory to define the landmarks used. These are the \textit{\gls{nasion}}, \textit{\gls{inion}}, \textit{left} and \textit{right \gls{preauricular}} and define the start of measurement for the electrode placement on the head. The numbers in the name of the system refer to the percentile arch length of the arch formed by the \gls{nasion} and \gls{inion}, as well as the left and right \gls{preauricular}. More specifically, the number \textbf{10} denotes that the placement shall start at $10\%$ of the arch length, while the number \textbf{20} denotes the arch length that each electrode shall have, after the placement of the first one. Denser systems than the 10-20 exist, namely the 10-10 and 10-5, following the same placement rules. Lastly, it should be noted that the electrodes are placed circularly and to aid in the visualization of the placement, some details are shown in \autoref{fig:10_20_explanation}.
+To understand where the \textbf{10-20} naming convention comes from, it is imperative to define the landmarks used. These are the \textit{\gls{nasion}}, \textit{\gls{inion}}, \textit{left} and \textit{right \gls{preauricular}} and define the start of measurement for the electrode placement on the head. The numbers in the name of the system refer to the percentage arc length of the arc formed by the \gls{nasion} and \gls{inion}, as well as the left and right \gls{preauricular}. More specifically, the number \textbf{10} denotes that the placement shall start at $10\%$ of the arch length, while the number \textbf{20} denotes the arch length that each electrode shall have, after the placement of the first one. Denser systems than the 10-20 exist, namely the 10-10 and 10-5, following the same placement rules. Lastly, it should be noted that the electrodes are placed circularly and to aid in the visualization of the placement, some details are shown in \autoref{fig:10_20_explanation}.
 
 \begin{figure}[H]
     \centering
@@ -149,17 +149,17 @@ For each model, the tetrahedral mesh was generated using TetGen \cite{tetgen}, w
 	\item the maximum tetrahedron volume $(V_{max})$
 \end{itemize}
 with $q$ being the ratio of the circumference and the shortest edge length of each tetrahedron, while $V_{max}$ being the maximum allowable volume that an element can have. All the quantities are in the units each model is designed with. Specifically, the command line arguments used are shown in \autoref{lst:tetgen_commands}. More details on the software compilation and the integration with all the other tools can be found in \autoref{chap:soft_arch}.
-% Is this listing really necesary? 
+
 \begin{lstlisting}[language=bash,caption={Command to run TetGen},captionpos=b, label=lst:tetgen_commands]
 	./tetgen -zpq1.414/0O4a30kANEFVV filename_merged.stl
 \end{lstlisting}
 
-As it can be seen in \autoref{fig:mesh_comparison}, the mesh generated with $q = 1.414$ has almost double the amount of elements than the one generated with $q = 2.0$. The difference can be seen in the green highlighted circular areas of \autoref{fig:mesh_comparison}, where it is prevalent that the mesh captures better the boundary surface and the number of elements at this area is greater with $q = 1.414$ compared to the $q = 2.0$ case. The $q$ and $V_{max}$ presented here for the dense ($q=1.414$) mesh, are inspired by Tran et al.\cite{Tran2020}.
+As it can be seen in \autoref{fig:mesh_comparison}, the mesh generated with $q = 1.414$ has almost double the number of elements than the one generated with $q = 2.0$. The difference can be seen in the green highlighted circular areas of \autoref{fig:mesh_comparison}, where it is prevalent that the mesh captures better the boundary surface and the number of elements at this area is greater with $q = 1.414$ compared to the $q = 2.0$ case. The $q$ and $V_{max}$ presented here for the dense ($q=1.414$) mesh, are inspired by Tran et al.\cite{Tran2020}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/mesh_comparison.pdf}
-    \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlight an area where differences are clearly visible, in regards to mesh quality and number of elements.}
+    \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlight an area where differences are visible, in regards to mesh quality and the number of elements.}
     % \vspace{-1.2cm}
     \label{fig:mesh_comparison}
 \end{figure}
@@ -201,7 +201,7 @@ The final step before having the mesh elements ready to be imported by the solve
 	\end{tabular}
 \end{table}
 
-Regarding the electrode labels, the count starts from \textbf{10} \textit{(assigned to Fp1)} and the direction of labelling is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
+Regarding the electrode labels, the count starts from \textbf{10} \textit{(assigned to Fp1)} and the direction of labeling is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
 
 \subsection{Viewing the Mesh}
 
@@ -217,7 +217,7 @@ Getting to a solution is a multi-step process and the specifics steps are shown 
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{assets/images/fem_solver_high_level.pdf}
-    \caption{High level description of the \gls{FEM} solver procedure}
+    \caption{High-level description of the \gls{FEM} solver procedure}
     \label{fig:solver_high_level}
 \end{figure}
 
@@ -235,7 +235,7 @@ As discussed in \ref{subsec:mesh_generation}, having better mesh quality helps t
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/solved_mesh_comp.pdf}
-    \caption[Problem solution comparison for the different $q$ mesh parameters.]{Problem solution comparison of the different mesh parameters. The green circles highlights an area where differences are clearly visible, in regards to mesh outline and number of elements.}
+    \caption[Problem solution comparison for the different $q$ mesh parameters.]{Problem solution comparison of the different mesh parameters. The green circles highlight an area where differences are visible, in regards to mesh outline and the number of elements.}
     \label{fig:solved_mesh_comparison}
 \end{figure}
 
@@ -243,8 +243,8 @@ In the case of the presented $q$ values in \autoref{fig:solved_mesh_comparison},
 
 \draft{Add the figure of the mesh convergence study.}
 
-Progressing with $0.1$ step size from $q=2.0$ to $q=1.0$ on \draft{fig:mesh\_conv\_study}, it can be seen that up to \draft{q=1.6} there is a difference between the patterns of the solved model, while below \draft{q=1.4} there is no visible difference in the field distribution. To find the suitable value, the next step is to repeat the process of solving with varying $q$ values, but now with a finer step in the region that has been identified as "converged" \textit{(no significant change from one value to the next)}. The final range shall be tested on at least one more model and if there is less than \textbf{2\%} difference in the values obtained from the solver, then the mesh can be considered converged and the final $q$ value is chosen. However for simplicity reasons here the value of $\boldsymbol{q=1.5}$ will be used for all the model meshes.
-% Maybe you should give a small justification on the 2 percent value
+Progressing with $0.1$ step size from $q=2.0$ to $q=1.0$ on \draft{fig:mesh\_conv\_study}, it can be seen that up to \draft{q=1.6} there is a difference between the patterns of the solved model, while below \draft{q=1.4} there is no visible difference in the field distribution. To find the suitable value, the next step is to repeat the process of solving with varying $q$ values, but now with a finer step in the region that has been identified as "converged" \textit{(no significant change from one value to the next)}. The final range can be tested on at least one more model and if there are no significant difference in the values obtained from the solver, then the mesh can be considered converged and the final $q$ value is chosen. However for simplicity reasons, the value of $\boldsymbol{q=1.5}$ will be used for the model meshes.
+
 \subsection{Solver Set-up \& Selection}
 
 One of the most important factors in having a successful solution of the model is using the correct solver for the problem. Depending on the mathematical nature of the physical problem, different solvers can give more accurate results and in a shorter time.
@@ -253,9 +253,9 @@ Generally, there are two major solver categories, the direct and the iterative, 
 
 \subsubsection{Direct Solution}
 
-The most accurate solution of a \gls{FEM} problem is evaluated through a direct solver. This kind of solvers tries to approach the solution by using traditional linear algebra techniques, like inverse matrix calculation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM} which makes them unsuitable for a problem with a few million elements since access to the whole matrix is required. In the case of realistic brain models, the element count can sometimes reach the order of 6 million in a square matrix. Apart from the \gls{RAM} issues, these solvers are not suitable, given that most of the times the \gls{FE} matrices are heavily sparse, meaning most of their elements are zero, thus having many unnecessary operations resulting in zero.
+The most accurate solution of a \gls{FEM} problem is evaluated through a direct solver. This kind of solvers tries to approach the solution by using traditional linear algebra techniques, like inverse matrix calculation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM} which makes them unsuitable for a problem with a few million elements since access to the whole matrix is required. In the case of realistic brain models, the element count can sometimes reach the order of 6 million in a square matrix. Apart from the \gls{RAM} issues, these solvers are not suitable, given that most of the time the \gls{FE} matrices are heavily sparse, meaning most of their elements are zero, thus having many unnecessary operations resulting in zero.
 
-It should be obvious that direct solvers are out of the question for realistic brain models since they can only be used on a grid of computers. Just to benchmark the performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve the \texttt{126325} model from the \gls{PHM} repository \cite{ErikG.Lee2016}. Results are summarized below in \autoref{tab:direct_solver_bench}. All the direct solver benchmarks were obtained though running the code on the \gls{HPC} grid of \gls{AUTh} \gls{IT} center.
+It should be obvious that direct solvers are out of the question for realistic brain models since they can only be used on a grid of computers. Just to benchmark the performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve the \texttt{126325} model from the \gls{PHM} repository \cite{ErikG.Lee2016}. Results are summarized below in \autoref{tab:direct_solver_bench}. All the direct solver benchmarks were obtained through running the code on the \gls{HPC} grid of \gls{AUTh} \gls{IT} center.
 
 \begin{table}[!ht]
 	\centering
@@ -294,4 +294,4 @@ Solving the Laplace equation yields the potential at each node and to calculate 
 \begin{equation}
 	\vec{E} = -\nabla\phi
 \end{equation}
-where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination of two different solutions with different electrode pairs is what is of interest and after calculating the potentials for each case, the electric field of the maximum, as well as the directional modulation envelope, is calculated using the \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
+where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination of two different solutions with different electrode pairs is what is of interest and after calculating the potentials for each case, the electric field of the maximum, as well as the directional modulation envelope, is calculated using \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
