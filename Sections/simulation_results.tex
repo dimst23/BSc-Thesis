@@ -52,21 +52,36 @@ It is clear from the figures above that the software can be considered accurate,
 \section{Realistic Human Models}
 \label{sec:realistic_human_models}
 
+Going from a spherical model, to a murine model and then to a realistic human model is great leap from simplicity to great complexity. To be able and test any hypothesis in clinical trials and get validated, first the processes of modelling, testing on murine models and phantoms have to precede.
+
+As it has been explained so far, \gls{tTIS} shows great potential to be used for non-invasive \gls{DBS}, thus the leap from the simple spherical model of \paper{Grossman}{Grossman2017} to realistic human models must be made. Two key factors have been tested in this work and more specifically the results of the effect of the human head anatomy variation as well as the variation of the electrode position are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position}. As it will be evident below, the anatomy of each model, i.e., of each person has a significant impact on the final pattern inside the brain, thus there is the need for optimization to achieve stimulation of a small area, as different electrode combinations must be used for the each person or model. The optimization is not included in this work as it is part of future work and currently it is at a preliminary stage, however a discussion is provide on \autoref{sec:discussion}.
+
+Lastly, it should be noted that for the electrode positioning impact assessment, models with the international 10-10 system have also been tested to find the potential issues that the 10-20 coarse nature might have.
+
+\subsection{Effects of Model Anatomy}
+\label{subsec:effects_of_model_anatomy}
+
+Assessing the impact of the model anatomy on the field distribution requires many different subjects to have some statistically significant results. Specifically in this work, 9 models from the \gls{PHM} repository \cite{ErikG.Lee2016} were used, having 10-20 as the electrode system. Electrodes P8, F7 and P7, F8 as seen in \autoref{fig:electrodes_10-20} were used for the base vcc and base gnd respectively.
+
 \draft{
     \begin{itemize}
         \item Run a sweep analysis on the different models to get some statistics for the effect of the model anatomy
-        \item Run a same model, varying electrode position analysis to show the pattern change when the electrode pairing changes
-        \item Show the granularity, if any, of the 10-10 and 10-20 systems for stimulation
-        \item Run 1 optimization to show the preliminary results of convergence
+        \item Add the graph for showing the model comparison across the axis lines to defend the difference in anatomy linked to difference in the electric field distribution
         \item Write about the model assumptions, such as uniform white matter in most models, no specific areas on the white matter, no spongiform bone included
         \item Write about potential improvements from having a conductivity calibrated for spongiform bone too
         \item Write some potential approximations that can be used \cite{Rampersad2013_skull_approximations}
     \end{itemize}
 }
 
-\subsection{Effects of Model Anatomy}
 \subsection{Varying Electrode Position}
-\gls{tACS}
+\label{subsec:varying_electrode_position}
+
+\draft{
+    \begin{itemize}
+        \item Run a same model, varying electrode position analysis to show the pattern change when the electrode pairing changes
+    \end{itemize}
+}
+
 \cite{ITstissue}
 %%% PHM model citations
 \cite{Lee2016}
@@ -77,3 +92,11 @@ It is clear from the figures above that the software can be considered accurate,
 \cite{Hsu2019}
 \cite{Rampersad2019}
 %%% My work citations
+
+\subsection{10-20 vs 10-10 system}
+
+\draft{
+    \begin{itemize}
+        \item Show the granularity, if any, of the 10-10 and 10-20 systems for stimulation
+    \end{itemize}
+}
