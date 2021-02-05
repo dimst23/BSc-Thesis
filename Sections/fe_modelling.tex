@@ -80,7 +80,7 @@ RefineMesh;
 
 Realistic brain models are difficult to construct in \gls{CAD} software and be anatomically correct at the same time, so they are usually generated using medical imaging data from \gls{MRI}, and \gls{CT} scans. The models used in the simulations of this work are from the \gls{PHM} repository of \gls{IT'IS} \cite{ErikG.Lee2016,Lee2018,ITstissue}. Each model contains a total of 7 (seven) triangular 3D surface meshes \textit{(skin, skull, \gls{CSF}, grey matter, white matter, cerebellum, and ventricles)} in \gls{STL} format, generated from \gls{MRI} data. Sometimes the surface meshes are referred to as \gls{BE} meshes, and hereafter this term will be used interchangeably with \gls{STL} format.
 
-Other ways, not included in this work, for modeling the brain and head, are using \gls{MRI} data and generate the corresponding tetrahedral mesh from medical imaging segmentation. One streamlined and straightforward way to achieve this is to use \texttt{Brain2Mesh}, a tool developed by Tran et al.\cite{Tran2020}, that can generate tetrahedral meshes from segmented \gls{MR} images.
+Other ways not included in this work, to model the brain and head, are using \gls{MRI} data and generate the corresponding tetrahedral mesh from medical imaging segmentation. One streamlined and straightforward way to achieve this is to use \texttt{Brain2Mesh}, a tool developed by Tran et al.\cite{Tran2020}, that can generate tetrahedral meshes from segmented \gls{MR} images.
 
 \section{Meshing}
 \label{sec:fem_meshing}
@@ -134,11 +134,11 @@ Using the output coordinates from the \texttt{Mesh2EEG} \cite{Giacometti2014} to
     \label{fig:electrodes_10-20}
 \end{wrapfigure}
 
-The creation of the electrode array is followed by the placement of electrodes on the head surface, a process that is one of the most critical factors for the correct functioning of \gls{tTIS}. The positioning affects the stimulation pattern in the brain; therefore, by choosing the right electrodes, one can achieve the desired stimulation.
+The creation of the electrode array is followed by the placement of electrodes on the head surface, a process that is one of the most critical factors for the correct functioning of \gls{tTIS}. The positioning affects the brain's stimulation pattern; therefore, one can achieve the desired stimulation by choosing the right electrodes.
 
-The spatial distribution of the electrodes is shown in \autoref{fig:electrodes_10-20}, where the positions marked in orange represent the \textbf{10-20} system electrodes. Before the entire mesh can be generated, each electrode must be aligned normal to the region of interest, with the alignment calculated using \autoref{alg:electrode_orientation} in \autoref{appndx:algorithms}. Finally, electrode placement on the surface of the head model is completed with the successful orientation of all electrodes and the subsequent surface mesh merge of the electrode array and the skin.
+The spatial electrodes' distribution is shown in \autoref{fig:electrodes_10-20}, where the positions marked in orange represent the \textbf{10-20} system electrodes. Before the entire mesh can be generated, each electrode must be aligned normal to the region of interest, with the alignment calculated using \autoref{alg:electrode_orientation} in \autoref{appndx:algorithms}. Finally, electrode placement on the surface of the head model is completed with the successful orientation of all electrodes and the subsequent surface mesh merge of the electrode array and the skin.
 
-In order for the electrodes to be used by the solver, they must be annotated, i.e., each electrode is assigned a number \textit{(ID)}. The details of the annotation procedure are discussed in \ref{subsec:elec_annotation}.
+For the electrodes to be used by the solver, they must be annotated, i.e., each electrode is assigned a number \textit{(ID)}. The details of the annotation procedure are discussed in \ref{subsec:elec_annotation}.
 
 \subsection{Mesh Generation}
 \label{subsec:mesh_generation}
@@ -154,19 +154,19 @@ where $q$ is the ratio of the circumference and the shortest edge length of each
 	./tetgen -zpq1.414/0O4a30kANEFVV filename_merged.stl
 \end{lstlisting}
 
-As can be seen in \autoref{fig:mesh_comparison}, the mesh generated with $q = 1.414$ has almost twice as many elements as the mesh generated with $q = 2.0$. The difference can be seen in the green highlighted circular areas in \autoref{fig:mesh_comparison}, where it is prevalent that the mesh captures better the boundary surface and the number of elements in this area is greater with $q = 1.414$ than in the $q = 2.0$ case. The $q$ and $V_{max}$ presented here for the dense ($q=1.414$) mesh are inspired by Tran et al.\cite{Tran2020}.
+As shown in \autoref{fig:mesh_comparison}, the mesh generated with $q = 1.414$ has almost twice as many elements as the mesh generated with $q = 2.0$. The difference can be seen in the green highlighted circular areas in \autoref{fig:mesh_comparison}. It is prevalent that the mesh captures better the boundary surface and the number of elements in this area is greater with $q = 1.414$ than in the $q = 2.0$ case. The $q$ and $V_{max}$ presented here for the dense ($q=1.414$) mesh are inspired by Tran et al.\cite{Tran2020}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/mesh_comparison.pdf}
-    \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlight an area where differences are visible in regards to mesh quality and the number of elements.}
+    \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlight an area where differences are visible regarding mesh quality and the number of elements.}
     % \vspace{-1.2cm}
     \label{fig:mesh_comparison}
 \end{figure}
 
-Better mesh quality always comes at the cost of computation time, both for mesh generation and subsequent solution, as well as computational resources. Meshing with too many elements can prohibit the solver from running even on average desktop computers due to the high demand for \gls{RAM}. Considering computation time and resources, a trade-off must always be made to find the best balance between the desired and the actual solution. Such an evaluation is carried out through a mesh convergence study in which the problem is solved for the same model by varying the mesh parameters in each run. Details about the mesh convergence run for this work can be found in \ref{sec:mesh_quality}.
+Better mesh quality always comes at the cost of computation time, both for mesh generation and subsequent solution, as well as computational resources. Meshing with too many elements can prohibit the solver from running even on average desktop computers due to the high demand for \gls{RAM}. Considering computation time and resources, a trade-off must always be made to find the best balance between the desired and the actual solution. The evaluation is carried out through a mesh convergence study where the problem is solved for the same model by varying the mesh parameters in each run. Details about the mesh convergence run for this work can be found in \ref{sec:mesh_quality}.
 
-Before assessing the quality of the mesh by solving the problem, there are some basic rules that must be followed for a good mesh. One of these rules is that the \gls{tetrahedron aspect ratio}, the ratio between the circumference of each tetrahedron and the shortest edge length, should be as low as possible, which means that there will be more symmetric tetrahedra. Reducing this ratio has a direct effect on another metric, the dihedral angle. Comparing the graphs in \autoref{fig:mesh_quality_graphs} for the two different $q$-values, it is clear that the mesh with the lower $q$-value is better because the \gls{tetrahedron aspect ratio} accumulates in the areas with a lower value. This ratio is key as the lower the value, the more symmetrical each tetrahedron is, eliminating potentially degenerate elements in the mesh.
+Before assessing the mesh's quality by solving the problem, some basic rules must be followed for a good mesh. One of these rules is that the \gls{tetrahedron aspect ratio}, the ratio between the circumference of each tetrahedron and the shortest edge length, should be as low as possible, which means that there will be more symmetric tetrahedra. Reducing this ratio has a direct effect on another metric, the dihedral angle. Comparing the graphs in \autoref{fig:mesh_quality_graphs} for the two different $q$-values, it is clear that the mesh with the lower $q$-value is better because the \gls{tetrahedron aspect ratio} accumulates in the areas with a lower value. This ratio is key as the lower the value, the more symmetrical each tetrahedron is, eliminating potentially degenerate elements in the mesh.
 
 \begin{figure}[H]
     \centering
@@ -176,12 +176,12 @@ Before assessing the quality of the mesh by solving the problem, there are some 
     \label{fig:mesh_quality_graphs}
 \end{figure}
 
-To complete the evaluation of the mesh quality, the study of mesh convergence is presented in \autoref{sec:mesh_quality}, where the meshing values are chosen for this work.
+To complete the mesh quality evaluation, the study of mesh convergence is presented in \autoref{sec:mesh_quality}, where the meshing values are chosen for this work.
 
 \subsection{Region \& Electrode Annotation}
 \label{subsec:elec_annotation}
 
-The final step before the mesh elements are ready to be imported by the solver is to label the mesh elements. This process is straightforward when using the switch \texttt{-A} in TetGen \cite{tetgen}, which automatically assigns region attributes based on the lower boundary of each region. For the realistic head models, the assigned region attributes can be seen in \autoref{tab:domain_annotation}.
+Before the mesh elements are ready to be imported by the solver, the final step is to label the mesh elements. This process is straightforward when using the switch \texttt{-A} in TetGen \cite{tetgen}, which automatically assigns region attributes based on each region's lower boundary. For the realistic head models, the assigned region attributes can be seen in \autoref{tab:domain_annotation}.
 
 \begin{table}[!ht]
 	\centering
@@ -201,7 +201,7 @@ The final step before the mesh elements are ready to be imported by the solver i
 	\end{tabular}
 \end{table}
 
-As for the electrode labels, the count starts at \textbf{10} \textit{(assigned to Fp1)}, and the direction of the labels is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
+The electrode label count, starts at \textbf{10} \textit{(assigned to Fp1)}, and the direction of the labels is from \gls{nasion} to \gls{inion} and from left to right, with the directions as shown in \autoref{fig:electrodes_10-20}.
 
 \subsection{Viewing the Mesh}
 
@@ -210,7 +210,7 @@ Visual evaluation of the mesh quality and visualization of the solution can be d
 \section{Solver}
 \label{sec:fem_solver}
 
-After successfully meshing the model, the next step is to numerically solve the problem using a \gls{FEM}-solver. The chosen package, which contains a wealth of solvers, is SfePy \cite{Cimrman2019}. In the following sections, an overview of the boundary conditions used as well as the different solvers tested is given.
+After successfully meshing the model, the next step is to numerically solve the problem using a \gls{FEM}-solver. The chosen package, which contains a wealth of solvers, is SfePy \cite{Cimrman2019}. In the following sections, an overview of the boundary conditions used and the different solvers tested is given.
 
 The path to the solution is a multi-step process, and the steps are shown in \autoref{fig:solver_high_level}. The mesh loaded here is the one generated by the procedure described in \ref{subsec:mesh_generation}.
 
@@ -223,7 +223,7 @@ The path to the solution is a multi-step process, and the steps are shown in \au
 
 \subsection{Loading the Mesh \& Settings}
 
-There are two important files that need to be loaded into the solver. One is the meshed model in \gls{VTK} format, and the other is the settings for the simulation in \gls{YAML} format. The settings file contains the path of the meshed model, the path for the various scripts, and the region labels for both the model regions (e.g., brain, skin), as well as the electrode regions, with the corresponding conductivity values per region.
+Two important files need to be loaded into the solver. One is the meshed model in \gls{VTK} format, and the other is the settings for the simulation in \gls{YAML} format. The settings file contains the path of the meshed model, the path for the various scripts, and the region labels for both the model regions (e.g., brain, skin), and the electrode regions, with the corresponding conductivity values per region.
 
 It should be noted that when using SfePy's built-in mesh importer, the region labels array in the meshed model file must be named as \texttt{mat\_id}; otherwise, the labels will not be imported. For the purposes of this work, this has been abstracted, and further implementation details can be found in \autoref{chap:soft_arch}.
 
@@ -235,11 +235,11 @@ As discussed in \ref{subsec:mesh_generation}, better mesh quality helps to outli
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/solved_mesh_comp.pdf}
-    \caption[Problem solution comparison for the different $q$ mesh parameters.]{Problem solution comparison of the different mesh parameters. The green circles highlight an area where differences are visible in regards to mesh outline and the number of elements.}
+    \caption[Problem solution comparison for the different $q$ mesh parameters.]{Problem solution comparison of the different mesh parameters. The green circles highlight an area where differences are visible regarding mesh outline and the number of elements.}
     \label{fig:solved_mesh_comparison}
 \end{figure}
 
-In the case of the presented $q$-values in \autoref{fig:solved_mesh_comparison}, the difference between the field distribution is prominent. The mesh with a lower $q$ value, which means that more tetrahedra are closer to being regular, has a smoother field distribution; therefore, this difference can be considered significant compared to the mesh with $q=2.0$. One way to find a suitable value is to look at the changes between different runs of a solved model with varying $q$ values. In \autoref{fig:mesh_conv_study}, a solved model with different mesh densities can be found.
+In the presented $q$-values in \autoref{fig:solved_mesh_comparison}, the difference between the field distribution is prominent. The mesh with a lower $q$ value, which means that more tetrahedra are closer to being regular, has a smoother field distribution; therefore, this difference can be considered significant compared to the mesh with $q=2.0$. One way to find a suitable value is to look at the changes between different runs of a solved model with varying $q$ values. In \autoref{fig:mesh_conv_study}, a solved model with different mesh densities can be found.
 
 \begin{figure}[H]
     \centering
@@ -248,7 +248,7 @@ In the case of the presented $q$-values in \autoref{fig:solved_mesh_comparison},
     \label{fig:mesh_conv_study}
 \end{figure}
 
-Progressing from $q=2.0$ to $q=1.0$ with a step size of $0.1$, one can see in \autoref{fig:mesh_conv_study} that up to $q=1.6$, there is a difference between the patterns of the solved model, while below $q=1.4$, there is no visible difference in the field distribution. To find the appropriate value, the next step is to repeat the solution process with varying $q$ values, but now with a finer step in the range that has been identified as "converged" \textit{(no significant change from one value to the next)}. The final range can be tested on at least one more model, and if there is no significant difference in the values obtained from the solver, then the mesh can be considered convergent, and the final $q$ value is chosen. However, for simplicity, the value $\boldsymbol{q=1.5}$ is used here for all model meshes. Finally, a more illustrative graph is provided in \autoref{fig:mesh_conv_graph} below.
+Progressing from $q=2.0$ to $q=1.0$ with a step size of $0.1$, one can see in \autoref{fig:mesh_conv_study} that up to $q=1.6$, there is a difference between the patterns of the solved model, while below $q=1.4$, there is no visible difference in the field distribution. The next step is to repeat the solution process with varying $q$ values to find the appropriate value, but now with a finer step in the range that has been identified as "converged" \textit{(no significant change from one value to the next)}. The final range can be tested on at least one more model, and if there is no significant difference in the values obtained from the solver, then the mesh can be considered convergent, and the final $q$ value is chosen. However, for simplicity, the value $\boldsymbol{q=1.5}$ is used here for all model meshes. Finally, a more illustrative graph is provided in \autoref{fig:mesh_conv_graph} below.
 
 \begin{figure}[H]
     \centering
@@ -265,7 +265,7 @@ In general, there are two main categories of solvers, direct and iterative, whic
 
 \subsubsection{Direct Solution}
 
-The most accurate solution to a \gls{FEM} problem is evaluated through a direct solver. This type of solver attempts to approach the solution by using traditional linear algebra techniques, such as inverse matrix computation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM}, which makes them unsuitable for a problem with a few million elements since access to the entire matrix is required. In realistic brain models, the number of elements in a square matrix can sometimes reach the order of 6 million. Apart from the \gls{RAM} problem, these solvers are not suitable because the \gls{FE} matrices are usually very sparse, i.e., most of their elements are zero, resulting in many unnecessary zero operations.
+The most accurate solution to a \gls{FEM} problem is evaluated through a direct solver. This type of solver attempts to approach the solution by using traditional linear algebra techniques, such as inverse matrix computation, to find the matrix of unknowns. Direct solvers can take up huge amounts of \gls{RAM}, making them unsuitable for a problem with a few million elements since access to the entire matrix is required. In realistic brain models, the number of elements in a square matrix can sometimes reach the order of 6 million. Apart from the \gls{RAM} problem, these solvers are not suitable because the \gls{FE} matrices are usually very sparse, i.e., most of their elements are zero, resulting in many unnecessary zero operations.
 
 It should be evident that direct solvers are out of the question for realistic brain models, since they can only be used on a grid of computers. To compare performance, a direct solver called \gls{UMFPACK} \cite{Davis2004_umfpack} was used to solve model \texttt{126325} from the \gls{PHM} repository \cite{ErikG.Lee2016}. The results are summarized below in \autoref{tab:direct_solver_bench}. All direct solver benchmarks were obtained by running the code on the \gls{HPC} grid of \gls{AUTh} \gls{IT} center.
 
@@ -287,16 +287,16 @@ It should be evident that direct solvers are out of the question for realistic b
 \subsubsection{Iterative Solution}
 \label{subsec:iterative_solvers}
 
-The logic behind this type of solvers is that initially, a guess is made for the solution, and then iterations follow to find the exact solution based on the given convergence criteria.
+The logic behind this type of solvers is that initially, a guess is made for the solution. Then iterations follow to find the exact solution based on the given convergence criteria.
 
 In this work, iterative solvers have been used, in particular the \gls{CG} solver. Before solving the actual problem, the matrix is first passed through a preconditioner, which transforms the matrix into a more suitable form for numerical solution. Here the \gls{HYPRE} \cite{hypre-web-page} suite was used with the Boomer\gls{AMG} \cite[chapter 4]{McCormick1987_amg} preconditioner. The multigrid method is used in solving partial differential equations by hierarchical discretization of the problem. Specifically, Algebraic Multigrid constructs the hierarchy from the system matrix instead of using the differential equations directly. 
 
-In addition, to make the system matrix less element-heavy, a coarsening algorithm is used together with the preconditioner, namely the \gls{HMIS}, which in turn belongs to the \gls{HYPRE} family of tools. All these packages are included in the Python version of the \gls{PETSc} \cite{petsc-web-page,petsc-user-ref,petsc-efficient}, called \texttt{petsc4py} \cite{Dalcin2011}. \gls{PETSc} is a toolset that can be used to parallelize the problems and contains many solvers for sparse matrices \textit{(matrices with most elements zero)}, as this is the case for our problem.
+In addition, to make the system matrix less element-heavy, a coarsening algorithm is used together with the preconditioner, namely the \gls{HMIS}, which belongs to the \gls{HYPRE} family of tools. All these packages are included in the Python version of the \gls{PETSc} \cite{petsc-web-page,petsc-user-ref,petsc-efficient}, called \texttt{petsc4py} \cite{Dalcin2011}. \gls{PETSc} is a toolset that parallelize the problems and contains many solvers for sparse matrices \textit{(matrices with most elements zero)}, as this is the case for our problem.
 
 \subsection{Boundary Conditions}
 \label{subsec:solver_boundary_conditions}
 
-In all simulations, the von Neumann boundary condition \textit{(flux through a surface)} $\big(\sigma\nabla\phi\cdot\vec{n} = 0\big)$ is applied on the whole model domain, and the Dirichlet boundary condition \textit{(potential on a surface)} $\big(\phi = \phi_0$, $\phi = -\phi_0\big)$ is used for the active electrode and the non-active electrode, respectively. The the desired injected current determines the magnitude of $\phi_0$.
+In all simulations, the von Neumann boundary condition \textit{(flux through a surface $\rightarrow\sigma\nabla\phi\cdot\vec{n} = 0$)} is applied on the whole model domain. On the active the non-active electrodes, the Dirichlet boundary condition \textit{(potential on a surface $\rightarrow\phi = \phi_0$, $\phi = -\phi_0$)} is applied, respectively. The the desired injected current determines the magnitude of $\phi_0$.
 
 \subsection{Post-processing Steps}
 
@@ -306,4 +306,4 @@ Solving the Laplace equation, the potential at each node is obtained and the der
 \begin{equation}
 	\vec{E} = -\nabla\phi
 \end{equation}
-where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination of two different solutions with different electrode pairs is what is of interest. After calculating the potentials for each case, the electric field of the maximum, and the directional modulation envelope, is calculated using \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
+where $\phi$ is the potential as solved by the \gls{FEM} solver. The combination of two different solutions with different electrode pairs is what is of interest. After calculating each case's potentials, the electric field of the maximum, and the directional modulation envelope is calculated using \autoref{alg:max_modulation_amplitude} found in \autoref{appndx:algorithms}.
