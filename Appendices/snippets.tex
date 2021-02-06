@@ -2,3 +2,187 @@
 \chapter{Snippets}
 \label{appndx:snippets}
 
+\noindent Snippet on \href{https://gitlab.com/ttis-simulations/ttis-software/-/snippets/2043270}{GitLab}.
+\begin{lstlisting}[language=C,caption={Sphere \gls{CAD} model generation code in \texttt{geo} format},captionpos=b, label=lst:sphere_code]
+SetFactory("OpenCASCADE");
+
+head_radius = 87;
+
+// Ratio values from Grossman et al. 2017
+brain_ratio = 0.83;
+csf_ratio = 0.023;
+skull_ratio = 0.085;
+scalp_ratio = 0.05;
+
+Sphere(1) = {0, 0, 0, head_radius};
+Sphere(2) = {0, 0, 0, head_radius*(brain_ratio + csf_ratio + skull_ratio + scalp_ratio)};
+Sphere(3) = {0, 0, 0, head_radius*(brain_ratio + csf_ratio + skull_ratio)};
+Sphere(4) = {0, 0, 0, head_radius*(brain_ratio + csf_ratio)};
+Sphere(5) = {0, 0, 0, head_radius*(brain_ratio)};
+
+Physical Volume("Outer Boundary", 1) = {1};
+Physical Volume("Skin", 2) = {2};
+Physical Volume("Skull", 3) = {3};
+Physical Volume("CSF", 4) = {4};
+Physical Volume("Brain", 5) = {5};
+
+Physical Surface("Outer Boundary", 1) = {1};
+Physical Surface("Skin", 2) = {2};
+Physical Surface("Skull", 3) = {3};
+Physical Surface("CSF", 4) = {4};
+Physical Surface("Brain", 5) = {5};
+
+Mesh 2;
+RefineMesh;
+RefineMesh;
+RefineMesh;
+
+Mesh 3;
+RefineMesh;
+\end{lstlisting}
+
+\pagebreak
+\noindent Snippet on \href{https://gitlab.com/ttis-simulations/ttis-software/-/snippets/2067442}{GitLab}.
+\begin{lstlisting}[language=Python,caption={Meshing of the spherical layered model},captionpos=b,label=lst:sphere_model_meshsing]
+import os
+import sys
+import pymesh
+
+sys.path.append(os.path.realpath('library path containing the necessary scripts'))
+
+import Meshing.MeshOperations as MeshOps
+
+base_path = 'desired base path'
+
+# Change the angles to your desired configuration
+elec_attributes = {
+	'electrodes': {
+		'B_VCC': {
+			'theta': 258.5217,
+			'phi': 0
+		},
+		'B_GND': {
+			'theta': 326.2893,
+			'phi': 0
+		},
+		'D_VCC': {
+			'theta': 101.4783,
+			'phi': 0
+		},
+		'D_GND': {
+			'theta': 33.7107,
+			'phi': 0
+		},
+	},
+	'cylinder_radius': 4,
+	'cylinder_width': 3,
+	'skin_radius': 0,
+	'elements': 200,
+}
+
+skin_stl = pymesh.load_mesh(os.path.join(base_path, 'spheres_skin.stl'))
+
+meshing = MeshOps.MeshOperations(skin_stl, elec_attributes)
+meshing.load_surface_meshes(base_path, ['spheres_skin.stl', 'spheres_skull.stl', 'spheres_csf.stl', 'spheres_brain.stl'])
+
+meshing.sphere_model_meshing(os.path.join(base_path, 'meshed_model_sphere.poly'))    
+\end{lstlisting}
+
+\pagebreak
+\noindent Snippet on \href{https://gitlab.com/ttis-simulations/ttis-software/-/snippets/2067447}{GitLab}.
+\begin{lstlisting}[language=Python,caption={\gls{PHM} model meshing},captionpos=b,label=lst:phm_model_meshsing]
+import importlib
+import os
+import gc
+import sys
+import yaml
+
+with open(os.path.realpath('settings file path')) as stream:
+    settings = yaml.safe_load(stream)
+
+sys.path.append(os.path.realpath(settings['SfePy']['lib_path']))
+
+import FEM.Solver as slv
+
+models = ['103414', '105014', '105115', '110411', '111716', '113619', '117122', '163129', '196750']
+
+for model in models:
+    settings['SfePy']['real_brain']['mesh_file'] = 'model path prefix' + model + 'model suffix'
+    
+    solve = slv.Solver(settings, 'SfePy', '10-20')
+    solve.load_mesh('real_brain')
+    solve.define_field_variable('potential_base', 'voltage')
+    solve.define_field_variable('potential_df', 'voltage')
+    
+    solve.define_essential_boundary('Base_VCC', 26, 'potential_base', 150.0)
+    solve.define_essential_boundary('Base_GND', 16, 'potential_base', -150.0)
+    solve.define_essential_boundary('DF_VCC', 22, 'potential_df', 150.0)
+    solve.define_essential_boundary('DF_GND', 12, 'potential_df', -150.0)
+    
+    solve.solver_setup(600, 1e-10, 1e-8, verbose=True)
+    state = solve.run_solver(save_results=True, output_dir='output directory path', output_file_name='model prefix' + model + 'model suffix')
+    del state
+    solve.clear_all()
+    gc.collect()
+\end{lstlisting}
+
+\pagebreak
+\noindent Snippet on \href{https://gitlab.com/ttis-simulations/ttis-software/-/snippets/2068520}{GitLab}.
+\begin{lstlisting}[language=Python,caption={Electrode position sweep study},captionpos=b,label=lst:electrode_position_sweep]
+import importlib
+import os
+import gc
+import sys
+import yaml
+
+with open(os.path.realpath('settings file path')) as stream:
+    settings = yaml.safe_load(stream)
+
+sys.path.append(os.path.realpath(settings['SfePy']['lib_path']))
+
+import FEM.Solver as slv
+
+settings['SfePy']['real_brain']['mesh_file'] = 'model path prefix' + model + 'model suffix'
+
+# Change the combinations as you wish and/or add others
+electrodes = [[26, 16, 22, 12], [25, 15, 23, 13]]
+
+for electrode in electrodes:
+    solve = slv.Solver(settings, 'SfePy', '10-20')
+    solve.load_mesh('real_brain')
+    solve.define_field_variable('potential_base', 'voltage')
+    solve.define_field_variable('potential_df', 'voltage')
+
+    solve.define_essential_boundary('Base_VCC', electrode[0], 'potential_base', 150.0)
+    solve.define_essential_boundary('Base_GND', electrode[1], 'potential_base', -150.0)
+    solve.define_essential_boundary('DF_VCC', electrode[2], 'potential_df', 150.0)
+    solve.define_essential_boundary('DF_GND', electrode[3], 'potential_df', -150.0)
+    
+    solve.solver_setup(600, 1e-10, 1e-8, verbose=True)
+    state = solve.run_solver(save_results=True, output_dir='output directory path', output_file_name='fem_model-name_' + "{}-{}-{}-{}".format(*electrode))
+    del state
+    solve.clear_all()
+    gc.collect()
+\end{lstlisting}
+
+\noindent Snippet on \href{https://gitlab.com/ttis-simulations/ttis-software/-/snippets/2072723}{GitLab}.
+\begin{lstlisting}[language=Python,caption={Region volume calculation},captionpos=b,label=lst:region_volume_calc]
+import meshio
+import numpy as np
+
+loaded_mesh = meshio.read('path to the solved VTK file')
+
+# https://en.wikipedia.org/wiki/Tetrahedron#Volume
+voxel_volume = (1./6)*np.fromiter((np.absolute(np.linalg.det([loaded_mesh.points[cell[0]] - loaded_mesh.points[cell[3]], loaded_mesh.points[cell[1]] - loaded_mesh.points[cell[3]], loaded_mesh.points[cell[2]] - loaded_mesh.points[cell[3]]])) for cell in loaded_mesh.cells[0][1]), dtype=np.float32)
+
+print("****************************")
+print("****** Region volumes ******")
+print("****************************")
+print("Skin: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 1])/1000, 2)))
+print("Skull: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 2])/1000, 2)))
+print("CSF: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 3])/1000, 2)))
+print("Grey Matter: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 4])/1000, 2)))
+print("White Matter: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 5])/1000, 2)))
+print("Cerebellum: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 6])/1000, 2)))
+print("Ventricles: {} cm^3".format(np.round(np.sum(voxel_volume[loaded_mesh.cell_data['mat_id'][0] == 7])/1000, 2)))
+\end{lstlisting}
