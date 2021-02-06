@@ -1,8 +1,7 @@
 \pagebreak
 \pagenumbering{arabic}
 \chapter{Introduction}
-% This "with the latter being studied a couple of years earlier" it is not very clear what you mean. I thought that the latter started to be studied two years ago
-% General comment: maybe highlight or make some words bold to give emphasis where you want to
+
 Since neurons are driven by electric currents, changing their surrounding environment's electrical conditions can alter their behavior. Both electrically and magnetically induced stimulation has been used for many years, although the latter was studied several years earlier. Each method is on different physics, although the results are similar.
 
 \begin{wrapfigure}{l}{0.40\textwidth}
@@ -43,16 +42,16 @@ Furthermore, achieving neural firing synchronization is impossible through \gls{
 
 \subsection{Transcranial Alternating Current Stimulation \textit{(tACS)}}
 
-In many aspects, \gls{tACS} and \gls{tDCS} are identical. As mentioned before, the key characteristic where \gls{tACS} differs is the neural firing synchronization. Like \gls{tDCS}, this method also lacks focality, and there is one more issue in the game.
-% What does "There is no more issue in the game mean?"
+In many aspects, \gls{tACS} and \gls{tDCS} are identical. As mentioned before, the key characteristic where \gls{tACS} differs is the neural firing synchronization. Like \gls{tDCS}, this method also lacks focality.
+
 \gls{tACS} requires using low-frequency currents in the order of tens of Hz since at those frequencies, the neurons are firing the action potentials. The problem arising here again is the stimulation of a large area, synchronized at the stimulating current frequency. Such synchronization can have adverse effects, i.e., stimulating and synchronizing unwanted areas.
 
 Stimulating with higher frequency currents renders the method useless because the neuronal membrane can either not follow the oscillation, or the frequency is too high for the desired synchronization. This problem is solved by the \gls{tTIS} method, which is the focus of this work.
 
 \subsection{Transcranial Temporal Interference Stimulation \textit{(tTIS)}}
 
-\gls{tTIS} is essentially \gls{tACS} with a small yet remarkable modification. Taking advantage of the superposition principle of the electric field and utilizing the emerging interference patterns is the essence of this approach. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS}, where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the two electric fields' temporal interference, given that the envelope modulates at the difference of the two frequencies from the electrode.
-% I thought the different frequencies stemmed from two electrodes?
+\gls{tTIS} is essentially \gls{tACS} with a small yet remarkable modification. Taking advantage of the superposition principle of the electric field and utilizing the emerging interference patterns is the essence of this approach. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS}, where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the two electric fields' temporal interference, given that the envelope modulates at the difference of the two electrode frequencies.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.95\textwidth]{assets/images/modulation_envelope.pdf}
