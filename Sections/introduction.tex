@@ -12,25 +12,25 @@ Since neurons are driven by electric currents, changing their surrounding enviro
     \label{fig:cortical_layers}
 \end{wrapfigure}
 
-Because of the layered structure (\autoref{fig:cortical_layers}) of the neocortex, the electric fields induced by \gls{TMS} act mainly on interneurons and collaterals of the tangentially oriented pyramidal cells, whereas the total electric field induced by electrical stimulation is perpendicular to the cortical surface and thus acts mainly on pyramidal cells of \textit{layer V} since most of them are perpendicular to the cortex. As a result, \gls{TMS}-induced fields have a low penetration depth. In contrast, \gls{tES} induced fields can penetrate deep into the brain, but at the expense of spatial resolution. Therefore, \gls{tES} is mostly used to try to reach deep targets.
-% Maybe used another phrase than "deep in the brain" because you have already used it three times :P
+Because of the layered structure (\autoref{fig:cortical_layers}) of the neocortex, the electric fields induced by \gls{TMS} act mainly on interneurons and collaterals of the tangentially oriented pyramidal cells, whereas the total electric field induced by electrical stimulation is perpendicular to the cortical surface and thus acts mainly on pyramidal cells of \textit{layer V} since most of them are perpendicular to the cortex. As a result, \gls{TMS}-induced fields have a low penetration depth. In contrast, \gls{tES} induced fields can penetrate deep into the brain, but at the expense of spatial resolution. Therefore, \gls{tES} is mostly used to try to reach deep targets. 
+
 \gls{DBS}, particularly the non-invasive methods achieving it, is an emerging need as most crucial brain components' functionality lies deep within the brain. Although successful invasive methods can alleviate Parkinson's symptoms, non-invasive methods offer greater scalability and lower risk to the patient. However, the challenge with non-invasive methods is the lack of spatial resolution and precise targeting of the desired area, usually on the order of tens of millimeters (e.g., pituitary gland \cite{Yadav2017_pituitary}).
 
 In 2017, a new method that seemingly revolutionizes the way non-invasive \gls{DBS} is performed by accommodating clever tricks or \textit{"hacks"} of the neuron physics was presented by Nir Grossman and his team \cite{Grossman2017} for the first time. The method of \paper{Grossman}{Grossman2017} uses a pair of electrodes operated with a high-frequency alternating current whose envelope oscillates at the desired frequency by setting different frequencies between the pairs of electrodes. The significant advantage is reaching deep targets and stimulating only the regions of interest without affecting surrounding areas or the entire brain.
 
-The Grossman method is a promising technique for the future of \gls{DBS}. It is investigated in this work to evaluate its potential application in humans, as only sphere and simple phantom models were in the original work \cite{Grossman2017}, in conjunction with successful test runs in murine subjects. Expanding the study on realistic human brain models will help understand \gls{tTIS} specifics, and tests on healthy individuals will consolidate the method's effectiveness. Ultimately, this work aims to enable optimized and personalized treatment planning for humans based on rigorous computer simulations. 
+The Grossman method is a promising technique for the future of \gls{DBS}. It is investigated in this work to evaluate its potential application in humans, as only sphere and simple phantom models were in the original work \cite{Grossman2017}, in conjunction with successful test runs in murine subjects. Expanding the study on realistic human brain models will help understand \gls{tTIS} specifics, and tests on healthy individuals will consolidate the method's effectiveness. Ultimately, this work aims to enable optimized and personalized treatment planning for humans based on rigorous computer simulations.
 
 As a closing remark, it has been a firm belief of the author that the greatest benefit to science and society comes from the open sharing of knowledge, and true to this belief, all the code, drafts, text, and all originally created materials of this work are publicly available on the GitLab repository \cite{thesis_repo}.
 
 \section{Methods of Electrical Stimulation}
 
-To better understand the major advantages of the \gls{tTIS} method, the different methods for achieving electrical stimulation shall be touched upon for comparison purposes. An overview of the two main methods is presented in this section, as these are the most commonly used ones and also consist the basis for almost all other electrical stimulation method variations.
+To better understand the primary advantages of the \gls{tTIS} method, the different methods for achieving electrical stimulation shall be touched upon for comparison purposes. An overview of the two main methods is presented in this section. These are the most commonly used ones and form the basis for almost all other electrical stimulation method variations.
 
 \subsection{Transcranial Direct Current Stimulation \textit{(tDCS)}}
 
-\gls{tDCS} delivers constant current via electrodes placed on the head, targeting to stimulate the cortical areas. There are numerous studies showing promising results in depression treatment \cite{Moffa2020,Brunoni2016} and \gls{tDCS} is increasingly used in such cases \cite{Nitsche2008}.
+\gls{tDCS} delivers constant current via electrodes placed on the head, targeting to stimulate the cortical areas. Numerous studies show promising results in depression treatment \cite{Moffa2020,Brunoni2016}, and \gls{tDCS} is increasingly used in such cases \cite{Nitsche2008}.
 
-Although \gls{tDCS} is good for an overall cortical stimulation, the lack of focality is one of the major issues. As it can be seen in \autoref{fig:tdcs_pattern}, the electric current flows though a particularly large area potentially affecting unwanted regions of the brain.
+Although \gls{tDCS} is useful for overall cortical stimulation, the lack of focality is one of the principal issues. As shown in \autoref{fig:tdcs_pattern}, the electric current flows through an extensive area, potentially affecting unwanted regions of the brain.
 
 \begin{figure}[H]
     \centering
@@ -39,19 +39,19 @@ Although \gls{tDCS} is good for an overall cortical stimulation, the lack of foc
     \label{fig:tdcs_pattern}
 \end{figure}
 
-Furthermore, achieving neural firing synchronization is impossible through \gls{tDCS}, since this kind of effect requires alternating current. The method that has such an ability is \gls{tACS}.
+Furthermore, achieving neural firing synchronization is impossible through \gls{tDCS} since this kind of effect requires alternating current. The method that has such an ability is \gls{tACS}.
 
 \subsection{Transcranial Alternating Current Stimulation \textit{(tACS)}}
 
-In many aspects, \gls{tACS} and \gls{tDCS} are identical. As mentioned before, the key characteristic where \gls{tACS} differs is the neural firing synchronization. Same as \gls{tDCS}, this method also lacks focality and there is one more issue in the game.
+In many aspects, \gls{tACS} and \gls{tDCS} are identical. As mentioned before, the key characteristic where \gls{tACS} differs is the neural firing synchronization. Like \gls{tDCS}, this method also lacks focality, and there is one more issue in the game.
 % What does "There is no more issue in the game mean?"
-\gls{tACS} requires using low frequency currents in the order of tens of Hz, since at those frequencies the neurons are firing the action potentials. The problem arising here once again is the stimulation of a large area, synchronized at the stimulating current frequency. Such a synchronization can have adverse effects, i.e. stimulating and synchronizing unwanted areas.
+\gls{tACS} requires using low-frequency currents in the order of tens of Hz since at those frequencies, the neurons are firing the action potentials. The problem arising here again is the stimulation of a large area, synchronized at the stimulating current frequency. Such synchronization can have adverse effects, i.e., stimulating and synchronizing unwanted areas.
 
-Stimulating with higher frequency currents renders the method useless because the neuronal membrane is either not able to follow the oscillation, or the frequency is too high for the desired synchronization. This problem is solved by the \gls{tTIS} method, which is the focus in this work.
+Stimulating with higher frequency currents renders the method useless because the neuronal membrane can either not follow the oscillation, or the frequency is too high for the desired synchronization. This problem is solved by the \gls{tTIS} method, which is the focus of this work.
 
 \subsection{Transcranial Temporal Interference Stimulation \textit{(tTIS)}}
 
-\gls{tTIS} is essentially \gls{tACS} with a small yet important modification. Taking advantage of the superposition principle of the electric field and utilizing the emerging interference patterns is the essence of this approach. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS} where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the temporal interference of the two electric fields, given that the envelope modulates at the difference of the two frequencies from the electrode.
+\gls{tTIS} is essentially \gls{tACS} with a small yet remarkable modification. Taking advantage of the superposition principle of the electric field and utilizing the emerging interference patterns is the essence of this approach. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS}, where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the two electric fields' temporal interference, given that the envelope modulates at the difference of the two frequencies from the electrode.
 % I thought the different frequencies stemmed from two electrodes?
 \begin{figure}[H]
     \centering
@@ -60,7 +60,7 @@ Stimulating with higher frequency currents renders the method useless because th
     \label{fig:modulation_showcase}
 \end{figure}
 
-This method was tested by \paper{Grossman}{Grossman2017} on murine brains and the results were spot on with the respective simulation. Targeted neuro-modulation was achieved with a much better focality and depth than the traditional methods. Although this process works well on murine brains, it poses a great challenge for the human models as the geometry and the volume change dramatically. A sample image from this work can be seen on \autoref{fig:ttis_pattern}, where the focality and depth achieved by the Grossman method in comparison with \autoref{fig:tdcs_pattern} is clearly visible.
+This method was tested by \paper{Grossman}{Grossman2017} on murine brains, and the results were spot on with the respective simulation. Targeted neuro-modulation was achieved with a much better focality and depth than the traditional methods. Although this process works well on murine brains, it poses a great challenge for the human models as the geometry and the volume change dramatically. A sample image from this work can be seen in \autoref{fig:ttis_pattern}, where the Grossman's method focality and depth in comparison with \autoref{fig:tdcs_pattern} are visible.
 
 \begin{figure}[H]
     \centering
@@ -69,11 +69,11 @@ This method was tested by \paper{Grossman}{Grossman2017} on murine brains and th
     \label{fig:ttis_pattern}
 \end{figure}
 
-This approach seems really promising and it is yet to be reinforced by follow-up works and real experiments on human subjects in the clinical setting, potentially aiding in the treatment of some diseases.
+This approach seems promising. It is yet to be reinforced by follow-up works and real experiments on human subjects in the clinical setting, potentially aiding in treating some diseases.
 
 \section{Theoretical Background}
 
-In order to grasp the physics behind the simulations, a brief explanation regarding the conduction within the media is presented in \autoref{sec:e_ohmic_qs}, followed by an analysis regarding the \gls{tTIS} hypothesis based on Grossman et al.\cite{Grossman2017} work.
+To grasp the physics behind the simulations, a brief explanation regarding the conduction within the media is presented in \autoref{sec:e_ohmic_qs}, followed by an analysis regarding the \gls{tTIS} hypothesis based on Grossman et al.\cite{Grossman2017} work.
 
 \subsection{Electric Field Ohmic Quasi-static Approximation}
 \label{sec:e_ohmic_qs}
@@ -106,12 +106,12 @@ Generally, Maxwell's equations for electromagnetic wave propagation in a medium 
 
 \noindent The problem in question, finding the electrical field distribution in a volume using low frequencies, can be approached by simplifying the general form of Maxwell's equations and deriving the Quasi-static approximation format. The first step is to define the assumptions taken for such an approach to be valid.
 
-For the frequencies in the \si{kHz} range used in the studied problem, the displacement current can be neglected making the Ohmic currents dominate. Also, since the magnetic field is not time variant, based on \autoref{eq:maxwell_curl_e} we can write:
+For the frequencies in the \si{kHz} range used in the studied problem, the displacement current can be neglected, making the Ohmic currents dominate. Also, since the magnetic field is not time-variant, based on \autoref{eq:maxwell_curl_e}, we can write:
 \begin{equation}
     \label{eq:curl_zero_e_field}
     \nabla\times\vec{E} = \vec{0}
 \end{equation}
-and as we know, when a field is irrotational then it can be calculated from a scalar potential ($\phi$) as seen below:
+and as we know, when a field is irrotational, then it can be calculated from a scalar potential ($\phi$) as seen below:
 \begin{equation}
     \label{eq:e_field_from_potential}
     \boxed{\vec{E} = -\nabla\phi}
@@ -132,7 +132,7 @@ with $\sigma$ being the electrical conductivity of each medium. Finally, based o
     \boxed{\nabla\cdot(\sigma\nabla\phi) = 0}
 \end{equation}
 
-\autoref{eq:laplace_e} describes the problem of conduction using bulk conductors but it is worth noting that the equation is only valid in the frequency domain, where the displacement current effects are negligible and only when there is no charge generated \textit{(charge is conserved)}. Furthermore, care shall be taken with the conductivity values which may be dependant on the stimulating frequency for different materials.
+\autoref{eq:laplace_e} describes the problem of conduction using bulk conductors. However, it is worth noting that the equation is only valid in the frequency domain, where the displacement current effects are negligible and only when there is no charge generated \textit{(charge is conserved)}. Furthermore, care shall be taken with the conductivity values, which may depend on the stimulating frequency for different materials.
 
 \pagebreak
 \subsection{Temporal Interference}
@@ -147,7 +147,7 @@ The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced
     \label{fig:brain_elec_demo}
 \end{wrapfigure}
 
-Using two pairs of electrodes (\autoref{fig:brain_elec_demo}) with each pair having a slightly different frequency, an interference pattern can be generated in the conducting medium oscillating at the difference of the two frequencies. Depending on the nature of the medium, the pattern can vary and as illustrated in Grossman et al.\cite{Grossman2017}, when a uniform medium is used it is simple and easy to calculate.
+Using two pairs of electrodes (\autoref{fig:brain_elec_demo}), with each pair having a slightly different frequency, an interference pattern can be generated in the conducting medium oscillating at the two frequencies' difference. Depending on the medium's nature, the pattern can vary, and as illustrated in Grossman et al.\cite{Grossman2017}, when a uniform medium is used, it is simple and easy to calculate.
 
 Since the modulation happens in the 3D space, there will be different patterns in the $x$, $y$ and $z$ directions. According to Grossman et al.\cite[page 20]{Grossman2017}, at any location $\vec{r} = (x,y,z)$ the envelope amplitude of the \gls{AM} of the electric field produced by the temporal interference is calculated as:
 \begin{equation}
@@ -157,7 +157,7 @@ Since the modulation happens in the 3D space, there will be different patterns i
 where $\vec{E_1} = \vec{E_1}(\vec{r})$, $\vec{E_2} = \vec{E_2}(\vec{r})$ are the electric fields coming from the two electrodes and $\vec{n} = \vec{n}(\vec{r})$ is the unit vector at the direction of interest.
 \\\vspace{1pt}
 
-What is of interest is the maximum amplitude of modulation at a specific location because the modulation will vary with time between zero and maximum. To calculate this amplitude across all directions, the analysis in Grossman et al.\cite[page 20]{Grossman2017} can be better supported by the analysis conducted in Rampersad et al.\cite[section 2.5]{Rampersad2019}. Based on the two aforementioned publications, a complete description will be given here. The formula to calculate the maximum modulation amplitude along all directions at a specific location, $\vec{r} = (x,y,z)$, is:
+What is of interest is the maximum amplitude of modulation at a specific location because the modulation will vary with the time between zero and maximum. To calculate this amplitude across all directions, the analysis in Grossman et al.\cite[page 20]{Grossman2017} can be better supported by the analysis conducted in Rampersad et al.\cite[section 2.5]{Rampersad2019}. Based on the two publications mentioned above, a complete description will be given here. The formula to calculate the maximum modulation amplitude along all directions at a specific location, $\vec{r} = (x,y,z)$, is:
 \begin{equation}
     \label{eq:max_mod_amplitude}
     \vec{E}_{AM}^{max}(\vec{r}) = \begin{cases}
@@ -166,4 +166,4 @@ What is of interest is the maximum amplitude of modulation at a specific locatio
       2\dfrac{\Big|\big|\vec{E_2}\big|\times\big(\vec{E_1} - \vec{E_2}\big)\Big|}{\big|\vec{E_1} - \vec{E_2}\big|} & \text{otherwise}
     \end{cases}
 \end{equation}
-where $\alpha$ is the angle between $\vec{E_1}$ and $\vec{E_2}$, while \autoref{eq:max_mod_amplitude} holds true only if $\alpha < 90\si{\degree}$. Whenever $\alpha \geq 90\si{\degree}$, the sign of one of the two fields can be flipped \textit{(it must be done is a consistent fashion)}, since reaching peak field strength at different time points across different areas is what makes the $< 90\si{\degree}$ rule to be violated. This change is possible considering that \autoref{eq:max_mod_amplitude} calculates the maximum effect over one oscillation, so the overall effect is what we care for. The calculation of $\vec{E}_{AM}^{max}$ can be seen in \autoref{alg:max_modulation_amplitude} at \autoref{appndx:algorithms}.
+where $\alpha$ is the angle between $\vec{E_1}$ and $\vec{E_2}$, while \autoref{eq:max_mod_amplitude} holds only if $\alpha < 90\si{\degree}$. Whenever $\alpha \geq 90\si{\degree}$, the sign of one of the two fields can be flipped \textit{(it must be done consistently)}, since reaching peak field strength at different time points across different areas is what makes the $< 90\si{\degree}$ rule to be violated. This change is possible considering that \autoref{eq:max_mod_amplitude} calculates the maximum effect over one oscillation so that the overall effect is taken. The calculation of $\vec{E}_{AM}^{max}$ can be seen in \autoref{alg:max_modulation_amplitude} in \autoref{appndx:algorithms}.
