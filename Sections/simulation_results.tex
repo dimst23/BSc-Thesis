@@ -56,22 +56,92 @@ Going from a spherical model, to a murine model and then to a realistic human mo
 
 As it has been explained so far, \gls{tTIS} shows great potential to be used for non-invasive \gls{DBS}, thus the leap from the simple spherical model of \paper{Grossman}{Grossman2017} to realistic human models must be made. Two key factors have been tested in this work and more specifically the results of the effect of the human head anatomy variation as well as the variation of the electrode position are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position}. As it will be evident below, the anatomy of each model, i.e., of each person has a significant impact on the final pattern inside the brain, thus there is the need for optimization to achieve stimulation of a small area, as different electrode combinations must be used for the each person or model. The optimization is not included in this work as it is part of future work and currently it is at a preliminary stage, however a discussion is provide on \autoref{sec:discussion}.
 
-Lastly, it should be noted that for the electrode positioning impact assessment, models with the international 10-10 system have also been tested to find the potential issues that the 10-20 coarse nature might have.
+Lastly, it should be noted that for the electrode positioning impact assessment, models with the international 10-10 system have also been tested to find the potential issues that the 10-20 coarse nature might have. It should be noted that all conductivity values for the simulated models are taken from the \gls{IT'IS} tissue database \cite{ITstissue}.
 
 \subsection{Effects of Model Anatomy}
 \label{subsec:effects_of_model_anatomy}
 
-Assessing the impact of the model anatomy on the field distribution requires many different subjects to have some statistically significant results. Specifically in this work, 9 models from the \gls{PHM} repository \cite{ErikG.Lee2016} were used, having 10-20 as the electrode system. Electrodes P8, F7 and P7, F8 as seen in \autoref{fig:electrodes_10-20} were used for the base vcc and base gnd respectively.
+Assessing the impact of the model anatomy on the field distribution requires many different subjects to have statistically significant results. Specifically in this work, 9 models from the \gls{PHM} repository \cite{ErikG.Lee2016} were used, having the 10-20 as the electrode placement system. Electrodes P8, F7 \textit{(1\si{kHz})} and P7, F8 \textit{(1.04\si{kHz})} were used, with the first electrode in each couple being the active electrode. The corresponding electrode positions are shown in \autoref{fig:electrodes_10-20}.
 
-\draft{
-    \begin{itemize}
-        \item Run a sweep analysis on the different models to get some statistics for the effect of the model anatomy
-        \item Add the graph for showing the model comparison across the axis lines to defend the difference in anatomy linked to difference in the electric field distribution
-        \item Write about the model assumptions, such as uniform white matter in most models, no specific areas on the white matter, no spongiform bone included
-        \item Write about potential improvements from having a conductivity calibrated for spongiform bone too
-        \item Write some potential approximations that can be used \cite{Rampersad2013_skull_approximations}
-    \end{itemize}
-}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/y_axis_line_brain.png}
+        \caption{Slice across the x-axis.}
+        \label{fig:brain_slice_for_effects_x}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/center_of_bounds_line_brain.png}
+        \caption{Slice across the center of bounds.}
+        \label{fig:brain_slice_for_effects_cf}
+    \end{subfigure}
+    \caption{Slice references for \cref{fig:x_axis_effect,fig:center_of_bounds_effect}. The white line represents the line of measurement.}
+    \label{fig:brain_slice_for_effects}
+\end{figure}
+
+As a first step the maximum modulation envelope electric field value was taken across the line of the x-axis for each model, with the reference plane illustrated in \autoref{fig:brain_slice_for_effects_x}. The field values for each model, along the x-axis, can be seen in \autoref{fig:x_axis_effect}, along with the standard deviation in the legend.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \textwidth]{assets/images/x_axis_line.pdf}
+    \caption{Field distribution for each \gls{PHM} model along the x-axis. The number near each model is the standard deviation for the distribution. The curves were smoothed using a moving average with a window size of 50 samples.}
+    \label{fig:x_axis_effect}
+\end{figure}
+
+It is evident from the shape of the curves in \autoref{fig:x_axis_effect} that the same pattern is followed, but there is a significant variation from one model to the next, both in the curve's shape and the standard deviation. Furthermore, another measurement was made along the center of bounds axis (\autoref{fig:brain_slice_for_effects_cf}) and as illustrated in \autoref{fig:center_of_bounds_effect}, the problems discussed for the x-axis plot are even more prevalent.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.85\textwidth]{assets/images/center_of_bounds_line.pdf}
+    \caption{Field distribution for each \gls{PHM} model along each model's the center of bounds. The number near each model is the standard deviation for the distribution. The curves were smoothed using a moving average with a window size of 50 samples.}
+    \label{fig:center_of_bounds_effect}
+\end{figure}
+
+Looking at \autoref{fig:center_of_bounds_effect} it is evident that for each model the variability of the electric field is not negligible. The graph indicates the values on the line that cuts the center of bounds for each model, meaning that is passes through many different layers at different heights in the head, giving a clearer picture of what happens. 
+
+To better understand the cause of this difference and gauge which models have similar patterns, \gls{PCA} was performed with the features as summarized in \autoref{tab:pca_features}. For each model, the thickness was calculated from the coordinate points along the x-axis line (\autoref{fig:brain_slice_for_effects_x}), in the corresponding regions. Each of the maximum modulation envelope electric field was calculated in the whole volume of each designated region on \autoref{tab:pca_features}, same as the standard deviation.
+
+\begin{table}[!ht]
+	\centering
+    \caption[\gls{PCA} feature values]{Feature values used in the \gls{PCA} analysis. The electric field values, denoted with $E$ are the mean for each model on the designated region. $\sigma$ is the corresponding standard deviation for each electric field value. The thickness value is the sum of the skin, skull , and \gls{CSF} thickness along the x-axis line for each model.}
+    \label{tab:pca_features}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+        % \hline
+        \cline{2-8}
+        \multicolumn{1}{c|}{} & \cellcolor[HTML]{C0C0C0}\textbf{[mm]} & \multicolumn{6}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{[mV/m]}} \\ \hline
+        \rowcolor[HTML]{C0C0C0} 
+        \textbf{Model ID} & \textbf{Thickness} &  $\boldsymbol{E_{CSF}}$ & $\boldsymbol{E_{GM}}$ & $\boldsymbol{E_{WM}}$ & $\boldsymbol{\sigma_{CSF}}$ & $\boldsymbol{\sigma_{GM}}$ & $\boldsymbol{\sigma_{WM}}$ \\\hline
+        103414 & 25.36 &             31.70 &            41.70 &            43.35 &            11.89 &           10.84 &            9.99 \\\hline
+        105014 & 36.60 &             26.43 &            34.37 &            35.35 &            10.39 &            9.51 &            8.39 \\\hline
+        105115 & 37.09 &             24.30 &            32.45 &            33.33 &             8.91 &            8.57 &            7.49 \\\hline
+        110411 & 39.84 &             24.67 &            33.33 &            34.17 &             9.50 &            9.36 &            8.42 \\\hline
+        111716 & 38.71 &             26.08 &            35.06 &            35.91 &            10.37 &           10.35 &            9.29 \\\hline
+        113619 & 37.18 &             26.16 &            35.23 &            36.64 &            10.51 &           10.34 &            9.86 \\\hline
+        117122 & 37.38 &             29.17 &            39.43 &            40.84 &            11.76 &           12.16 &           11.38 \\\hline
+        163129 & 39.07 &             26.77 &            35.50 &            36.67 &            10.18 &            9.98 &            8.92 \\\hline
+        196750 & 39.88 &             28.76 &            38.12 &            39.40 &            10.81 &           10.29 &            9.23 \\\hline
+    \end{tabular}
+\end{table}
+
+Correlating the data from \autoref{tab:pca_features} in a \gls{PCA} chart, provides an insight on similarities or the lack thereof, between the models used. As seen in \autoref{fig:model_pca}, there is some clustering of models indicating that they more correlated than the rest, based on the provided feature set. That said, it is evident that the models 111716, 113619, and 163129 are clustered together, in a weak way, and as seen on \autoref{tab:pca_features} they have very similar thickness values. Models like 103414 and 110411 are on the 2 sides of the graph and they have very different thickness values. The two latter models have also significant difference in the mean electric field values on the white matter.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.85\textwidth]{assets/images/model_pca.pdf}
+    \caption{Principle Component Analysis (PCA) graph for the different models, based on the features included in \autoref{tab:pca_features}. The explained variance ratio in $\boldsymbol{96.18\%}$.}
+    \label{fig:model_pca}
+\end{figure}
+
+From the analysis provided above, it seems that there is a dependance on the thickness of the model with the final electric field sparsity and distribution, considering the same electrodes are operating for each one of the models. Despite the initial evidence presented above, further investigation with more models is required to reach a conclusion. What is certain is that there is a dependance on the model geometry and the final pattern as it can also be seen in \autoref{fig:models_pattern_variation}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{assets/images/brain_pattern_variation_models.pdf}
+    \caption{Variation of the electric field pattern distribution for the different models. The scale is the same for all models.}
+    \label{fig:models_pattern_variation}
+\end{figure}
+
+In all models included in this work and all simulations, a uniform white matter and skull are assumed. This is not the correct since the white matter has different regions with different densities, and similarly the skull has the spongiform regions with very low conductivity value. As shown by \paper{Rampersad}{Rampersad2013_skull_approximations}, on \gls{tES} and specifically \gls{tDCS}, the different conductivity values for the layered bone structure \textit{(spongiform and compact bone)} of the skull can have a considerable effect if not considered in the simulations. The white matter uniformity consideration on the other hand, provides no information for the different regions and it puts a road block on assessing the impact of the electric field on the regions of interest, most of them lying in the white matter region, near the ventricles \textit{(e.g., pineal gland and globus palidus)}.
 
 \subsection{Varying Electrode Position}
 \label{subsec:varying_electrode_position}
@@ -81,17 +151,6 @@ Assessing the impact of the model anatomy on the field distribution requires man
         \item Run a same model, varying electrode position analysis to show the pattern change when the electrode pairing changes
     \end{itemize}
 }
-
-\cite{ITstissue}
-%%% PHM model citations
-\cite{Lee2016}
-\cite{Lee2018}
-\cite{ErikG.Lee2016}
-%%% PHM model citations
-%%% My work citations
-\cite{Hsu2019}
-\cite{Rampersad2019}
-%%% My work citations
 
 \subsection{10-20 vs 10-10 system}
 
