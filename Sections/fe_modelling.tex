@@ -37,44 +37,7 @@ Brain & 72.21 \\ \hline
 
 \noindent The radius of each layer \textit{(lower bound)} comes from the normalized layer thickness given by Grossman et al.\cite[Figure S2, J, and K]{Grossman2017}, using the skin's surface as the outer radius (base radius).
 
-\begin{lstlisting}[language=C,caption={Sphere \gls{CAD} model generation code in \texttt{geo} format},captionpos=b, label=lst:sphere_code]
-SetFactory("OpenCASCADE");
-
-head_radius = 87;
-
-// Ratio values from Grossman et al. 2017
-brain_ratio = 0.83;
-csf_ratio = 0.023;
-skull_ratio = 0.085;
-scalp_ratio = 0.05;
-
-Sphere(1) = {0, 0, 0, head_radius};
-Sphere(2) = {0, 0, 0, head_radius*(brain_ratio + csf_ratio + skull_ratio + scalp_ratio)};
-Sphere(3) = {0, 0, 0, head_radius*(brain_ratio + csf_ratio + skull_ratio)};
-Sphere(4) = {0, 0, 0, head_radius*(brain_ratio + csf_ratio)};
-Sphere(5) = {0, 0, 0, head_radius*(brain_ratio)};
-
-Physical Volume("Outer Boundary", 1) = {1};
-Physical Volume("Skin", 2) = {2};
-Physical Volume("Skull", 3) = {3};
-Physical Volume("CSF", 4) = {4};
-Physical Volume("Brain", 5) = {5};
-
-Physical Surface("Outer Boundary", 1) = {1};
-Physical Surface("Skin", 2) = {2};
-Physical Surface("Skull", 3) = {3};
-Physical Surface("CSF", 4) = {4};
-Physical Surface("Brain", 5) = {5};
-
-Mesh 2;
-RefineMesh;
-RefineMesh;
-RefineMesh;
-
-Mesh 3;
-RefineMesh;
-\end{lstlisting}
-
+\pagebreak
 \subsection{Realistic Human Head Models}
 \label{sec:phm_models}
 
@@ -106,8 +69,18 @@ The meshing pipeline's first step is to import all the necessary files for geome
 
 In addition to the geometry files, the electrode coordinate files are also loaded. The electrode coordinates are generated using \texttt{Mesh2EEG} \cite{Giacometti2014}, a tool developed by Thayer School of Engineering at Dartmouth \cite{mesh2eeg_web}.
 
+\pagebreak
 \subsection{Electrode Array Generation \& Placement}
 \label{subsec:elec_placement}
+
+\begin{wrapfigure}{l}{0.48\textwidth}
+    \centering
+    % \vspace{-10pt}
+    \includegraphics[width = 0.45\textwidth]{assets/images/eeg_electrodes_10-20.pdf}
+    \caption[10-10 system names. The orange electrodes are used in the 10-20 system.]{10-10 system names. 10-20 system depicted in orange. \href{http://www.mariusthart.net/downloads/eeg_electrodes_10-20.svg}{Illustration} by \href{http://www.beteredingen.nl}{Marius 't Hart} licensed under \href{http://creativecommons.org/licenses/by-sa/3.0/nl/deed.en_GB}{CC BY-SA v3.0}}
+    % \vspace{-2.0cm}
+    \label{fig:electrodes_10-20}
+\end{wrapfigure}
 
 The term "electrode array generation" implies creating an electrode cluster from each electrode's coordinates to subsequently acquire the actual \gls{FE} meshes of each electrode. Ensuring repeatability across different heads \textit{(different geometries)} is key to having comparable results and drawing conclusions, so standard electrode positioning systems widely used in \gls{EEG} studies were also used here. In particular, the \textbf{international 10-20 system} \cite[chapter 13]{Malmivuo1995} is adopted, as it is the most common system in the clinical setting.
 
@@ -123,16 +96,6 @@ To understand where the \textbf{10-20} naming convention comes from, defining th
 As in a real electrode placement scenario, these landmarks need to be identified to calculate the individual electrode position. This process is done manually by reviewing each model's the 3D geometry and identifying the 4 (four) landmarks required. Having the coordinates of each landmark in the coordinate system of the \gls{STL} file in question, the positions can be easily calculated with the \texttt{Mesh2EEG} \cite{Giacometti2014} tool, which runs on \gls{MATLAB}. This tool takes as an input the 3D surface mesh in \gls{STL} format and the coordinates of the four landmarks on the model. The output is then the coordinates of each point in all three systems as mentioned earlier, the 10-20, 10-10, and the 10-5.
 
 Using the output coordinates from the \texttt{Mesh2EEG} \cite{Giacometti2014} tool, the final step for creating the electrodes is to create a cylindrical mesh for each electrode by using the calculated coordinates as the center point and orienting the cylinder normal to the surface of the head \textit{(skin)}.
-\\\vspace{1pt}
-
-\begin{wrapfigure}{l}{0.48\textwidth}
-    \centering
-    \vspace{-15pt}
-    \includegraphics[width = 0.45\textwidth]{assets/images/eeg_electrodes_10-20.pdf}
-    \caption[10-10 system names. The orange electrodes are used in the 10-20 system.]{10-10 system names. 10-20 system depicted in orange. \href{http://www.mariusthart.net/downloads/eeg_electrodes_10-20.svg}{Illustration} by \href{http://www.beteredingen.nl}{Marius 't Hart} licensed under \href{http://creativecommons.org/licenses/by-sa/3.0/nl/deed.en_GB}{CC BY-SA v3.0}}
-    % \vspace{-0.5cm}
-    \label{fig:electrodes_10-20}
-\end{wrapfigure}
 
 The creation of the electrode array is followed by the placement of electrodes on the head surface, a process that is one of the most critical factors for the correct functioning of \gls{tTIS}. The positioning affects the brain's stimulation pattern; therefore, one can achieve the desired stimulation by choosing the right electrodes.
 
@@ -158,7 +121,7 @@ As shown in \autoref{fig:mesh_comparison}, the mesh generated with $q = 1.414$ h
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 0.85\textwidth]{assets/images/mesh_comparison.pdf}
+    \includegraphics[width = 0.8\textwidth]{assets/images/mesh_comparison.pdf}
     \caption[Mesh quality comparison for the different $q$ parameters.]{Mesh quality comparison of the different mesh parameters. The green circles highlight an area where differences are visible regarding mesh quality and the number of elements.}
     % \vspace{-1.2cm}
     \label{fig:mesh_comparison}
@@ -207,6 +170,7 @@ The electrode label count, starts at \textbf{10} \textit{(assigned to Fp1)}, and
 
 Visual evaluation of the mesh quality and visualization of the solution can be done using Paraview \cite{paraview} which supports the \gls{VTK} file format used in this work for all meshed models.
 
+% \pagebreak
 \section{Solver}
 \label{sec:fem_solver}
 
@@ -234,7 +198,7 @@ As discussed in \ref{subsec:mesh_generation}, better mesh quality helps to outli
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 0.85\textwidth]{assets/images/solved_mesh_comp.pdf}
+    \includegraphics[width = 0.8\textwidth]{assets/images/solved_mesh_comp.pdf}
     \caption[Problem solution comparison for the different $q$ mesh parameters.]{Problem solution comparison of the different mesh parameters. The green circles highlight an area where differences are visible regarding mesh outline and the number of elements.}
     \label{fig:solved_mesh_comparison}
 \end{figure}
@@ -243,7 +207,7 @@ In the presented $q$-values in \autoref{fig:solved_mesh_comparison}, the differe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 0.9\textwidth]{assets/images/mesh_conv_study.pdf}
+    \includegraphics[width = 0.8\textwidth]{assets/images/mesh_conv_study.pdf}
     \caption{Meshing for different $q$ values}
     \label{fig:mesh_conv_study}
 \end{figure}
