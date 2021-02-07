@@ -146,16 +146,71 @@ In all models included in this work and all simulations, a uniform white matter 
 \subsection{Varying Electrode Position}
 \label{subsec:varying_electrode_position}
 
-\draft{
-    \begin{itemize}
-        \item Run a same model, varying electrode position analysis to show the pattern change when the electrode pairing changes
-    \end{itemize}
-}
+Model anatomy is one of the crucial factors that must be considered when simulating with \gls{tTIS}. Although it is not the only player, since the current ratio between the two electrodes, and the position of them, can influence the results a lot.
 
-\subsection{10-20 vs 10-10 system}
+As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has significant impact regarding the maximum potential achieved in a given volume. This dependance is well explained as shown in \autoref{fig:mod_env_amplitude_var}, due to the fact that when the two electrodes are not placed symmetrically, the pair closest to the region of interest takes over. The resulting modulation amplitude is much lower than the one seen in \autoref{fig:modulation_showcase}.
 
-\draft{
-    \begin{itemize}
-        \item Show the granularity, if any, of the 10-10 and 10-20 systems for stimulation
-    \end{itemize}
-}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \textwidth]{assets/images/modulation_envelope_2-1.pdf}
+    \caption{Modulation envelope and the effect of differing amplitudes between the two fields}
+    \label{fig:mod_env_amplitude_var}
+\end{figure}
+
+In this work, the attention will be shifted towards the electrode position variation and its subsequent effects. One can imagine that moving the electrodes or changing the combination used can have an impact on the final pattern. It is evident from \autoref{fig:elec_position_variation} that using the combination just one step above the previous one can have significant impact on the field distribution.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/105014_26_16.png}
+        \caption{P8, F8 and P7, F7 electrode pairs.}
+        \label{fig:26_16_elec_pair}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/105014_25_15.png}
+        \caption{P4, F4 and P3, F3 electrode pairs.}
+        \label{fig:25_15_elec_pair}
+    \end{subfigure}
+    \caption{Electric field distribution with varying electrode position}
+    \label{fig:elec_position_variation}
+\end{figure}
+
+Even if one electrode is moved and the others stay as they are, significant differences are observed \textit{(\autoref{fig:one_elec_moved_var})}. One of the main reasons making \cref{fig:26_16_elec_pair,fig:25_15_elec_pair} differ significantly is the lack of granularity the 10-20 system provides. Limited only to 19 electrodes, there is not much room for movement, hence a system with more electrodes is required and in that case th 10-10 system can be a good candidate. The reason that the 10-5 system is not considered is mainly due to the very high number of electrodes \textit{(329 in total)}.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/105014_26_16_22_12_z-axis.png}
+        \caption{P8, F8 and P7, F7 electrode pairs.}
+        \label{fig:26_16_12_22_elec_pair}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/105014_26_16_23_12_z-axis.png}
+        \caption{P8, F8 and P3, F7 electrode pairs.}
+        \label{fig:25_15_13_24_elec_pair}
+    \end{subfigure}
+    \caption{Electric field distribution with varying electrode position}
+    \label{fig:one_elec_moved_var}
+\end{figure}
+
+As it will be discussed in a more detail in the \nameref{sec:discussion}, the dependance on the position, the current ratio, and the model anatomy drives the need for seeking personalized optimization for each model. The optimization will be part of future work and it is not covered in the current work.
+
+To better illustrate the granularity mentioned above, the \textbf{103414} model was meshed with all the 10-10 system electrodes and the solved with the pairs as shown in \autoref{fig:one_elec_moved_var_10-10}.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/103414_35_68_43_76.png}
+        \caption{FT7, P7 and FT8, P8 electrode pairs.}
+        \label{fig:35_68_43_76_elec_pair}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{assets/images/103414_35_68_43_75.png}
+        \caption{FT7, P7 and FT8, P6 electrode pairs.}
+        \label{fig:35_68_43_75_elec_pair}
+    \end{subfigure}
+    \caption{Electric field distribution with varying electrode position on the 10-10 system.}
+    \label{fig:one_elec_moved_var_10-10}
+\end{figure}
+
+What is clear from the figure above is that the effect the electrode position on the electric field pattern can be manipulated with more refined moves.
