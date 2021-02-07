@@ -1,19 +1,20 @@
 \pagebreak
 \chapter{Simulation Results}
 
-The entirety of this work is based on the method introduced by \paper{Grossman}{Grossman2017}, which has been tested on murine brains and the results where very close with the simulated ones. Although on murine brain the method can produce the desired results, on the human brain it is much more difficult to achieve the required outcome and much more difficult to accurately simulate it.
+% The introduction needs restructuring because you have already written about this stuff in the general Introduction. I suggest you leave the introduction of each paragraph for the very end, where you will be able to read the whole text and create a better flow between the sections.
+The entirety of this work is based on the method introduced by \paper{Grossman}{Grossman2017}, which has been tested on murine brains and the results were closely aligned the simulated ones. Although the method can produce the desired results when applied on the murine brain, it is much more challenging to achieve and accurately simulate the required outcome on the human brain.
 
-\paper{Grossman}{Grossman2017} simulation models were based on a simple spherical layered model, with uniform density of the material. Such an approach is working for small brains, like murine brain, but it fails for human models where the structure is very complex and greatly varying between subjects. One way to better approach the problem on humans is to use detailed models, capturing the non-uniformities and geometric details, giving results closer to reality.
+\paper{Grossman}{Grossman2017} simulation models were based on a simple spherical layered model with uniform density of each material. Such an approach is accurate for small brains, like murine brains, but it fails for the human case, where the structure is very complex and greatly varying between subjects. One way to better approach the problem on humans is to use detailed models that capture the non-uniformities and fine geometric details, giving results closer to reality.
 
 The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the road blocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in \autoref{sec:discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed and the method is further extended for human models, where the results are seen in \autoref{sec:realistic_human_models}.
 
 \section{Simple Spherical Layered Model}
-
-The simple model is comprized of 4 layers in total, with varying thickness each. The layer thickness is included in \autoref{tab:spherical_layers} as a radius fraction and the values for each layer come from Grossman et al. \cite[Figure S2, J and K]{Grossman2017} \textit{(referred hereafter as paper)}. Additionally, the conductivity values used in the paper are summarized in \autoref{tab:grossman_conductivity_vals}.
-
+% What is a radius fraction?
+The simple spherical model is comprised of 4 layers in total, with varying thickness each. The layer thicknesses are included in \autoref{tab:spherical_layers} as radius fractions and stem from Grossman et al. \cite[Figure S2, J and K]{Grossman2017} \textit{(referred hereafter as paper)}. Additionally, the conductivity values used in the paper are summarized in \autoref{tab:grossman_conductivity_vals}.
+% I don't think it is a really good idea to use "the paper" because someone might not be reading your text sequentially and have no idea where you refer to. You can just include the number, e.g. [6], without the Grosmman et al blah blah, but I don't like "the paper" at all :P
 \begin{table}[!ht]
 \centering
-\caption{Conductivity values for the simple model taken from \cite{ITstissue}}
+\caption{Conductivity values for the simple model \cite{ITstissue}}
 \label{tab:grossman_conductivity_vals}
 \begin{tabular}{|c|c|c|}
     \hline
@@ -26,8 +27,8 @@ The simple model is comprized of 4 layers in total, with varying thickness each.
 \end{tabular}
 \end{table}
 
-To benchmark this work's software the same configurations as in the paper were used and the results can be seen in \autoref{fig:grossman_thesis_comparison}.
-
+To benchmark the software developed for this work, the same configurations as in the paper were used and the results can be seen in \autoref{fig:grossman_thesis_comparison}.
+% What are those results exactly? What are we seing in this figure?
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
@@ -47,16 +48,18 @@ To benchmark this work's software the same configurations as in the paper were u
 \end{figure}
 
 It is clear from the figures above that the software can be considered accurate, based on the paper's results, so the analysis can proceed on the realistic human head models in the following section.
-
+% Why is it clear exactly? They are similar but they are not identical, maybe you should be more specific on what criteria you are using. Also, I would prefer something in the lines of "Since we have established that the analysis and the corresponding software produce accurate results for the simple spherical model, we can proceed to apply it to the human brain model".
 
 \section{Realistic Human Models}
 \label{sec:realistic_human_models}
 
-Going from a spherical model, to a murine model and then to a realistic human model is great leap from simplicity to great complexity. To be able and test any hypothesis in clinical trials and get validated, first the processes of modelling, testing on murine models and phantoms have to precede.
+Manipulating a spherical model, then a murine model and finally a realistic human model comes at the cost of exponentially increasing complexity. Nevertheless, it consists an essential process, along with testing on murine models and phantoms, that has to precede in order to be able to validate any hypothesis during clinical trials.
 
-As it has been explained so far, \gls{tTIS} shows great potential to be used for non-invasive \gls{DBS}, thus the leap from the simple spherical model of \paper{Grossman}{Grossman2017} to realistic human models must be made. Two key factors have been tested in this work and more specifically the results of the effect of the human head anatomy variation as well as the variation of the electrode position are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position}. As it will be evident below, the anatomy of each model, i.e., of each person has a significant impact on the final pattern inside the brain, thus there is the need for optimization to achieve stimulation of a small area, as different electrode combinations must be used for the each person or model. The optimization is not included in this work as it is part of future work and currently it is at a preliminary stage, however a discussion is provide on \autoref{sec:discussion}.
+In that direction, two key factors have been tested in this work, specifically the effect of the human head anatomy variation between subjects, as well as the variation of the electrode position. These effects are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position} respectively. As it will be evident below, the anatomy of each patient has a significant impact on the resulting pattern inside the brain. Thus, there is the need for optimization to achieve stimulation of a small area, as different electrode combinations must be used for the each person or model. This optimization will be the subject of a future work, however a relevant discussion is provided on \autoref{sec:discussion}.
+% When you say electrode combinations you mean a differend brand? Different colour? Different position? Different stimulation?
 
-Lastly, it should be noted that for the electrode positioning impact assessment, models with the international 10-10 system have also been tested to find the potential issues that the 10-20 coarse nature might have. It should be noted that all conductivity values for the simulated models are taken from the \gls{IT'IS} tissue database \cite{ITstissue}.
+Lastly, it should be noted that for the electrode positioning impact assessment models with the international 10-10 system have also been tested to find the potential issues that the 10-20 coarse nature might have. It should be noted that all conductivity values for the simulated models originate from the \gls{IT'IS} tissue database \cite{ITstissue}.
+% What is the 10-20 coarse nature?
 
 \subsection{Effects of Model Anatomy}
 \label{subsec:effects_of_model_anatomy}
