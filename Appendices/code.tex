@@ -1,3 +1,592 @@
 \pagebreak
 \chapter{Thesis Software}
 \label{appndx:code}
+
+The following software can also be found in the up-to-date version on \href{https://gitlab.com/ttis-simulations/ttis-software/-/tree/master/Scripts}{GitLab}.
+
+\section{Meshing}
+\begin{lstlisting}[language=Python,caption={Class handling electrode operations on the models},captionpos=b,label=lst:electrode_operations_class]
+import pymesh
+import numpy as np
+
+class ElectrodeOperations:
+    def __init__(self, surface_mesh: pymesh.Mesh, electrode_attributes: dict):
+        self.surface_mesh = surface_mesh
+        self.surface_mesh.enable_connectivity() # Required by some functions below
+        self.electrode_attributes = electrode_attributes
+        self.electrode_array = {}
+
+    def add_electrodes_on_skin(self):
+        if not self.electrode_array:
+            raise AttributeError('The electrodes shall be positioned first before added on the surface. Please call the positioning function first.')
+        electrode_mesh = self.get_electrode_single_mesh()
+        # Get the surface outline including the electrode
+        model = pymesh.merge_meshes((self.surface_mesh, electrode_mesh))
+        outer_hull = pymesh.compute_outer_hull(model)
+
+        # Create the surface with the electrode mesh imprinted
+        electrode_tan_mesh = pymesh.boolean(electrode_mesh, self.surface_mesh, 'difference')
+        outer_diff = pymesh.boolean(outer_hull, electrode_tan_mesh, 'difference')
+        conditioned_surface = pymesh.merge_meshes((outer_diff, electrode_tan_mesh))
+
+        # Generate the surface with the electrode on
+        face_id = np.arange(conditioned_surface.num_faces)
+        conditioned_surface = pymesh.remove_duplicated_vertices(conditioned_surface)[0] # Remove any duplicate vertices
+
+        return [pymesh.submesh(conditioned_surface, np.isin(face_id, pymesh.detect_self_intersection(conditioned_surface)[:, 0], invert=True), 0), outer_diff]  # Get rid of the duplicate faces on the tangent surface, without merging the points
+
+    def standard_electrode_positioning(self, width=4, radius=4, elements=150):
+        closest_point = pymesh.distance_to_mesh(self.surface_mesh, self.electrode_attributes['coordinates'])[1] # Get the closest point to the one provided
+
+        i = 0
+        for electrode_name in self.electrode_attributes['names']:
+            p_i = self.surface_mesh.vertices[self.surface_mesh.faces[closest_point[i]]][0] # Get the surface vertex coordinates
+            electrode_orientation = self.__orient_electrode(p_i) # Orient the electrode perpendicular to the surface
+
+            # Generate the electrode cylinder and save to the output dictionary
+            electrode_cylinder = pymesh.generate_cylinder(p_i - (width * electrode_orientation)/4., p_i + (width * electrode_orientation)/4., radius, radius, elements)
+            self.electrode_array[electrode_name] = electrode_cylinder
+            i = i + 1
+
+    def get_electrode_array(self):
+        if not self.electrode_array:
+            raise AttributeError('Electrodes are not positioned yet. Please call the positioning function.')
+        return self.electrode_array
+
+    def get_electrode_single_mesh(self):
+        if not self.electrode_array:
+            raise AttributeError('Electrodes are not positioned yet. Please call the positioning function.')
+        return pymesh.merge_meshes((e_mesh for e_mesh in self.electrode_array.values()))
+
+    def __orient_electrode(self, init_point):
+        point_id = np.where(np.sum(self.surface_mesh.vertices == init_point, axis=1))[0][0] # Unique point assumed
+        face = self.surface_mesh.get_vertex_adjacent_faces(point_id)[0]
+
+        points = []
+        for point in self.surface_mesh.vertices[self.surface_mesh.faces[face]]:
+            if np.sum(point != init_point):
+                points.append(point)
+        p_1 = points[0] - init_point
+        p_2 = points[1] - init_point
+
+        normal = np.cross(p_1, p_2)
+        return normal/np.linalg.norm(normal)
+
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Class handling all mesh operations for the models},captionpos=b,label=lst:mesh_operations_class]
+import os
+import meshio
+import pymesh
+import numpy as np
+
+import Meshing.ElectrodeOperations as ElecOps
+import FileOps.FileOperations as FileOps
+
+class MeshOperations(ElecOps.ElectrodeOperations):
+    def __init__(self):
+        self.merged_meshes = None
+        print()
+
+    def phm_model_meshing(self, base_path: str, suffix_name: str, mesh_filename: str, electrode_attributes: dict):
+        ##### Import th model files to create the mesh
+        print("Importing files") # INFO log
+        skin_stl = pymesh.load_mesh(os.path.join(base_path, 'skin' + suffix_name))
+        skull_stl = pymesh.load_mesh(os.path.join(base_path, 'skull' + suffix_name))
+        csf_stl = pymesh.load_mesh(os.path.join(base_path, 'csf' + suffix_name))
+        gm_stl = pymesh.load_mesh(os.path.join(base_path, 'gm' + suffix_name))
+        wm_stl = pymesh.load_mesh(os.path.join(base_path, 'wm' + suffix_name))
+        ventricles_stl = pymesh.load_mesh(os.path.join(base_path, 'ventricles' + suffix_name))
+        cerebellum_stl = pymesh.load_mesh(os.path.join(base_path, 'cerebellum' + suffix_name))
+        ##### Import th model files to create the mesh
+
+        ##### Electrode placement
+        print("Placing Electrodes") # INFO log
+        electrodes_object = ElecOps.ElectrodeOperations(skin_stl, electrode_attributes)
+        electrodes_object.standard_electrode_positioning(width=electrode_attributes['width'], radius=electrode_attributes['radius'], elements=electrode_attributes['elements'])
+        skin_with_electrodes = electrodes_object.add_electrodes_on_skin()[0]
+
+        electrodes_single_mesh = electrodes_object.get_electrode_single_mesh()
+        electrodes = pymesh.boolean(electrodes_single_mesh, skin_stl, 'difference')
+        pymesh.map_face_attribute(electrodes_single_mesh, electrodes, 'face_sources')
+        ##### Electrode placement
+
+        self.merged_meshes = pymesh.merge_meshes((skin_with_electrodes, skull_stl, csf_stl, gm_stl, wm_stl, cerebellum_stl, ventricles_stl))
+        regions = self.region_points([skin_stl, skull_stl, csf_stl, gm_stl, wm_stl, cerebellum_stl, ventricles_stl], electrodes, 0.1)
+
+        FileOps.FileOperations.poly_write(mesh_filename, self.merged_meshes.vertices, self.merged_meshes.faces, self.merged_meshes.get_attribute('face_sources'), regions)
+
+    def region_points(self, boundary_surfaces: list, electrode_mesh, shift: float, max_volume=30):
+        points = {}
+        i = 1
+        for surface in boundary_surfaces:
+            vertices = surface.vertices
+            max_z_point_id = np.where(vertices[:, 2] == np.amax(vertices[:, 2]))[0][0]
+            points[str(i)] = {
+                'coordinates': np.round(vertices[max_z_point_id] - np.absolute(np.multiply(vertices[max_z_point_id]/np.linalg.norm(vertices[max_z_point_id]), [0, 0, shift])), 6),
+                'max_volume': max_volume,
+            }
+            i = i + 1
+
+        i = 10
+        electrode_regions = electrode_mesh.get_attribute('face_sources')
+        electrode_mesh.add_attribute('vertex_valance')
+        vertex_valance = electrode_mesh.get_attribute('vertex_valance')
+        for region in np.unique(electrode_regions):
+            faces = electrode_mesh.faces[np.where(electrode_regions == region)[0]]
+            vertices = electrode_mesh.vertices[np.unique(faces)]
+            max_valance_point = np.where(vertex_valance[np.unique(faces)] == np.amax(vertex_valance[np.unique(faces)]))[0][0]
+            points[str(i)] = {
+                'coordinates': np.round(vertices[max_valance_point] - np.multiply(vertices[max_valance_point]/np.linalg.norm(vertices[max_valance_point]), shift), 6),
+                'max_volume': max_volume,
+            }
+            i = i + 1
+
+        return points
+\end{lstlisting}
+
+\section{FEM}
+
+\begin{lstlisting}[language=Python,caption={Class interfacing to SfePy and contains routines for the PHM and spherical model \gls{FEM} solution.},captionpos=b,label=lst:fem_solver_class]
+from __future__ import absolute_import
+import os
+import gc
+import sys
+import meshio
+import numpy as np
+
+#### SfePy libraries
+from sfepy.base.base import Struct
+from sfepy.discrete import (FieldVariable, Material, Integral, Equation, Equations, Problem, Function)
+from sfepy.discrete.fem import Mesh, FEDomain, Field
+from sfepy.terms import Term
+from sfepy.discrete.conditions import Conditions, EssentialBC
+from sfepy.solvers.ls import PETScKrylovSolver
+from sfepy.solvers.nls import Newton
+#### SfePy libraries
+
+import Meshing.modulation_envelope as mod_env
+
+class Solver:
+    def __init__(self, settings_file: dict, settings_header: str, electrode_system: str):
+        self.__settings = settings_file
+        self.__settings_header = settings_header
+        if os.name == 'nt':
+            self.__extra_path = '_windows'
+        else:
+            self.__extra_path = ''
+        sys.path.append(os.path.realpath(settings_file[settings_header]['lib_path' + self.__extra_path]))
+
+        self.__linear_solver = None
+        self.__non_linear_solver = None
+        self.__overall_volume = None
+        self.conductivities = {}
+        self.electrode_system = electrode_system
+
+        # Read from settings
+        self.__material_conductivity = None
+        self.__selected_model = None
+        self.domain = None
+        self.problem = None
+        self.essential_boundaries = []
+        self.field_variables = {}
+        self.fields = {}
+
+    def load_mesh(self, model=None, connectivity='3_4'):
+        if model is None:
+            raise AttributeError('No model was selected.')
+        mesh = meshio.read(self.__settings[self.__settings_header][model]['mesh_file' + self.__extra_path])
+        self.__selected_model = model
+
+        vertices = mesh.points
+        vertex_groups = np.empty(vertices.shape[0])
+        cells = mesh.cells[0][1]
+        cell_groups = mesh.cell_data['cell_scalars'][0]
+
+        for group in np.unique(cell_groups):
+            roi_cells = np.unique(cells[np.where(cell_groups == group)[0]])
+            vertex_groups[roi_cells] = group
+
+        loaded_mesh = Mesh.from_data('mesh_name', vertices, vertex_groups, [cells], [cell_groups], [connectivity])
+        self.domain = FEDomain('domain', loaded_mesh)
+
+    def define_field_variable(self, var_name: str, field_name: str):
+        # TODO: Check if the provided field exists
+        if not self.__overall_volume:
+            self.__assign_regions()
+        if field_name not in self.fields.keys():
+            self.fields[field_name] = Field.from_args(field_name, dtype=np.float64, shape=(1, ), region=self.__overall_volume, approx_order=1)
+
+        self.field_variables[var_name] = {
+            'unknown': FieldVariable(var_name, 'unknown', field=self.fields[field_name]),
+            'test': FieldVariable(var_name + '_test', 'test', field=self.fields[field_name], primary_var_name=var_name),
+        }
+
+    def define_essential_boundary(self, region_name: str, group_id: int, field_variable: str, field_value: float):
+        # TODO: Add a check to see if the provided potential variable is a defined potential
+        # TODO: Do not run if there are no field variables
+        if field_variable not in self.field_variables.keys():
+            raise AttributeError('The field variable {}')
+        temporary_domain = self.domain.create_region(region_name, 'vertices of group ' + str(group_id), 'facet', add_to_regions=False)
+        self.essential_boundaries.append(EssentialBC(region_name, temporary_domain, {field_variable + '.all' : field_value}))
+
+    def solver_setup(self, max_iterations=250, relative_tol=1e-7, absolute_tol=1e-3, verbose=False):
+        self.__linear_solver = PETScKrylovSolver({
+            'ksp_max_it': max_iterations,
+            'ksp_rtol': relative_tol,
+            'ksp_atol': absolute_tol,
+            'ksp_type': 'cg',
+            'pc_type': 'hypre',
+            'pc_hypre_type': 'boomeramg',
+            'pc_hypre_boomeramg_coarsen_type': 'HMIS',
+            'verbose': 2 if verbose else 0,
+        })
+
+        self.__non_linear_solver = Newton({
+            'i_max': 1,
+            'eps_a': absolute_tol,
+        }, lin_solver=self.__linear_solver)
+
+    def run_solver(self, save_results: bool, post_process_calculation=True):
+        if not self.__non_linear_solver:
+            raise AttributeError('The solver is not setup. Please set it up before calling run.')
+        self.__material_definition()
+
+        self.problem = Problem('temporal_interference', equations=self.__generate_equations())
+        self.problem.set_bcs(ebcs=Conditions(self.essential_boundaries))
+        self.problem.set_solver(self.__non_linear_solver)
+
+        if post_process_calculation:
+            return self.problem.solve(post_process_hook=self.__post_process, save_results=save_results)
+        return self.problem.solve(save_results=save_results)
+
+    def set_custom_post_process(self, function):
+        self.__post_process = function
+
+    def clear_all(self):
+        del self.domain
+        del self.__overall_volume
+        del self.essential_boundaries
+        del self.field_variables
+        del self.fields
+        del self.problem
+        gc.collect()
+
+    def __generate_equations(self):
+        # TODO: Add a check for the existence of the fields
+        integral = Integral('i1', order=2)
+
+        equations_list = []
+        for field_variable in self.field_variables.items():
+            term_arguments = {
+                'conductivity': self.__material_conductivity,
+                field_variable[0] + '_test': field_variable[1]['test'],
+                field_variable[0]: field_variable[1]['unknown']
+            }
+            equation_term = Term.new('dw_laplace(conductivity.val, ' + field_variable[0] + '_test, ' + field_variable[0] + ')', integral, self.__overall_volume, **term_arguments)
+            equations_list.append(Equation('balance', equation_term))
+
+        return Equations(equations_list)
+
+    def __material_definition(self):
+        if not self.conductivities:
+            self.__assign_regions()
+        self.__material_conductivity = Material('conductivity', function=Function('get_conductivity', lambda ts, coors, mode=None, equations=None, term=None, problem=None, **kwargs: self.__get_conductivity(ts, coors, mode, equations, term, problem, conductivities=self.conductivities)))
+
+    def __assign_regions(self):
+        self.__overall_volume = self.domain.create_region('Omega', 'all')
+
+        for region in self.__settings[self.__settings_header][self.__selected_model]['regions'].items():
+            self.domain.create_region(region[0], 'cells of group ' + str(region[1]['id']))
+            self.conductivities[region[0]] = region[1]['conductivity']
+
+        for electrode in self.__settings[self.__settings_header]['electrodes'][self.electrode_system].items():
+            self.domain.create_region(electrode[0], 'cells of group ' + str(electrode[1]['id']))
+            self.conductivities[electrode[0]] = self.__settings[self.__settings_header]['electrodes']['conductivity']
+
+    def __get_conductivity(self, ts, coors, mode=None, equations=None, term=None, problem=None, conductivities=None):
+        # Execute only once at the initialization
+        if mode == 'qp':
+            values = np.empty(int(coors.shape[0]/4)) # Each element corresponds to one coordinate of the respective tetrahedral edge
+
+            # Save the conductivity values
+            for domain in problem.domain.regions:
+                if domain.name in conductivities.keys():
+                    values[domain.entities[3]] = conductivities[domain.name]
+
+            values = np.repeat(values, 4) # Account for the tetrahedral edges
+            values.shape = (coors.shape[0], 1, 1)
+
+            return {'val' : values}
+
+    def __post_process(self, out, problem, state, extend=False):
+        e_field_base = problem.evaluate('-ev_grad.2.Omega(potential_base)', mode='qp')
+        e_field_df = problem.evaluate('-ev_grad.2.Omega(potential_df)', mode='qp')
+
+        # Calculate the maximum modulation envelope
+        modulation_cells = mod_env.modulation_envelope(e_field_base[:, 0, :, 0], e_field_df[:, 0, :, 0])
+        modulation_cells = np.repeat(modulation_cells, 4, axis=0).reshape((e_field_base.shape[0], 4, 1, 1))
+        modulation_points = modulation_cells.flatten()[np.unique(problem.domain.mesh.get_conn('3_4').flatten(), return_index=True)[1]]
+
+        # Calculate the directional modulation envelope
+        modulation_x = mod_env.modulation_envelope(e_field_base[:, 0, :, 0], e_field_df[:, 0, :, 0], dir_vector=[1, 0, 0])
+        modulation_y = mod_env.modulation_envelope(e_field_base[:, 0, :, 0], e_field_df[:, 0, :, 0], dir_vector=[0, 1, 0])
+        modulation_z = mod_env.modulation_envelope(e_field_base[:, 0, :, 0], e_field_df[:, 0, :, 0], dir_vector=[0, 0, 1])
+
+        modulation_x = np.repeat(modulation_x, 4, axis=0).reshape((e_field_base.shape[0], 4, 1, 1))
+        modulation_y = np.repeat(modulation_y, 4, axis=0).reshape((e_field_base.shape[0], 4, 1, 1))
+        modulation_z = np.repeat(modulation_z, 4, axis=0).reshape((e_field_base.shape[0], 4, 1, 1))
+
+        # Save the output
+        out['e_field_base'] = Struct(name='e_field_base', mode='cell', data=e_field_base, dofs=None)
+        out['e_field_df'] = Struct(name='e_field_df', mode='cell', data=e_field_df, dofs=None)
+        out['max_modulation'] = Struct(name='max_modulation', mode='cell', data=modulation_cells, dofs=None)
+        out['max_modulation_pts'] = Struct(name='max_modulation_pts', mode='vertex', data=modulation_points, dofs=None)
+        out['modulation_x'] = Struct(name='modulation_x', mode='cell', data=modulation_x, dofs=None)
+        out['modulation_y'] = Struct(name='modulation_y', mode='cell', data=modulation_y, dofs=None)
+        out['modulation_z'] = Struct(name='modulation_z', mode='cell', data=modulation_z, dofs=None)
+
+        return out
+\end{lstlisting}
+
+\section{Utilities}
+\begin{lstlisting}[language=Python,caption={Class defining parsers and writers for commonly used file types. Here .gmsh and .poly are covered.},captionpos=b,label=lst:file_ops_class]
+import numpy as np
+
+class FileOperations():
+    def __init__(self):
+        print("here")
+
+    @staticmethod
+    def poly_write(file_name: str, nodes, faces, boundaries, regions: dict):
+        with open(file_name, "wb") as m_file:
+            # Nodes
+            m_file.write("{} 3\n".format(len(nodes)).encode("utf-8"))
+            for index in range(0, len(nodes)):
+                m_file.write("{} {} {} {}\n".format(index + 1, *nodes[index]).encode("utf-8"))
+
+            # Faces
+            m_file.write("{} 1\n".format(len(faces)).encode("utf-8"))
+            for index in range(0, len(faces)):
+                m_file.write("1 0 {}\n".format(int(boundaries[index] + 1)).encode("utf-8"))
+                m_file.write("3 {} {} {}\n".format(*faces[index] + 1).encode("utf-8"))
+
+            # Holes NOT IMPLEMENTED YET
+            m_file.write("0\n".encode("utf-8"))
+
+            # Regions
+            m_file.write("{}\n".format(len(list(regions.keys()))).encode("utf-8"))
+            for region_id in regions.keys():
+                m_file.write("{} {} {} {} {} {}\n".format(region_id, *regions[region_id]['coordinates'], region_id, regions[region_id]['max_volume']).encode("utf-8"))
+
+    @staticmethod
+    def gmsh_write(file_name: str, surfaces, domains, physical_tags, bounding_surface_tag):
+        c_size_t = np.dtype("P")
+
+        with open(file_name, "wb") as m_file:
+            # MeshFormat (Check)
+            m_file.write(b"$MeshFormat\n")
+            m_file.write("4.1 {} {}\n".format(1, c_size_t.itemsize).encode("utf-8"))
+
+            m_file.write(b"$EndMeshFormat\n")
+
+            # PhysicalNames (Check)
+            m_file.write(b"$PhysicalNames\n")
+            m_file.write("{}\n".format(len(physical_tags)).encode("utf-8"))
+            for physical_tag in physical_tags:
+                m_file.write('3 {} "{}"\n'.format(*physical_tag).encode("utf-8"))
+            m_file.write(b"$EndPhysicalNames\n")
+
+            # Entities (Check)
+            m_file.write(b"$Entities\n")
+            
+            m_file.write("0 0 {} {}\n".format(len(surfaces), len(domains)).encode("utf-8"))
+            for i in range(0, len(surfaces)):
+                m_file.write("{} {} {} {} {} {} {} {} {}\n".format(i + 1, np.amin(surfaces[i].vertices[:, 0]), np.amin(surfaces[i].vertices[:, 1]), np.amin(surfaces[i].vertices[:, 2]), np.amax(surfaces[i].vertices[:, 0]), np.amax(surfaces[i].vertices[:, 1]), np.amax(surfaces[i].vertices[:, 2]), 0, 0).encode("utf-8"))
+            for i in range(0, len(domains)):
+                m_file.write("{} {} {} {} {} {} {} {} {} {} {}\n".format(i + 1, np.amin(domains[i].vertices[:, 0]), np.amin(domains[i].vertices[:, 1]), np.amin(domains[i].vertices[:, 2]), np.amax(domains[i].vertices[:, 0]), np.amax(domains[i].vertices[:, 1]), np.amax(domains[i].vertices[:, 2]), 1, physical_tags[i][0], 1, bounding_surface_tag[i]).encode("utf-8"))
+            m_file.write(b"$EndEntities\n")
+
+            # Nodes (Checked?)
+            float_fmt=".16e"
+
+            surfs = 0
+            voxels = 0
+            for surf in surfaces:
+                surfs = surfs + surf.num_vertices
+            for domain in domains:
+                voxels = voxels + domain.num_vertices
+
+            m_file.write(b"$Nodes\n")
+            num_blocks = len(surfaces) + len(domains)
+            min_tag = 1
+            max_tag = surfs + voxels
+
+            m_file.write("{} {} {} {}\n".format(num_blocks, surfs + voxels, min_tag, max_tag).encode("utf-8"))
+
+            ta = 1
+            face_elements = []
+            for i in range(0, len(surfaces)):
+                # dim_entity, is_parametric
+                num_elem = surfaces[i].num_vertices
+
+                m_file.write("{} {} {} {}\n".format(2, i + 1, 0, num_elem).encode("utf-8"))
+                np.arange(ta, ta + num_elem).tofile(m_file, "\n", "%d")
+                m_file.write(b"\n")
+                np.savetxt(m_file, surfaces[i].vertices, delimiter=" ", fmt="%" + float_fmt)
+                #face_elements.append(surfaces[i].faces + 1 + (ta - 1))
+                face_elements.append(surfaces[i].faces.astype(c_size_t) + 1 + (ta - 1))
+                ta = ta + num_elem
+                m_file.write(b"\n")
+
+            voxel_elements = []
+            for i in range(0, len(domains)):
+                num_elem = domains[i].num_vertices
+
+                m_file.write("{} {} {} {}\n".format(3, i + 1, 0, num_elem).encode("utf-8"))
+                np.arange(ta, ta + num_elem).tofile(m_file, "\n", "%d")
+                m_file.write(b"\n")
+                np.savetxt(m_file, domains[i].vertices, delimiter=" ", fmt="%" + float_fmt)
+                #voxel_elements.append(domains[i].voxels + 1 + (ta - 1))
+                voxel_elements.append(domains[i].voxels.astype(c_size_t) + 1 + (ta - 1))
+                ta = ta + num_elem
+                m_file.write(b"\n")
+            m_file.write(b"$EndNodes\n")
+
+            # Elements
+            surfs = 0
+            voxels = 0
+            for surf in surfaces:
+                surfs = surfs + surf.num_faces
+            for domain in domains:
+                voxels = voxels + domain.num_voxels
+
+            m_file.write(b"$Elements\n")
+            num_blocks = len(face_elements) + len(voxel_elements)
+            min_tag = 1
+            max_tag = surfs + voxels
+
+            m_file.write("{} {} {} {}\n".format(num_blocks, surfs + voxels, min_tag, max_tag).encode("utf-8"))
+
+            ta = 1
+            for i in range(0, len(face_elements)):
+                num_elem = face_elements[i].shape[0]
+
+                m_file.write("{} {} {} {}\n".format(2, i + 1, 2, num_elem).encode("utf-8"))
+                np.savetxt(m_file, np.column_stack([np.arange(ta, ta + num_elem), face_elements[i]]), "%d", " ")
+                ta = ta + num_elem
+                m_file.write(b"\n")
+
+            for i in range(0, len(voxel_elements)):
+                num_elem = voxel_elements[i].shape[0]
+
+                m_file.write("{} {} {} {}\n".format(3, i + 1, 4, num_elem).encode("utf-8"))
+                np.savetxt(m_file, np.column_stack([np.arange(ta, ta + num_elem), voxel_elements[i]]), "%d", " ")
+                ta = ta + num_elem
+                m_file.write(b"\n")
+            m_file.write(b"$EndElements\n")
+\end{lstlisting}
+
+\begin{lstlisting}[language=yaml,caption={Sample settings file},captionpos=b,label=lst:settings_file]
+---
+SfePy:
+  lib_path: 'path to the scripts folder on Linux'
+  lib_path_windows: 'path to the scripts folder on Windows'
+  electrodes:
+    conductivity: 59600000.0
+    10-20:
+      Fp1:
+        id: 10
+      Fp2:
+        id: 11
+      F7:
+        id: 12
+      F3:
+        id: 13
+      Fz:
+        id: 14
+      F4:
+        id: 15
+      F8:
+        id: 16
+      T7:
+        id: 17
+      C3:
+        id: 18
+      Cz:
+        id: 19
+      C4:
+        id: 20
+      T8:
+        id: 21
+      P7:
+        id: 22
+      P3:
+        id: 23
+      Pz:
+        id: 24
+      P4:
+        id: 25
+      P8:
+        id: 26
+      O1:
+        id: 27
+      O2:
+        id: 28
+    sphere:
+      B_VCC: 
+        id: 4
+      B_GND: 
+        id: 5
+      D_VCC: 
+        id: 6
+      D_GND: 
+        id: 7
+  real_brain:
+    mesh_file: 'mesh file to be loaded'
+    output_dir: 'desired output directory'
+    mesh_file_windows: 'mesh file to be loaded'
+    output_dir_windows: 'desired output directory'
+    regions:
+      Skin:
+        id: 1
+        conductivity: 0.17
+      Skull:
+        id: 2
+        conductivity: 0.003504
+      CSF:
+        id: 3
+        conductivity: 1.776
+      GM:
+        id: 4
+        conductivity: 0.2391
+      WM:
+        id: 5
+        conductivity: 0.2651
+      Cerebellum:
+        id: 6
+        conductivity: 0.6597
+      Ventricles:
+        id: 7
+        conductivity: 1.776
+  sphere:
+    mesh_file: 'mesh file to be loaded'
+    output_dir: 'desired output directory'
+    mesh_file_windows: 'mesh file to be loaded'
+    output_dir_windows: 'desired output directory'
+    regions:
+      Skin: 
+        id: 0
+        conductivity: 0.17
+      Skull: 
+        id: 1
+        conductivity: 0.003504
+      CSF: 
+        id: 2
+        conductivity: 1.776
+      Brain: 
+        id: 3
+        conductivity: 0.234
+---
+\end{lstlisting}
