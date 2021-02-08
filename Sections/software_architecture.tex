@@ -1,5 +1,51 @@
 \pagebreak
 \chapter{Software Architecture}
 \label{chap:soft_arch}
+
+Finding the right software and the right tools for the specific problem requirements is usually a challenging task. There are many proprietary software available providing an intuitive user interface, and the required tools for \gls{FE} analysis. Apart from the proprietary ones there are many other open-source software like \gls{SimNIBS}, and SCIRun. The challenge is to combine the weaknesses of one software with the strengths of the other.
+
+In this work an interface-like software has been developed for the simulations of the \gls{tTIS} method. The boundaries are not strictly set for this purpose only, but the software in question is easily scalable to multiple physics problems requiring \gls{FEM} solution. As mentioned before, this work uses SfePy \cite{Cimrman2019}, PyMesh \cite{pymesh}, and TetGen \cite{tetgen} packages. These are all open-source and actively developed, with TetGen \cite{tetgen} being highly used in application involving tetrahedral meshing.
+
+As part of experimentation and learning, custom functions annotating and recognizing the regions of each model were developed and can be found on GitLab \cite{thesis_repo}, at \href{https://gitlab.com/ttis-simulations/ttis-software/-/releases#v0.1}{v0.1 release}. 
+
 \section{UML Class Diagram}
-\section{Use-case diagram}
+
+Better understanding of the software's structure and function requires using \gls{UML} class and use case diagrams, highly established ways of technical communication in software engineering.
+
+\autoref{fig:uml_class_meshing} presents the class relations and definitions of the meshing procedure. The steps taken to mesh the model are illustrated in \autoref{fig:use_case_meshing}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.85\textwidth]{assets/images/uml_class_diagram_meshing.png}
+    \caption{\gls{UML} class diagram for this work's meshing classes}
+    \label{fig:uml_class_meshing}
+\end{figure}
+
+The meshing procedure is a bit involved, in terms of steps and packages required, since it generates a TetGen file which is the meshed using TetGen. The \gls{FEM} solution procedure is much simpler, with most of the functionality done by the \texttt{Solver} class automatically. The only required package for the normal operation of the solver is SfePy. The \texttt{Solver} class is highly modular and can be modified to suit the needs of the problem, by just altering the equation and the boundary condition definition.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.38\textwidth]{assets/images/uml_class_diagram_fem.png}
+    \caption{\gls{UML} class diagram for this work's \gls{FEM} class}
+    \label{fig:uml_class_fem}
+\end{figure}
+
+\section{Use-case diagrams}
+
+An overview of the meshing procedure is provided in \autoref{fig:use_case_meshing}. This relies on the class implementation (\autoref{fig:uml_class_meshing}) and the relevant code executing the use cases described, can be found in \autoref{appndx:code}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.76\textwidth]{assets/images/uml_meshing_use_case_diagram.png}
+    \caption{\gls{UML} use case diagram for the meshing procedure}
+    \label{fig:use_case_meshing}
+\end{figure}
+
+Same as above, \autoref{fig:use_case_fem} illustrates the procedure to solve the meshed model. The code regarding these use cases can be found in \autoref{appndx:code}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.76\textwidth]{assets/images/uml_fem_use_case_diagram.png}
+    \caption{\gls{UML} use case diagram for the \gls{FEM} solution procedure}
+    \label{fig:use_case_fem}
+\end{figure}
