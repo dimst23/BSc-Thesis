@@ -51,7 +51,7 @@ It is clear from the figures above that the software can be considered accurate,
 
 Manipulating a spherical model, then a murine model and finally a realistic human model comes at the cost of exponentially increasing complexity. Nevertheless, it consists an essential process, along with testing on murine models and phantoms, that has to precede in order to be able to validate any hypothesis during clinical trials.
 
-In that direction, two key factors have been tested in this work, specifically the effect of the human head anatomy variation between subjects, as well as the variation of the electrode position. These effects are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position} respectively. As it will be evident below, the anatomy of each patient has a significant impact on the resulting pattern inside the brain. Thus, there is the need for optimization to achieve stimulation of a small area, as different electrode pair combinations must be used for the each person or model. This optimization will be the subject of a future work, however a relevant discussion is provided on \autoref{sec:discussion}.
+In that direction, two key factors have been tested in this work, specifically the effect of the human head anatomy variation between subjects, as well as the variation of the electrode position. These effects are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position} respectively. As it will be evident below, the anatomy of each patient has a significant impact on the resulting pattern inside the brain. Thus, there is the need for optimization to achieve stimulation of a small area, as different electrode pair combinations must be used for each person or model. This optimization will be the subject of a future work, however a relevant discussion is provided in \autoref{sec:discussion}.
 % When you say electrode combinations you mean a differend brand? Different colour? Different position? Different stimulation?
 
 Lastly, it should be noted that for the electrode positioning impact assessment models with the international 10-10 system have also been tested to find the potential issues that the 10-20 system's coarse nature might have. It should be noted that all conductivity values for the simulated models originate from the \gls{IT'IS} tissue database \cite{ITstissue}.
@@ -60,7 +60,7 @@ Lastly, it should be noted that for the electrode positioning impact assessment 
 \subsection{Effects of Model Anatomy}
 \label{subsec:effects_of_model_anatomy}
 
-Assessing the impact of the model anatomy on the field distribution requires many different subjects to have statistically significant results. Specifically in this work, 9 models from the \gls{PHM} repository \cite{ErikG.Lee2016} were used, having the 10-20 as the electrode placement system. Electrodes P8, F7 \textit{(1\si{kHz})} and P7, F8 \textit{(1.04\si{kHz})} were used, with the first electrode in each couple being the active electrode. The corresponding electrode positions are shown in \autoref{fig:electrodes_10-20}.
+Assessing the impact of the model anatomy on the field distribution requires testing on many different subjects to have statistically significant results. Specifically, 9 models from the \gls{PHM} repository \cite{ErikG.Lee2016} having the 10-20 as the electrode placement system were used. Electrodes P8, F7 \textit{(1\si{kHz})} and P7, F8 \textit{(1.04\si{kHz})} were employed, with the first electrode in each couple being the active electrode. The corresponding electrode positions are shown in \autoref{fig:electrodes_10-20}.
 
 \begin{figure}[H]
     \centering
@@ -78,7 +78,7 @@ Assessing the impact of the model anatomy on the field distribution requires man
     \label{fig:brain_slice_for_effects}
 \end{figure}
 
-As a first step the maximum modulation envelope electric field value was taken across the line of the x-axis for each model, with the reference plane illustrated in \autoref{fig:brain_slice_for_effects_x}. The field values for each model, along the x-axis, can be seen in \autoref{fig:x_axis_effect}, along with the standard deviation in the legend.
+As a first step, the electric field of the maximum modulation envelope was extracted across the x-axis for each model, with the reference plane illustrated in \autoref{fig:brain_slice_for_effects_x}. The extracted field values can be seen in \autoref{fig:x_axis_effect} along with the standard deviation in the legend.
 
 \begin{figure}[H]
     \centering
@@ -87,7 +87,7 @@ As a first step the maximum modulation envelope electric field value was taken a
     \label{fig:x_axis_effect}
 \end{figure}
 
-It is evident from the shape of the curves in \autoref{fig:x_axis_effect} that the same pattern is followed, but there is a significant variation from one model to the next, both in the curve's shape and the standard deviation. Furthermore, another measurement was made along the center of bounds axis (\autoref{fig:brain_slice_for_effects_cf}) and as illustrated in \autoref{fig:center_of_bounds_effect}, the problems discussed for the x-axis plot are even more prevalent.
+It is evident from \autoref{fig:x_axis_effect} that a similar electric field pattern is present across different models, at least ragarding the area around the center of the graph, but there is considerable variation in the normalized field intensity as well as the standard deviation. Furthermore, another measurement was conducted along the center of bounds axis (\autoref{fig:brain_slice_for_effects_cf}) and as illustrated in \autoref{fig:center_of_bounds_effect}, the preceding observations are even more prevalent.
 
 \begin{figure}[H]
     \centering
