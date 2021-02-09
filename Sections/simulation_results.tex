@@ -96,10 +96,10 @@ It is evident from \autoref{fig:x_axis_effect} that a similar electric field pat
     \label{fig:center_of_bounds_effect}
 \end{figure}
 
-Looking at \autoref{fig:center_of_bounds_effect} it is evident that for each model the variability of the electric field is not negligible. The graph indicates the values on the line that cuts the center of bounds for each model, meaning that is passes through many different layers at different heights in the head, giving a clearer picture of what happens. 
-
-To better understand the cause of this difference and gauge which models have similar patterns, \gls{PCA} was performed with the features as summarized in \autoref{tab:pca_features}. For each model, the thickness was calculated from the coordinate points along the x-axis line (\autoref{fig:brain_slice_for_effects_x}), in the corresponding regions. Each of the maximum modulation envelope electric field was calculated in the whole volume of each designated region on \autoref{tab:pca_features}, same as the standard deviation.
-
+Looking at \autoref{fig:center_of_bounds_effect} it can be deduced that the variability of the electric field across different models is not negligible. One could hypothesize that this case pertains to a more clear or general picture of the field distribution, given that the line that traverses the center of bounds passes through many different layers of the brain. 
+% I propose you include a figure explaining what the center of bounds is. Also the cause of what difference do you mean?
+To better understand the cause of this difference and gauge which models have similar patterns, a \gls{PCA} was performed with the features summarized in \autoref{tab:pca_features}. For each model, the thickness was calculated from the coordinate points along the x-axis line (\autoref{fig:brain_slice_for_effects_x}), in the corresponding regions. Each of the maximum modulation envelope electric field was calculated in the whole volume of each designated region on \autoref{tab:pca_features}, same as the standard deviation.
+% I did not really got how you calculated the thickness. Actually, I think that the whole previous paragraph needs restructuring. What are the regions you are refering to exactly? Also, maybe it would be a good idea to write a few words on what this method is and why it is useful, as well as explain what the variables in the table are (unless you have refered to them earlier somewhere)
 \begin{table}[!ht]
 	\centering
     \caption[\gls{PCA} feature values]{Feature values used in the \gls{PCA} analysis. The electric field values, denoted with $E$ are the mean for each model on the designated region. $\sigma$ is the corresponding standard deviation for each electric field value. The thickness value is the sum of the skin, skull , and \gls{CSF} thickness along the x-axis line for each model.}
@@ -122,8 +122,8 @@ To better understand the cause of this difference and gauge which models have si
     \end{tabular}
 \end{table}
 
-Correlating the data from \autoref{tab:pca_features} in a \gls{PCA} chart, provides an insight on similarities or the lack thereof, between the models used. As seen in \autoref{fig:model_pca}, there is some clustering of models indicating that they more correlated than the rest, based on the provided feature set. That said, it is evident that the models 111716, 113619, and 163129 are clustered together, in a weak way, and as seen on \autoref{tab:pca_features} they have very similar thickness values. Models like 103414 and 110411 are on the 2 sides of the graph and they have very different thickness values. The two latter models have also significant difference in the mean electric field values on the white matter.
-
+Correlating the data from \autoref{tab:pca_features} in a \gls{PCA} chart provides an insight on similarities, or the lack thereof, between the models used. As seen in \autoref{fig:model_pca}, there is some clustering of models indicating that they more correlated than the rest, based on the provided feature set. That said, it is evident that the models 111716, 113619, and 163129 are clustered together, in a weak way, and as seen on \autoref{tab:pca_features} they have very similar thickness values. Models like 103414 and 110411 are on the 2 sides of the graph and they have very different thickness values. The two latter models have also significant difference in the mean electric field values on the white matter.
+% I think it would be better if the previous paragraph had a bullet-point structure because now your observations are a little bit lost and not very clear at first sight.
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/model_pca.pdf}
@@ -131,33 +131,33 @@ Correlating the data from \autoref{tab:pca_features} in a \gls{PCA} chart, provi
     \label{fig:model_pca}
 \end{figure}
 
-From the analysis provided above, it seems that there is a dependance on the thickness of the model with the final electric field sparsity and distribution, considering the same electrodes are operating for each one of the models. Despite the initial evidence presented above, further investigation with more models is required to reach a conclusion. What is certain is that there is a dependance on the model geometry and the final pattern as it can also be seen in \autoref{fig:models_pattern_variation}.
-
+From the observations presented above, there seems to be a dependence between the thickness and the electric field sparsity and distribution, considering that the same pairs of electrodes are operating on each model. Despite this preliminary finding, further investigation with a greater number of models is required to reach a safe conclusion. Nevertheless, there is certainly a corellation of the model geometry and the final pattern as it is illustrated in \autoref{fig:models_pattern_variation}.
+% Maybe you should include a little bit more info on what you see in this picture? Apart from the fact that the patterns are not identical. Aren't there any other similarities or differences? 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.8\textwidth]{assets/images/brain_pattern_variation_models.pdf}
     \caption{Variation of the electric field pattern distribution for the different models. The scale is the same for all models.}
     \label{fig:models_pattern_variation}
 \end{figure}
-
+% I think the following paragraph needs restructuring. From what I got, you say that tou assumed a uniform white matter and skull, but this is not the best way to go because you may miss out on details. Ok, but what do you do with that info? Are you going to try something in your next work? Are you just refering to it so the reader can keep it in mind when assesing your findings? You have to be more specific, it is a little messy right now.
 In all models included in this work and all simulations, a uniform white matter and skull are assumed. This is not the correct since the white matter has different regions with different densities, and similarly the skull has the spongiform regions with very low conductivity value. As shown by \paper{Rampersad}{Rampersad2013_skull_approximations}, on \gls{tES} and specifically \gls{tDCS}, the different conductivity values for the layered bone structure \textit{(spongiform and compact bone)} of the skull can have a considerable effect if not considered in the simulations. The white matter uniformity consideration on the other hand, provides no information for the different regions and it puts a road block on assessing the impact of the electric field on the regions of interest, most of them lying in the white matter region, near the ventricles \textit{(e.g., pineal gland and globus palidus)}.
 
 \subsection{Varying Electrode Position}
 \label{subsec:varying_electrode_position}
 
-Model anatomy is one of the crucial factors that must be considered when simulating with \gls{tTIS}. Although it is not the only player, since the current ratio between the two electrodes, and the position of them, can influence the results a lot.
+Model anatomy is one of the crucial factors that must be considered when simulating with \gls{tTIS} but it is not the only player, since the current ratio between the two electrodes and the position thereof can pose a major influence on the results.
 
-As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has significant impact regarding the maximum potential achieved in a given volume. This dependance is well explained as shown in \autoref{fig:mod_env_amplitude_var}, due to the fact that when the two electrodes are not placed symmetrically, the pair closest to the region of interest takes over. The resulting modulation amplitude is much lower than the one seen in \autoref{fig:modulation_showcase}.
-
+As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has significant impact regarding the maximum potential achieved in a given volume. This dependence can be evidently seen in \autoref{fig:mod_env_amplitude_var}, due to the fact that when the two electrodes are not placed symmetrically, the pair closest to the region of interest takes over. The resulting modulation amplitude is much lower than the one seen in \autoref{fig:modulation_showcase}.
+% I think it would be easier for the reader to see the difference if you included the correct figure here as well. Also, what does it mean that the "pair takes over"?
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{assets/images/modulation_envelope_2-1.pdf}
     \caption{Modulation envelope and the effect of differing amplitudes between the two fields}
     \label{fig:mod_env_amplitude_var}
 \end{figure}
-
+% What exactly is one step above? You have to be more precise.
 In this work, the attention will be shifted towards the electrode position variation and its subsequent effects. One can imagine that moving the electrodes or changing the combination used can have an impact on the final pattern. It is evident from \autoref{fig:elec_position_variation} that using the combination just one step above the previous one can have significant impact on the field distribution.
-
+% What is this significant impact exaxtly? Tell us a little bit more about it! 
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
@@ -175,7 +175,7 @@ In this work, the attention will be shifted towards the electrode position varia
 \end{figure}
 
 Even if one electrode is moved and the others stay as they are, significant differences are observed \textit{(\autoref{fig:one_elec_moved_var})}. One of the main reasons making \cref{fig:26_16_elec_pair,fig:25_15_elec_pair} differ significantly is the lack of granularity the 10-20 system provides. Limited only to 19 electrodes, there is not much room for movement, hence a system with more electrodes is required and in that case th 10-10 system can be a good candidate. The reason that the 10-5 system is not considered is mainly due to the very high number of electrodes \textit{(329 in total)}.
-
+% I am confused. Again, you speak about significant differences but you are not being specific. Ok, it is obvious from the picture, but you have to be explicit. Also, I can not understand which picture has which system (10-20 or else).
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
