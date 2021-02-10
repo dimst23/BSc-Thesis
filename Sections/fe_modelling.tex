@@ -1,5 +1,5 @@
 \pagebreak
-\chapter{Finite Element Modelling}
+\chapter{Finite Element Modeling}
 
 All models are discretized with a \gls{FE} mesh before being passed to the solver. Although there are numerous \gls{FEM} solver tools, \textit{SfePy} is used in this work \cite{Cimrman2019} since it provides all the necessary means for solving the problem in question, and it has a direct interface to Python. In this section, a detailed overview of the models used (\autoref{sec:fem_models}), the meshing strategy (\autoref{sec:fem_meshing}), and the solver configuration (\autoref{sec:fem_solver}) are given.
 
@@ -50,18 +50,18 @@ Other ways not included in this work, to model the brain and head, are using \gl
 
 Proper meshing is key to obtaining correct results when solving a \gls{FEM} problem. In this section, the mesh quality criteria are described, and a basic mesh convergence analysis is presented. Besides the analysis, the followed meshing strategy is presented in detail, with specific code examples and the algorithms developed and employed. The tool PyMesh \cite{pymesh} is used for all meshing operations, containing all the necessary \gls{STL} file and geometry operations needed in this work. Specifically for volume meshing, this work uses TetGen \cite{tetgen}, a software library designed explicitly for tetrahedral meshing.
 
-Before proceeding with the detailed explanation of each process involved in the final generation of the meshed model, an overview diagram of the steps involved can be seen in \autoref{fig:mesh_modelling}.
+Before proceeding with the detailed explanation of each process involved in the final generation of the meshed model, an overview diagram of the steps involved can be seen in \autoref{fig:mesh_modeling}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = \textwidth]{assets/images/fem_meshing_high_level.pdf}
     \caption{High-level description of the \gls{FEM} meshing procedure}
-    \label{fig:mesh_modelling}
+    \label{fig:mesh_modeling}
 \end{figure}
 
 \noindent The recognition of the individual mesh domains from the meshed model and subsequent labeling is a crucial process that allows different material definitions in the solver, useful for later analysis stages. A volumetric mesh is generated during the meshing procedure without labeling each domain, creating the need to recognize each area \textit{(domain)}. The recognition and subsequent labeling are done by partitioning the domains using the boundary surfaces and finding the enclosed tetrahedra, as described in \ref{subsec:elec_annotation}.
 
-Finally, as shown in \autoref{fig:mesh_modelling}, the meshed model is saved with all necessary annotations in \gls{VTK} format, a widely used and robust file format for \gls{FE} meshes.
+Finally, as shown in \autoref{fig:mesh_modeling}, the meshed model is saved with all necessary annotations in \gls{VTK} format, a widely used and robust file format for \gls{FE} meshes.
 
 \subsection{Loading Required Data}
 
