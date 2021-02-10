@@ -2,9 +2,15 @@
 \chapter{Simulation Results}
 
 % The introduction needs restructuring because you have already written about this stuff in the general Introduction. I suggest you leave the introduction of each paragraph for the very end, where you will be able to read the whole text and create a better flow between the sections.
-The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the road blocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in \autoref{sec:discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed and the method is further extended for human models, where the results are seen in \autoref{sec:realistic_human_models}.
+
+% The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the roadblocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in \autoref{sec:discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed, and the method is further extended for human models, where the results are seen in \autoref{sec:realistic_human_models}.
+
+This work explores the potential use of Grossman's \cite{Grossman2017} method in humans by simulating and later assessing the effects on realistic human head models. The first simulations run on the spherical model through Sim4Life, software from \draft{ZMT}. Due to the free version's limitations, a shift towards a custom tool was deemed necessary.
+
+Whenever a custom tool is utilized, validation is essential to avoid inaccurate conclusions. Below, the \nameref{sec:soft_validation} section provides a validation analysis of the custom tool developed for this work's scope. The realistic human head model analysis is presented in the \autoref{sec:realistic_human_models} section, where an investigation is showcased on the effects of the head anatomy and the electrode position variation.
 
 \section{Software Validation}
+\label{sec:soft_validation}
 
 The simple spherical model is comprised of 4 layers in total, with varying thickness each. The layer thicknesses are included in \autoref{tab:spherical_layers} as fractions of the outer surface and stem from Grossman et al. \cite[Figure S2, J, and K]{Grossman2017}. Additionally, the conductivity values used in the paper are summarized in \autoref{tab:grossman_conductivity_vals}.
 
@@ -23,7 +29,7 @@ The simple spherical model is comprised of 4 layers in total, with varying thick
 \end{tabular}
 \end{table}
 
-To benchmark the software developed for this work, the same electrode configuration as in Grossman \cite{Grossman2017} was used and the results are shown in \autoref{fig:grossman_thesis_comparison}.
+The same electrode configuration as in Grossman \cite{Grossman2017} was used to benchmark the software developed for this work, and the results are shown in \autoref{fig:grossman_thesis_comparison}.
 % What are those results exactly? What are we seing in this figure?
 \begin{figure}[H]
     \centering
@@ -43,24 +49,20 @@ To benchmark the software developed for this work, the same electrode configurat
     \label{fig:grossman_thesis_comparison}
 \end{figure}
 
-It is clear from the figures above that the software can be considered accurate, based on the Grossman's results, so the analysis can proceed on the realistic human head models in the following section.
+It is clear from the figures above that the software can be considered accurate, based on Grossman's results. The analysis can proceed on the realistic human head models in the following section.
 % Why is it clear exactly? They are similar but they are not identical, maybe you should be more specific on what criteria you are using. Also, I would prefer something in the lines of "Since we have established that the analysis and the corresponding software produce accurate results for the simple spherical model, we can proceed to apply it to the human brain model".
 
 \section{Realistic Human Models}
 \label{sec:realistic_human_models}
 
-Manipulating a spherical model, then a murine model and finally a realistic human model comes at the cost of exponentially increasing complexity. Nevertheless, it consists an essential process, along with testing on murine models and phantoms, that has to precede in order to be able to validate any hypothesis during clinical trials.
+Simulating a spherical model, then a murine model, and finally a realistic human model comes at the cost of exponentially increasing complexity. Nevertheless, it constitutes an essential process, along with testing on murine models and phantoms, that has to precede in order to be able to validate any hypothesis during clinical trials.
 
-In that direction, two key factors have been tested in this work, specifically the effect of the human head anatomy variation between subjects, as well as the variation of the electrode position. These effects are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position} respectively. As it will be evident below, the anatomy of each patient has a significant impact on the resulting pattern inside the brain. Thus, there is the need for optimization to achieve stimulation of a small area, as different electrode pair combinations must be used for each person or model. This optimization will be the subject of a future work, however a relevant discussion is provided in \autoref{sec:discussion}.
-% When you say electrode combinations you mean a differend brand? Different colour? Different position? Different stimulation?
-
-Lastly, it should be noted that for the electrode positioning impact assessment models with the international 10-10 system have also been tested to find the potential issues that the 10-20 system's coarse nature might have. It should be noted that all conductivity values for the simulated models originate from the \gls{IT'IS} tissue database \cite{ITstissue}.
-% What is the 10-20 coarse nature?
+In that direction, two key factors have been tested in this work, particularly the effect of the human head anatomy variation between subjects and the variation of the electrode position. These effects are presented in \cref{subsec:effects_of_model_anatomy,subsec:varying_electrode_position}, respectively. It should be noted that for the electrode positioning impact assessment, models using the international 10-10 system have also been tested to gauge for potential issues the 10-20 system's coarse nature might have. All conductivity values for the simulated models originate from the \gls{IT'IS} tissue database \cite{ITstissue}.
 
 \subsection{Effects of Model Anatomy}
 \label{subsec:effects_of_model_anatomy}
 
-Assessing the impact of the model anatomy on the field distribution requires testing on many different subjects to have statistically significant results. Specifically, 9 models from the \gls{PHM} repository \cite{ErikG.Lee2016} having the 10-20 as the electrode placement system were used. Electrodes P8, F7 \textit{(1\si{kHz})} and P7, F8 \textit{(1.04\si{kHz})} were employed, with the first electrode in each couple being the active electrode. The corresponding electrode positions are shown in \autoref{fig:electrodes_10-20}.
+Assessing the impact of the model anatomy on the field distribution requires testing several subjects to have statistically significant results. Specifically, nine models from the \gls{PHM} repository \cite{ErikG.Lee2016} having the 10-20 as the electrode placement system were used. Electrodes P8, F7 \textit{(1\si{kHz})} and P7, F8 \textit{(1.04\si{kHz})} were employed, with the first electrode in each couple being the active electrode. The corresponding electrode positions are shown in \autoref{fig:electrodes_10-20}.
 
 \begin{figure}[H]
     \centering
@@ -78,7 +80,7 @@ Assessing the impact of the model anatomy on the field distribution requires tes
     \label{fig:brain_slice_for_effects}
 \end{figure}
 
-As a first step, the electric field of the maximum modulation envelope was extracted across the x-axis for each model, with the reference plane illustrated in \autoref{fig:brain_slice_for_effects_x}. The extracted field values can be seen in \autoref{fig:x_axis_effect} along with the standard deviation in the legend.
+As a first step, the electric field of the maximum modulation envelope was extracted across the x-axis for each model, with the reference plane illustrated in \autoref{fig:brain_slice_for_effects_x}. The extracted field values can be seen in \autoref{fig:x_axis_effect}, along with the standard deviation in the legend.
 
 \begin{figure}[H]
     \centering
@@ -87,22 +89,28 @@ As a first step, the electric field of the maximum modulation envelope was extra
     \label{fig:x_axis_effect}
 \end{figure}
 
-It is evident from \autoref{fig:x_axis_effect} that a similar electric field pattern is present across different models, at least ragarding the area around the center of the graph, but there is considerable variation in the normalized field intensity as well as the standard deviation. Furthermore, another measurement was conducted along the center of bounds axis (\autoref{fig:brain_slice_for_effects_cf}) and as illustrated in \autoref{fig:center_of_bounds_effect}, the preceding observations are even more prevalent.
+It is evident from \autoref{fig:x_axis_effect} that a similar electric field pattern is present across different models, at least regarding the area around the center of the graph. However, there is considerable variation in the normalized field intensity as well as the standard deviation. Furthermore, another measurement was conducted along the center of bounds axis (\autoref{fig:brain_slice_for_effects_cf}), and as illustrated in \autoref{fig:center_of_bounds_effect}, where the preceding observations are even more prevalent.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/center_of_bounds_line.pdf}
-    \caption{Field distribution for each \gls{PHM} model along each model's the center of bounds. The number near each model is the standard deviation for the distribution. The curves were smoothed using a moving average with a window size of 50 samples.}
+    \caption{Field distribution for each \gls{PHM} model along each model's center of bounds. The number near each model is the standard deviation for the distribution. The curves were smoothed using a moving average with a window size of 50 samples.}
     \label{fig:center_of_bounds_effect}
 \end{figure}
 
-Looking at \autoref{fig:center_of_bounds_effect} it can be deduced that the variability of the electric field across different models is not negligible. One could hypothesize that this case pertains to a more clear or general picture of the field distribution, given that the line that traverses the center of bounds passes through many different layers of the brain. 
+Looking at \autoref{fig:center_of_bounds_effect}, it can be deduced that the electric field's variability across the different models is not negligible. One could hypothesize that this case pertains to a clearer or general picture of the field distribution, given that the line that traverses the center of bounds passes through many different layers of the brain. 
 % I propose you include a figure explaining what the center of bounds is. Also the cause of what difference do you mean?
-To better understand the cause of this difference and gauge which models have similar patterns, a \gls{PCA} was performed with the features summarized in \autoref{tab:pca_features}. For each model, the thickness was calculated from the coordinate points along the x-axis line (\autoref{fig:brain_slice_for_effects_x}), in the corresponding regions. Each of the maximum modulation envelope electric field was calculated in the whole volume of each designated region on \autoref{tab:pca_features}, same as the standard deviation.
+To better understand the cause of the variation between the models and gauge which models have similar patterns, a \gls{PCA} was performed with the features summarized in \autoref{tab:pca_features}. 
+
+\gls{PCA} is primarily used for dimensionality reduction and similarity grouping. If any of the provided models are similar, clustering will occur based on the provided feature set. The feature used for each model are:
+\begin{itemize}
+    \item the thickness that was calculated using the coordinate points along the x-axis line (\autoref{fig:brain_slice_for_effects_x}), for the corresponding regions,
+    \item the maximum modulation envelope electric field, computed in each designated region's volume (\autoref{tab:pca_features}), same as the standard deviation.
+\end{itemize}
 % I did not really got how you calculated the thickness. Actually, I think that the whole previous paragraph needs restructuring. What are the regions you are refering to exactly? Also, maybe it would be a good idea to write a few words on what this method is and why it is useful, as well as explain what the variables in the table are (unless you have refered to them earlier somewhere)
 \begin{table}[!ht]
 	\centering
-    \caption[\gls{PCA} feature values]{Feature values used in the \gls{PCA} analysis. The electric field values, denoted with $E$ are the mean for each model on the designated region. $\sigma$ is the corresponding standard deviation for each electric field value. The thickness value is the sum of the skin, skull , and \gls{CSF} thickness along the x-axis line for each model.}
+    \caption[\gls{PCA} feature values]{Feature values used in the \gls{PCA} analysis. The electric field values, denoted with $E$, are the mean for each model on the designated region. $\sigma$ is the corresponding standard deviation for each electric field value. The thickness value is the sum of the skin, skull, and \gls{CSF} thickness along the x-axis line for each model.}
     \label{tab:pca_features}
     \begin{tabular}{|c|c|c|c|c|c|c|c|}
         % \hline
@@ -122,16 +130,16 @@ To better understand the cause of this difference and gauge which models have si
     \end{tabular}
 \end{table}
 
-Correlating the data from \autoref{tab:pca_features} in a \gls{PCA} chart provides an insight on similarities, or the lack thereof, between the models used. As seen in \autoref{fig:model_pca}, there is some clustering of models indicating that they more correlated than the rest, based on the provided feature set. That said, it is evident that the models 111716, 113619, and 163129 are clustered together, in a weak way, and as seen on \autoref{tab:pca_features} they have very similar thickness values. Models like 103414 and 110411 are on the 2 sides of the graph and they have very different thickness values. The two latter models have also significant difference in the mean electric field values on the white matter.
+Correlating the data from \autoref{tab:pca_features} in a \gls{PCA} chart provides insight on similarities, or the lack thereof, between the models. As seen in \autoref{fig:model_pca}, clustering indicates a higher correlation between the clustered models. That said, it is evident that the models \textbf{111716}, \textbf{113619}, and \textbf{163129} are weakly clustered together, and as seen in \autoref{tab:pca_features}, they have very similar thickness values. Models like \textbf{103414} and \textbf{110411} are on the two sides of the graph, and they have very different thickness values. The two latter models also significantly differ in the mean electric field values on the white matter domain.
 % I think it would be better if the previous paragraph had a bullet-point structure because now your observations are a little bit lost and not very clear at first sight.
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.85\textwidth]{assets/images/model_pca.pdf}
-    \caption{Principle Component Analysis (PCA) graph for the different models, based on the features included in \autoref{tab:pca_features}. The explained variance ratio in $\boldsymbol{96.18\%}$.}
+    \caption{Principle Component Analysis graph for the different models, based on the features included in \autoref{tab:pca_features}. The explained variance ratio in $\boldsymbol{96.18\%}$.}
     \label{fig:model_pca}
 \end{figure}
 
-From the observations presented above, there seems to be a dependence between the thickness and the electric field sparsity and distribution, considering that the same pairs of electrodes are operating on each model. Despite this preliminary finding, further investigation with a greater number of models is required to reach a safe conclusion. Nevertheless, there is certainly a corellation of the model geometry and the final pattern as it is illustrated in \autoref{fig:models_pattern_variation}.
+From the observations presented above, there seems to be a dependence between the thickness and the electric field sparsity and distribution, considering that the same pairs of electrodes are operating on each model. Despite this preliminary finding, further investigation with a greater number of models is required to reach a safe conclusion. Nevertheless, there is undoubtedly a correlation between the model geometry and the final pattern, as illustrated in \autoref{fig:models_pattern_variation}.
 % Maybe you should include a little bit more info on what you see in this picture? Apart from the fact that the patterns are not identical. Aren't there any other similarities or differences? 
 \begin{figure}[H]
     \centering
@@ -140,14 +148,14 @@ From the observations presented above, there seems to be a dependence between th
     \label{fig:models_pattern_variation}
 \end{figure}
 % I think the following paragraph needs restructuring. From what I got, you say that tou assumed a uniform white matter and skull, but this is not the best way to go because you may miss out on details. Ok, but what do you do with that info? Are you going to try something in your next work? Are you just refering to it so the reader can keep it in mind when assesing your findings? You have to be more specific, it is a little messy right now.
-In all models included in this work and all simulations, a uniform white matter and skull are assumed. This is not the correct since the white matter has different regions with different densities, and similarly the skull has the spongiform regions with very low conductivity value. As shown by \paper{Rampersad}{Rampersad2013_skull_approximations}, on \gls{tES} and specifically \gls{tDCS}, the different conductivity values for the layered bone structure \textit{(spongiform and compact bone)} of the skull can have a considerable effect if not considered in the simulations. The white matter uniformity consideration on the other hand, provides no information for the different regions and it puts a road block on assessing the impact of the electric field on the regions of interest, most of them lying in the white matter region, near the ventricles \textit{(e.g., pineal gland and globus palidus)}.
+In all models included in this work and all simulations, a uniform white matter and skull are assumed. This is not correct since the white matter has different regions with varying densities. Similarly, the skull has spongiform regions with very low conductivity values. As shown by \paper{Rampersad}{Rampersad2013_skull_approximations}, on \gls{tES} and specifically \gls{tDCS}, the different conductivity values for the layered bone structure \textit{(spongiform and compact bone)} of the skull can considerably affect the simulations if not considered. The white matter uniformity consideration, on the other hand, provides no information for the different regions, and it puts a roadblock on assessing the impact of the electric field on the regions of interest, most of them lying in the white matter region, near the ventricles \textit{(e.g., pineal gland and globus palidus)}. All these considerations must be taken into account when assessing the results presented above.
 
 \subsection{Varying Electrode Position}
 \label{subsec:varying_electrode_position}
 
-Model anatomy is one of the crucial factors that must be considered when simulating with \gls{tTIS} but it is not the only player, since the current ratio between the two electrodes and the position thereof can pose a major influence on the results.
+Model anatomy is one of the crucial factors that must be considered when simulating with \gls{tTIS}. However, it is not the only player since the current ratio between the two electrodes and the position thereof can influence the results.
 
-As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has significant impact regarding the maximum potential achieved in a given volume. This dependence can be evidently seen in \autoref{fig:mod_env_amplitude_var}, due to the fact that when the two electrodes are not placed symmetrically, the pair closest to the region of interest takes over. The resulting modulation amplitude is much lower than the one seen in \autoref{fig:modulation_showcase}.
+As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has a significant impact on the maximum potential achieved in a given volume. This dependence can be seen in \autoref{fig:mod_env_amplitude_var} by considering an interference of two sine waves with an amplitude ratio of 2:1. The electric field of the pair closest to the region of interest is starting to be dominant, where after a point, the electric field with the highest amplitude will be effective. Therefore, based on these observations, the resulting modulation amplitude is much lower than the one seen in \autoref{fig:modulation_showcase}.
 % I think it would be easier for the reader to see the difference if you included the correct figure here as well. Also, what does it mean that the "pair takes over"?
 \begin{figure}[H]
     \centering
@@ -156,7 +164,7 @@ As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has significant 
     \label{fig:mod_env_amplitude_var}
 \end{figure}
 % What exactly is one step above? You have to be more precise.
-In this work, the attention will be shifted towards the electrode position variation and its subsequent effects. One can imagine that moving the electrodes or changing the combination used can have an impact on the final pattern. It is evident from \autoref{fig:elec_position_variation} that using the combination just one step above the previous one can have significant impact on the field distribution.
+In this work, the attention will be shifted towards the electrode position variation and its subsequent effects. One can imagine that moving the electrodes or changing the combination used can impact the final pattern. It is evident from \autoref{fig:elec_position_variation} that using the combination just one step above the previous one can have a significant impact on the field distribution.
 % What is this significant impact exaxtly? Tell us a little bit more about it! 
 \begin{figure}[H]
     \centering
@@ -170,11 +178,11 @@ In this work, the attention will be shifted towards the electrode position varia
         \caption{P4, F4 and P3, F3 electrode pairs.}
         \label{fig:25_15_elec_pair}
     \end{subfigure}
-    \caption{Electric field distribution with varying electrode position}
+    \caption{Electric field distribution with varying electrode position on the 10-20 system}
     \label{fig:elec_position_variation}
 \end{figure}
 
-Even if one electrode is moved and the others stay as they are, significant differences are observed \textit{(\autoref{fig:one_elec_moved_var})}. One of the main reasons making \cref{fig:26_16_elec_pair,fig:25_15_elec_pair} differ significantly is the lack of granularity the 10-20 system provides. Limited only to 19 electrodes, there is not much room for movement, hence a system with more electrodes is required and in that case th 10-10 system can be a good candidate. The reason that the 10-5 system is not considered is mainly due to the very high number of electrodes \textit{(329 in total)}.
+Even if one electrode is moved and the others stay as they are, significant differences are observed \textit{(\autoref{fig:one_elec_moved_var})}. One of the main reasons making \cref{fig:26_16_elec_pair,fig:25_15_elec_pair} differ significantly, is the lack of granularity the 10-20 system provides. Limited only to 19 electrodes, there is not much room for movement; hence, a system with more electrodes is required, and in that case, the 10-10 system can be a good candidate. The 10-5 system is not considered mainly due to the very high number of electrodes \textit{(329 in total)}.
 % I am confused. Again, you speak about significant differences but you are not being specific. Ok, it is obvious from the picture, but you have to be explicit. Also, I can not understand which picture has which system (10-20 or else).
 \begin{figure}[H]
     \centering
@@ -188,13 +196,11 @@ Even if one electrode is moved and the others stay as they are, significant diff
         \caption{P8, F8 and P3, F7 electrode pairs.}
         \label{fig:25_15_13_24_elec_pair}
     \end{subfigure}
-    \caption{Electric field distribution with varying electrode position}
+    \caption{Electric field distribution from varying one electrode's position on the 10-20 system}
     \label{fig:one_elec_moved_var}
 \end{figure}
 
-As it will be discussed in a more detail in the \nameref{sec:discussion}, the dependance on the position, the current ratio, and the model anatomy drives the need for seeking personalized optimization for each model. The optimization will be part of future work and it is not covered in the current work.
-
-To better illustrate the granularity mentioned above, the \textbf{103414} model was meshed with all the 10-10 system electrodes and the solved with the pairs as shown in \autoref{fig:one_elec_moved_var_10-10}.
+To better illustrate the granularity mentioned above, the \textbf{103414} model was meshed with all the 10-10 system electrodes and then solved with the pairs shown in \autoref{fig:one_elec_moved_var_10-10}.
 
 \begin{figure}[H]
     \centering
@@ -212,4 +218,4 @@ To better illustrate the granularity mentioned above, the \textbf{103414} model 
     \label{fig:one_elec_moved_var_10-10}
 \end{figure}
 
-What is clear from the figure above is that the effect the electrode position on the electric field pattern can be manipulated with more refined moves.
+What is clear from the figure above is that the effect of the electrode position on the electric field pattern can be manipulated with more refined moves.
