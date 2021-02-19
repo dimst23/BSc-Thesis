@@ -2,7 +2,7 @@
 \pagenumbering{arabic}
 \chapter{Introduction}
 
-Since neurons are driven by electric currents, changing their surrounding environment's electrical conditions can alter their behavior. Both electrically and magnetically induced stimulation has been used for many years, although the latter was studied several years earlier. Each method is on different physics, although the results are similar.
+Since neurons are driven by electric currents, changing their surrounding environment's electrical conditions can alter their behavior. Both electrically and magnetically induced stimulation has been used for many years, although the latter was studied several years earlier. Each method is based on different physics, although the results are similar.
 
 \begin{wrapfigure}{l}{0.40\textwidth}
     \centering
@@ -15,15 +15,15 @@ Because of the layered structure (\autoref{fig:cortical_layers}) of the neocorte
 
 \gls{DBS}, particularly the non-invasive methods achieving it, is an emerging need as most crucial brain components' functionality lies deep within the brain. Although successful invasive methods can alleviate Parkinson's symptoms, non-invasive methods offer greater scalability and lower risk to the patient. However, the challenge with non-invasive methods is the lack of spatial resolution and precise targeting of the desired area, usually on the order of tens of millimeters (e.g., pituitary gland \cite{Yadav2017_pituitary}).
 
-In 2017, a new method that seemingly revolutionizes the way non-invasive \gls{DBS} is performed by accommodating clever tricks or \textit{"hacks"} of the neuron physics was presented by Nir Grossman and his team \cite{Grossman2017} for the first time. The method of \paper{Grossman}{Grossman2017} uses a pair of electrodes operated with a high-frequency alternating current whose envelope oscillates at the desired frequency by setting different frequencies between the pairs of electrodes. The significant advantage is reaching deep targets and stimulating only the regions of interest without affecting surrounding areas or the entire brain.
+In 2017, a new method that seemingly revolutionizes the way non-invasive \gls{DBS} is performed by accommodating clever tricks or \textit{"hacks"} of the neuron physics, was presented by Nir Grossman and his team \cite{Grossman2017} for the first time. The method of \paper{Grossman}{Grossman2017} uses a pair of electrodes operated with a high-frequency alternating current whose envelope oscillates at the desired frequency by setting different frequencies between the pairs of electrodes. The significant advantage is reaching deep targets and stimulating only the regions of interest without affecting surrounding areas or the entire brain.
 
-The Grossman method is a promising technique for the future of \gls{DBS}. It is investigated in this work to evaluate its potential application in humans, as only sphere and simple phantom models were in the original work \cite{Grossman2017}, in conjunction with successful test runs in murine subjects. Expanding the study on realistic human brain models will help understand \gls{tTIS} specifics, and tests on healthy individuals will consolidate the method's effectiveness. Ultimately, this work aims to enable optimized and personalized treatment planning for humans based on rigorous computer simulations.
+The Grossman method is a promising technique for the future of \gls{DBS}. It is investigated in this work to evaluate its potential application in humans, as only sphere and simple phantom models were studied in the original work \cite{Grossman2017}, in conjunction with successful experiments in murine models. Expanding the study on realistic human brain models will help understand \gls{tTIS} specifics, and tests on healthy individuals will consolidate the method's effectiveness. Ultimately, this work aims to enable optimized and personalized treatment planning for humans based on rigorous computer simulations.
 
 As a closing remark, it has been a firm belief of the author that the greatest benefit to science and society comes from the open sharing of knowledge, and true to this belief, all the code, drafts, text, and all originally created materials of this work are publicly available on the GitLab repository \cite{thesis_repo}.
 
 \section{Methods of Electrical Stimulation}
 
-To better understand the primary advantages of the \gls{tTIS} method, the different methods for achieving electrical stimulation shall be touched upon for comparison purposes. An overview of the two main methods is presented in this section. These are the most commonly used ones and form the basis for almost all other electrical stimulation method variations.
+To better understand the primary advantages of the \gls{tTIS} method, the different methods for achieving electrical stimulation shall be touched upon for comparison purposes. An overview of the two main methods is presented in this section. These are the most commonly used ones and form the basis for almost all other electrical stimulation method variants.
 
 \subsection{Transcranial Direct Current Stimulation \textit{(tDCS)}}
 
@@ -50,7 +50,7 @@ Stimulating with higher frequency currents renders the method useless because th
 
 \subsection{Transcranial Temporal Interference Stimulation \textit{(tTIS)}}
 
-\gls{tTIS} is essentially \gls{tACS} with a small yet remarkable modification. Taking advantage of the superposition principle of the electric field and utilizing the emerging interference patterns is the essence of this approach. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS}, where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the two electric fields' temporal interference, given that the envelope modulates at the difference of the two electrode frequencies.
+\gls{tTIS} is essentially \gls{tACS} with a small, yet remarkable, modification. Taking advantage of the superposition principle of the electric field and utilizing the emerging interference patterns is the essence of this approach. The current flowing through each electrode pair has a high enough frequency that does not modulate any neurons, as opposed to \gls{tACS}, where the frequency shall be in the target modulation range. The modulator here is the envelope (\autoref{fig:modulation_showcase}) of the two electric fields' temporal interference, given that the envelope modulates at the difference of the two electrode frequencies.
 
 \begin{figure}[H]
     \centering
@@ -72,7 +72,7 @@ This approach seems promising. It is yet to be reinforced by follow-up works and
 
 \section{Theoretical Background}
 
-To grasp the physics behind the simulations, a brief explanation regarding the conduction within the media is presented in \autoref{sec:e_ohmic_qs}, followed by an analysis regarding the \gls{tTIS} hypothesis based on Grossman et al.\cite{Grossman2017} work.
+To grasp the physics behind the simulations, a brief explanation regarding current conduction within tissues is presented in \autoref{sec:e_ohmic_qs}, followed by an analysis regarding the \gls{tTIS} hypothesis based on Grossman et al.\cite{Grossman2017} work.
 
 \subsection{Electric Field Ohmic Quasi-static Approximation}
 \label{sec:e_ohmic_qs}
@@ -105,7 +105,7 @@ Generally, Maxwell's equations for electromagnetic wave propagation in a medium 
 
 \noindent The problem in question, finding the electrical field distribution in a volume using low frequencies, can be approached by simplifying the general form of Maxwell's equations and deriving the Quasi-static approximation format. The first step is to define the assumptions taken for such an approach to be valid.
 
-For the frequencies in the \si{kHz} range used in the studied problem, the displacement current can be neglected, making the Ohmic currents dominate. Also, since the magnetic field is not time-variant, based on \autoref{eq:maxwell_curl_e}, we can write:
+For the frequencies in the \si{kHz} range used in the studied problem, the displacement current can be neglected, making the Ohmic currents dominant. Also, since the magnetic field is not time-variant, based on \autoref{eq:maxwell_curl_e}, we can write:
 \begin{equation}
     \label{eq:curl_zero_e_field}
     \nabla\times\vec{E} = \vec{0}
@@ -125,7 +125,7 @@ where here $\vec{J}$ is the ohmic current seen below as it is assumed that there
     \label{eq:sigma_e_0}
     \vec{J} = \sigma\vec{E}\Rightarrow\boxed{\nabla\cdot\big(\sigma\vec{E}\big) = 0}
 \end{equation}
-with $\sigma$ being the electrical conductivity of each medium. Finally, based on \cref{eq:e_field_from_potential,eq:sigma_e_0} the final relationship describing the problem can be derived:
+with $\sigma$ being the electrical conductivity of each tissue. Finally, based on \cref{eq:e_field_from_potential,eq:sigma_e_0} the final relationship describing the problem can be derived:
 \begin{equation}
     \label{eq:laplace_e}
     \boxed{\nabla\cdot(\sigma\nabla\phi) = 0}
@@ -146,7 +146,7 @@ The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced
     \label{fig:brain_elec_demo}
 \end{wrapfigure}
 
-Using two pairs of electrodes (\autoref{fig:brain_elec_demo}), with each pair having a slightly different frequency, an interference pattern can be generated in the conducting medium oscillating at the two frequencies' difference. Depending on the medium's nature, the pattern can vary, and as illustrated in Grossman et al.\cite{Grossman2017}, when a uniform medium is used, it is simple and easy to calculate.
+Using two pairs of electrodes (\autoref{fig:brain_elec_demo}), with each pair having a slightly different frequency, an interference pattern can be generated in the conducting medium oscillating at the two frequencies' difference. Depending on the medium's nature, the pattern can vary, and as illustrated in Grossman et al.\cite{Grossman2017}, when a uniform medium is used, the pattern easily calculated.
 
 Since the modulation happens in the 3D space, there will be different patterns in the $x$, $y$ and $z$ directions. According to Grossman et al.\cite[page 20]{Grossman2017}, at any location $\vec{r} = (x,y,z)$ the envelope amplitude of the \gls{AM} of the electric field produced by the temporal interference is calculated as:
 \begin{equation}
