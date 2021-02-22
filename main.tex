@@ -1,7 +1,9 @@
-\documentclass[titlepage, a4paper, 10pt]{report}
+\documentclass[titlepage,openright,twoside,a4paper,10pt]{report}
 \usepackage[top=3.5cm, left=3cm, right=3cm, bottom=2.5cm]{geometry}
-\usepackage[english]{babel}
+% \usepackage[english]{babel}
+% \usepackage[utf8]{inputenc}
 \usepackage[unicode]{hyperref}
+\usepackage{fontspec}
 \usepackage{csquotes}
 \usepackage{siunitx}
 \usepackage{wrapfig}
@@ -11,6 +13,13 @@
 \usepackage{titletoc}
 \usepackage[font={small}]{caption}
 \usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage[variant=modern]{greek}
+%\newfontfamily\greekfont[Script=Greek]{GFS Didot}
+%\newfontfamily\greekfontsf[Script=Greek]{GFS Didot}
+\setmainfont{GFS Didot}
 
 % Citations and glossaries
 \usepackage[toc,nonumberlist,nopostdot,acronyms,automake]{glossaries}
@@ -21,6 +30,7 @@
 \usepackage{listings}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{graphicx}
+\usepackage[export]{adjustbox}
 \usepackage{tikz}
 \usepackage[labelfont=bf]{caption}
 \usepackage{float}
@@ -36,6 +46,9 @@
 % Commands
 \newcommand{\paper}[2]{#1 et al. \cite{#2}}
 \newcommand{\thetitle}{Investigating non-invasive deep brain stimulation using temporally interfering electric fields}
+
+% Prevent huge spaces from the twoside option
+\raggedbottom
 
 % Colors
 \definecolor{dark_grey}{HTML}{303030}
@@ -139,43 +152,66 @@
 \newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
 %% End of custom YAML highlight for the listing
 
+%% Intentionally left blank message
+% https://gist.github.com/philipptempel/5220000
+\makeatletter
+    \def\cleardoublepage{\clearpage%
+        \if@twoside
+            \ifodd\c@page\else
+                \vspace*{\fill}
+                \hfill
+                \begin{center}
+                This page intentionally left blank.
+                \end{center}
+                \vspace{\fill}
+                \thispagestyle{empty}
+                \newpage
+                \if@twocolumn\hbox{}\newpage\fi
+            \fi
+        \fi
+    }
+\makeatother
+%% End Intentionally left blank message
+
+%% Fancy header settings
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+\fancyhead{}
+\fancyhead[RO,LE]{Chapter \thechapter}
+\fancyhead[LE]{\leftmark}
+\fancyfoot{}
+\fancyfoot[CE,CO]{\thepage}
+%% Fancy header settings
+
+
 \begin{document}
 
-\maketitle
+\include{Sections/cover}
+% \maketitle
 
-\begin{abstract}
-  Treating brain diseases or suppressing the symptoms is not a trivial task. Different methods exists and usually these are invasive, which inherently poses a great risk for the overall health of the individual. This one of the main reasons that there is a lot of research activity in the non-invasive methods and more specifically how to electromagnetically induce potentials or alter the behavior of neuronal networks. One drawback in most of the methods is the low temporal resolution accompanied by low penetration depth. Here a study on a set of human brain models\cite{ErikG.Lee2016} is presented, based on the \gls{tTIS} method, first introduced by Grossman et al.\cite{Grossman2017} and studied on a human brain model by Rampersad et al.\cite{Rampersad2019}. The scope of this report is to illustrate the potential problems or traits that will arise by simulating on a population human brain models. \draft{Info about the results required.}
-\end{abstract}
-\pagebreak
+\cleardoublepage
+\include{Sections/abstract_en}
 
+\cleardoublepage
+\include{Sections/abstract_gr}
 
-% \thispagestyle{empty}
-% \setcounter{page}{0}
-\tableofcontents
-% \clearpage
-
+% \begin{abstract}
+%   Treating brain diseases or suppressing the symptoms is not a trivial task. Different methods exists and usually these are invasive, which inherently poses a great risk for the overall health of the individual. This one of the main reasons that there is a lot of research activity in the non-invasive methods and more specifically how to electromagnetically induce potentials or alter the behavior of neuronal networks. One drawback in most of the methods is the low temporal resolution accompanied by low penetration depth. Here a study on a set of human brain models\cite{ErikG.Lee2016} is presented, based on the \gls{tTIS} method, first introduced by Grossman et al.\cite{Grossman2017} and studied on a human brain model by Rampersad et al.\cite{Rampersad2019}. The scope of this report is to illustrate the potential problems or traits that will arise by simulating on a population human brain models. \draft{Info about the results required.}
+% \end{abstract}
 % \pagebreak
-% \cleardoublepage
-% \phantomsection
-% \addcontentsline{toc}{section}{\listfigurename}
+
+\tableofcontents
 \listoffigures
-% \cleardoublepage
-% \phantomsection
-% \addcontentsline{toc}{section}{\listtablename}
 \listoftables
-% \cleardoublepage
-% \phantomsection
-% \addcontentsline{toc}{section}{\lstlistlistingname}
 \lstlistoflistings
 
 % Add the sections
-\input{Sections/introduction.tex}
-% \input{Sections/electrical_stimulation_methods.tex}
-% \input{Sections/low_frequency_tacs_theory.tex}
-\input{Sections/fe_modelling.tex}
-\input{Sections/software_architecture.tex}
-\input{Sections/simulation_results.tex}
-\input{Sections/discussion_conclusion.tex}
+\input{Sections/introduction}
+\input{Sections/fe_modelling}
+\input{Sections/software_architecture}
+\input{Sections/simulation_results}
+\input{Sections/discussion_conclusion}
 
 % Helper sections
 \input{glossary} % Input the glossary
