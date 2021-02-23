@@ -1,7 +1,6 @@
 \documentclass[titlepage,openright,twoside,a4paper,10pt]{report}
+
 \usepackage[top=3.5cm, left=3cm, right=3cm, bottom=2.5cm]{geometry}
-% \usepackage[english]{babel}
-% \usepackage[utf8]{inputenc}
 \usepackage[unicode]{hyperref}
 \usepackage{fontspec}
 \usepackage{csquotes}
@@ -17,8 +16,6 @@
 \usepackage{polyglossia}
 \setdefaultlanguage{english}
 \setotherlanguage[variant=modern]{greek}
-%\newfontfamily\greekfont[Script=Greek]{GFS Didot}
-%\newfontfamily\greekfontsf[Script=Greek]{GFS Didot}
 \setmainfont{GFS Didot}
 
 % Citations and glossaries
@@ -69,7 +66,6 @@
 
 \addbibresource{references.bib}
 
-%\title{tACS using temporal interference to achieve targeted deep brain stimulation}
 \title{\thetitle}
 \author{Dimitrios Stoupis}
 \date{}
@@ -177,13 +173,19 @@
 
 %% Fancy header settings
 \pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 
-\fancyhead{}
-\fancyhead[RO,LE]{Chapter \thechapter}
-\fancyhead[LE]{\leftmark}
-\fancyfoot{}
-\fancyfoot[CE,CO]{\thepage}
+\fancyhf{} % Clear all header and footer
+
+% Add the page number on the header in plain style pages
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyhf[LEH,ROH]{\thepage}
+}
+
+\fancyhead[RE]{\itshape\nouppercase{\leftmark}}
+\fancyhead[LO]{\itshape\nouppercase{\rightmark}}
+\fancyhead[LE,RO]{\thepage}
 %% Fancy header settings
 
 
@@ -198,10 +200,8 @@
 \cleardoublepage
 \include{Sections/abstract_gr}
 
-% \begin{abstract}
-%   Treating brain diseases or suppressing the symptoms is not a trivial task. Different methods exists and usually these are invasive, which inherently poses a great risk for the overall health of the individual. This one of the main reasons that there is a lot of research activity in the non-invasive methods and more specifically how to electromagnetically induce potentials or alter the behavior of neuronal networks. One drawback in most of the methods is the low temporal resolution accompanied by low penetration depth. Here a study on a set of human brain models\cite{ErikG.Lee2016} is presented, based on the \gls{tTIS} method, first introduced by Grossman et al.\cite{Grossman2017} and studied on a human brain model by Rampersad et al.\cite{Rampersad2019}. The scope of this report is to illustrate the potential problems or traits that will arise by simulating on a population human brain models. \draft{Info about the results required.}
-% \end{abstract}
-% \pagebreak
+\cleardoublepage
+\include{Sections/acknowledgements}
 
 \tableofcontents
 \listoffigures
