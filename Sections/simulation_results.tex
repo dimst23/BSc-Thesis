@@ -5,7 +5,7 @@
 
 % The scope of this work is to try and investigate the potential use of the \paper{Grossman}{Grossman2017} method on humans, while noting the roadblocks of accurate simulation. Furthermore, since the method's effectiveness is heavily based on the injected current ratio and the electrode pair positioning, a discussion is provided in \autoref{sec:discussion} for potential optimization utilization. In the current section \paper{Grossman}{Grossman2017} approach with the spherical model is used as a benchmark for the validation of the software developed, and the method is further extended for human models, where the results are seen in \autoref{sec:realistic_human_models}.
 
-This work explores the potential use of Grossman's \cite{Grossman2017} method in humans by simulating and later assessing the effects on realistic human head models. The first simulations were run on the spherical model through Sim4Life, software from \draft{ZMT}. Due to the free version's limitations, a shift towards a custom tool was deemed necessary.
+This work explores the potential use of Grossman's \cite{Grossman2017} method in humans by simulating and later assessing the effects on realistic human head models. The first simulations were run on the spherical model through Sim4Life, software from \gls{ZMT}. Due to the free version's limitations, a shift towards a custom tool was deemed necessary.
 
 Whenever a custom tool is utilized, validation is essential to avoid inaccurate conclusions. Below, the \nameref{sec:soft_validation} section provides a validation analysis of the custom tool developed for this work's scope. The realistic human head model analysis is presented in \autoref{sec:realistic_human_models}, where an investigation is showcased on the effects of the head anatomy and the electrode position variation.
 
@@ -143,7 +143,7 @@ From the observations presented above, there seems to be a dependence between th
 % Maybe you should include a little bit more info on what you see in this picture? Apart from the fact that the patterns are not identical. Aren't there any other similarities or differences? 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 0.8\textwidth]{assets/images/brain_pattern_variation_models.pdf}
+    \includegraphics[width = 0.78\textwidth]{assets/images/brain_pattern_variation_models.pdf}
     \caption{Variation of the electric field pattern distribution for the different models. The scale is the same for all models.}
     \label{fig:models_pattern_variation}
 \end{figure}
@@ -164,7 +164,7 @@ As shown by \paper{Rampersad}{Rampersad2019}, the current ratio has a significan
     \label{fig:mod_env_amplitude_var}
 \end{figure}
 % What exactly is one step above? You have to be more precise.
-In this work, the attention will be shifted towards the electrode position variation and its subsequent effects. One can imagine that moving the electrodes or changing the combination used can impact the final pattern. It is evident from \autoref{fig:elec_position_variation} that using the combination \draft{just one step above} the previous one can have a significant impact on the field distribution.
+In this work, the attention will be shifted towards the electrode position variation and its subsequent effects. One can imagine that moving the electrodes or changing the combination used can impact the final pattern. It is evident from \autoref{fig:elec_position_variation} that using the combination right above the previous one can have a significant impact on the field distribution.
 % What is this significant impact exaxtly? Tell us a little bit more about it! 
 \begin{figure}[H]
     \centering
