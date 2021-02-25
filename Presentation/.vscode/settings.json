@@ -1,0 +1,31 @@
+{
+    "latex-workshop.latex.recipes":[
+        {
+            "name": "thesisrecipe",
+            "tools": [
+                "latexmk",
+                // "makeglossaries",
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "makeglossaries",
+            "command": "makeglossaries",
+            "args": [
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-xelatex",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+    ],
+}

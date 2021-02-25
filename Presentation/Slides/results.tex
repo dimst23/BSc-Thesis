@@ -1,0 +1,84 @@
+\section{Results and tools developed}
+
+\subsection{Open Python framework for FE simulations}
+\begin{frame}
+\frametitle{Open Python framework for FE simulations}
+\begin{itemize}
+    \uncover<1->{\item First simulations done using Sim4Life}
+    \uncover<2->{\item An open-source modular framework has been developed in Python (licensed under GPLv3)}
+    \uncover<3->{\item Based on SfePy \cite{Cimrman2019}, PyMesh \cite{pymesh} and TetGen \cite{tetgen} packages}
+    \uncover<4->{\item Allows to solve virtually any FE problem, thus it is scalable to other fields too}
+    \uncover<5->{\item Validated through the comparison with the Grossman et al. \cite{Grossman2017} results}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Open Python framework for FE simulations}
+    \only<1>{
+\begin{itemize}
+    \item Validated through the comparison with the Grossman et al. \cite{Grossman2017} results
+\end{itemize}
+% \addtocounter{figure}{1}
+    \begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width = \textwidth]{../assets/images/grossman_sphere_electric_field}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width = \textwidth]{../assets/images/grosman_benchmark.png}
+        \end{subfigure}
+        \caption{Modulation envelope on the y-direction for the spherical layered model, same as on Grossman et al.}
+    \end{figure}
+    }
+\end{frame}
+
+\subsection{Study of tTIS on human models}
+\begin{frame}
+\frametitle{Study of tTIS on human models}
+\begin{itemize}
+    \only<1-3>{\item Variation of the electric field pattern was observed, using the same 10-20 system electrodes, across different PHM models \cite{Lee2016,Lee2018,ErikG.Lee2016}}
+    \only<4>{\item Axis reference for Figure 5 and 6}
+\end{itemize}
+\only<1>{
+\begin{figure}
+    \centering
+    \includegraphics[height=0.62\textheight]{assets/brain_sweep.png}
+    \caption{tTIS pattern across different PHM models}
+\end{figure}
+}
+\only<2>{
+\addtocounter{figure}{1}
+\begin{figure}
+    \centering
+    \includegraphics[height=0.55\textheight]{assets/y_axis_line.pdf}
+    \caption{Electric field across the y-axis line of different PHM models. The number after the dash is the standard deviation for each model.}
+    \label{fig:y_axis}
+\end{figure}
+}
+\only<3>{
+\addtocounter{figure}{2}
+\begin{figure}
+    \centering
+    \includegraphics[height=0.55\textheight]{assets/center_of_bounds_line.pdf}
+    \caption{Electric field across the center of bounds of different PHM models. The number after the dash is the standard deviation for each model.}
+    \label{fig:center_of_bounds}
+\end{figure}
+}
+\only<4>{
+\addtocounter{figure}{3}
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/y_axis_line_brain.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/center_of_bounds_line_brain.png}
+    \end{subfigure}
+    \caption{Electric field across the center of bounds of different PHM models. The number after the dash is the standard deviation for each model.}
+\end{figure}
+}
+\end{frame}

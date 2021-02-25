@@ -1,0 +1,76 @@
+\section{Background}
+
+\subsection{Why tTIS}
+\begin{frame}
+\frametitle{Why tTIS}
+\begin{itemize}
+    \uncover<1->{\item Promising technique for non-invasive deep brain stimulation}
+    \uncover<2->{\item Pattern steerability and focality}
+    \uncover<3->{\item Surrounding neurons and networks might be unaffected}
+\end{itemize}
+\end{frame}
+
+\subsection{How tTIS works}
+\begin{frame}
+\frametitle{How tTIS works}
+\begin{itemize}
+    \uncover<1->{\item Two pairs of electrodes are used, with the ejected current frequency differing slightly}
+    \uncover<2->{\item Temporal interference is being utilized}
+\end{itemize}
+\only<2>{
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{assets/modulation_envelope.pdf}
+    \caption{Interfering wave oscillation}
+\end{figure}
+}
+    \only<3>{
+\begin{equation}
+    \label{eq:directional_amplitude}
+    \vec{E}(\vec{n},\vec{r}) = \Big|\big|(\vec{E_1} + \vec{E_2})\cdot\vec{n}\big| - \big|(\vec{E_1} - \vec{E_2})\cdot\vec{n}\big|\Big|
+\end{equation}
+\begin{equation}
+    \label{eq:max_mod_amplitude}
+    \vec{E}_{AM}^{max}(\vec{r}) = \begin{cases}
+        2\big|\vec{E_2}\big| & \text{if}\; \big|\vec{E_2}\big| < \big|\vec{E_1}\big|\cos\alpha \\
+        &\\
+      2\dfrac{\Big|\big|\vec{E_2}\big|\times\big(\vec{E_1} - \vec{E_2}\big)\Big|}{\big|\vec{E_1} - \vec{E_2}\big|} & \text{otherwise}
+    \end{cases}
+\end{equation}
+    }
+\end{frame}
+
+\subsection{FE Problem}
+\begin{frame}
+\frametitle{FE Problem}
+\begin{itemize}
+    \uncover<1->{\item Laplace's equation to be solved \textit{(Quasi-static approximation)}}
+    \uncover<2->{\item Meshing convergence concluded to $q=1.5$}
+    \uncover<4->{\item Dirichlet boundary conditions in the active electrodes and von Neumann in the remainder domain}
+    \uncover<5->{\item Iterative solver used, specifically the Boomer AMG}
+\end{itemize}
+\only<2>{
+\addtocounter{figure}{1}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{../assets/images/x_axis_line_mesh_conv.pdf}
+    \caption{Solved mesh value plot}
+\end{figure}
+}
+\only<3>{
+\addtocounter{figure}{2}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{../assets/images/mesh_quality_graphs.pdf}
+    \caption{Mesh convergence plot}
+\end{figure}
+}
+\only<5>{
+\addtocounter{figure}{3}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{../assets/images/fem_solver_high_level.pdf}
+    \caption{Solver pipeline}
+\end{figure}
+}
+\end{frame}
