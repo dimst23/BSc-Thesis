@@ -38,32 +38,33 @@
 \begin{frame}
 \frametitle{Study of tTIS on human models}
 \begin{itemize}
-    \only<1-3>{\item Variation of the electric field pattern was observed, using the same 10-20 system electrodes, across different PHM models \cite{Lee2016,Lee2018,ErikG.Lee2016}}
-    \only<4>{\item Axis reference for Figure 5 and 6}
+    \only<1-2>{\item Electrode placement system}
+    \only<3>{\item Variation of the electric field pattern was observed, using the same 10-20 system electrodes, across different PHM models \cite{Lee2016,Lee2018,ErikG.Lee2016}}
+    \only<5-6>{\item Variation of the electric field pattern was observed, using the same 10-20 system electrodes, across different PHM models \cite{Lee2016,Lee2018,ErikG.Lee2016}}
+    \only<4>{\item Axis reference for Figure 13 and 14}
+    \only<7>{\item Distribution across models}
 \end{itemize}
 \only<1>{
 \begin{figure}
     \centering
-    \includegraphics[height=0.62\textheight]{assets/brain_sweep.png}
-    \caption{tTIS pattern across different PHM models}
+    \includegraphics[height=0.62\textheight]{../assets/images/10-20_explanation.png}
+    \caption{10-20 electrode system}
 \end{figure}
 }
 \only<2>{
 \addtocounter{figure}{1}
 \begin{figure}
     \centering
-    \includegraphics[height=0.55\textheight]{assets/y_axis_line.pdf}
-    \caption{Electric field across the y-axis line of different PHM models. The number after the dash is the standard deviation for each model.}
-    \label{fig:y_axis}
+    \includegraphics[height=0.62\textheight]{../assets/images/eeg_electrodes_10-20.pdf}
+    \caption{10-10 system names. 10-20 system depicted in orange. \href{http://www.mariusthart.net/downloads/eeg_electrodes_10-20.svg}{Illustration} by \href{http://www.beteredingen.nl}{Marius 't Hart} licensed under \href{http://creativecommons.org/licenses/by-sa/3.0/nl/deed.en_GB}{CC BY-SA v3.0}}
 \end{figure}
 }
 \only<3>{
 \addtocounter{figure}{2}
 \begin{figure}
     \centering
-    \includegraphics[height=0.55\textheight]{assets/center_of_bounds_line.pdf}
-    \caption{Electric field across the center of bounds of different PHM models. The number after the dash is the standard deviation for each model.}
-    \label{fig:center_of_bounds}
+    \includegraphics[height=0.62\textheight]{../assets/images/brain_pattern_variation_models.pdf}
+    \caption{tTIS pattern across different PHM models}
 \end{figure}
 }
 \only<4>{
@@ -78,7 +79,90 @@
         \centering
         \includegraphics[width=\textwidth]{assets/center_of_bounds_line_brain.png}
     \end{subfigure}
+    \caption{Reference axis for the following diagrams}
+\end{figure}
+}
+\only<5>{
+\addtocounter{figure}{4}
+\begin{figure}
+    \centering
+    \includegraphics[height=0.55\textheight]{assets/y_axis_line.pdf}
+    \caption{Electric field across the y-axis line of different PHM models. The number after the dash is the standard deviation for each model.}
+    \label{fig:y_axis}
+\end{figure}
+}
+\only<6>{
+\addtocounter{figure}{5}
+\begin{figure}
+    \centering
+    \includegraphics[height=0.55\textheight]{assets/center_of_bounds_line.pdf}
     \caption{Electric field across the center of bounds of different PHM models. The number after the dash is the standard deviation for each model.}
+    \label{fig:center_of_bounds}
+\end{figure}
+}
+\only<7>{
+\addtocounter{figure}{6}
+\begin{figure}
+        \centering
+        \includegraphics[height=0.65\textheight]{assets/field_dist.pdf}
+    \caption{Electric field distribution across different models}
+\end{figure}
+}
+\end{frame}
+
+\subsection{Effect of different electrode positions}
+\begin{frame}
+\frametitle{Effect of different electrode positions}
+\begin{itemize}
+    \only<1>{\item Changing only one electrode on the 10-20 system}
+    \only<2>{\item Moving one row up on the 10-20 system}
+    \only<3>{\item Same changes in the 10-10 system}
+\end{itemize}
+\only<1>{
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{../assets/images/105014_26_16_22_12_z-axis.png}
+        \caption{P8, F8 and P7, F7 electrode pairs.}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{../assets/images/105014_26_16_23_12_z-axis.png}
+        \caption{P8, F8 and P3, F7 electrode pairs.}
+    \end{subfigure}
+    \caption{Electric field distribution from varying one electrode's position on the 10-20 system}
+    \label{fig:one_elec_moved_var}
+\end{figure}
+}
+\only<2>{
+\addtocounter{figure}{1}
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{../assets/images/105014_26_16.png}
+        \caption{P8, F8 and P7, F7 electrode pairs.}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{../assets/images/105014_25_15.png}
+        \caption{P4, F4 and P3, F3 electrode pairs.}
+    \end{subfigure}
+    \caption{Electric field distribution with varying electrode position on the 10-20 system}
+    \label{fig:elec_position_variation}
+\end{figure}
+}
+\only<3>{
+\addtocounter{figure}{2}
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{../assets/images/103414_35_68_43_76.png}
+        \caption{FT7, P7 and FT8, P8 electrode pairs.}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width = \textwidth]{../assets/images/103414_35_68_43_75.png}
+        \caption{FT7, P7 and FT8, P6 electrode pairs.}
+    \end{subfigure}
+    \caption{Electric field distribution with varying electrode position on the 10-10 system.}
+    \label{fig:one_elec_moved_var_10-10}
 \end{figure}
 }
 \end{frame}
