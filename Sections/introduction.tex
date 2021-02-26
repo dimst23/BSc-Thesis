@@ -11,13 +11,13 @@ Since neurons are driven by electric currents, changing their surrounding enviro
     \label{fig:cortical_layers}
 \end{wrapfigure}
 
-Because of the layered structure (\autoref{fig:cortical_layers}) of the neocortex, the electric fields induced by \gls{TMS} act mainly on interneurons and collaterals of the tangentially oriented pyramidal cells, whereas the total electric field induced by electrical stimulation is perpendicular to the cortical surface and thus acts mainly on pyramidal cells of \textit{layer V} since most of them are perpendicular to the cortex. As a result, \gls{TMS}-induced fields have a low penetration depth. In contrast, \gls{tES} induced fields can penetrate deep into the brain, but at the expense of spatial resolution. Therefore, \gls{tES} is mostly used to try to reach deep targets. 
+Because of the layered structure (\autoref{fig:cortical_layers}) of the neocortex, the electric fields induced by \gls{TMS} act mainly on interneurons and collaterals of the tangentially oriented pyramidal cells, whereas the total electric field induced by electrical stimulation is perpendicular to the cortical surface and thus acts mainly on pyramidal cells of \textit{layer V} since most of them are orthogonal to the cortex. As a result, \gls{TMS}-induced fields have a low penetration depth. In contrast, \gls{tES} induced fields can penetrate deep into the brain, but at the expense of spatial resolution. Therefore, \gls{tES} is mostly used to try to reach deep targets. 
 
-\gls{DBS}, particularly the non-invasive methods achieving it, is an emerging need as most crucial brain components' functionality lies deep within the brain. Although successful invasive methods can alleviate Parkinson's symptoms, non-invasive methods offer greater scalability and lower risk to the patient. However, the challenge with non-invasive methods is the lack of spatial resolution and precise targeting of the desired area, usually on the order of tens of millimeters (e.g., pituitary gland \cite{Yadav2017_pituitary}).
+\gls{DBS}, particularly the non-invasive methods achieving it, is an emerging need as most crucial brain components' functionality lies deep within the brain. Although successful invasive methods can, for example ,alleviate Parkinson's symptoms, non-invasive methods offer greater scalability and lower risk to the patient. However, the challenge with non-invasive methods is the lack of spatial resolution and precise targeting of the desired area, usually on the order of tens of millimeters (e.g., pituitary gland \cite{Yadav2017_pituitary}).
 
 In 2017, a new method that seemingly revolutionizes the way non-invasive \gls{DBS} is performed by accommodating clever tricks or \textit{"hacks"} of the neuron physics, was presented by Nir Grossman and his team \cite{Grossman2017} for the first time. The method of \paper{Grossman}{Grossman2017} uses a pair of electrodes operated with a high-frequency alternating current whose envelope oscillates at the desired frequency by setting different frequencies between the pairs of electrodes. The significant advantage is reaching deep targets and stimulating only the regions of interest without affecting surrounding areas or the entire brain.
 
-The Grossman method is a promising technique for the future of \gls{DBS}. It is investigated in this work to evaluate its potential application in humans, as only sphere and simple phantom models were studied in the original work \cite{Grossman2017}, in conjunction with successful experiments in murine models. Expanding the study on realistic human brain models will help understand \gls{tTIS} specifics, and tests on healthy individuals will consolidate the method's effectiveness. Ultimately, this work aims to enable optimized and personalized treatment planning for humans based on rigorous computer simulations.
+The Grossman method is a promising technique for the future of \gls{DBS}. It is investigated in this work to evaluate its potential application in humans, as only spherical and simple phantom models were studied in the original work \cite{Grossman2017}, in conjunction with successful experiments in murine models. Expanding the study on realistic human brain models will help understand \gls{tTIS} specifics, and tests on healthy individuals will consolidate the method's effectiveness. Ultimately, this work aims to enable optimized and personalized treatment planning for humans based on rigorous computer simulations.
 
 As a closing remark, it has been a firm belief of the author that the greatest benefit to science and society comes from the open sharing of knowledge, and true to this belief, all the code, drafts, text, and all originally created materials of this work are publicly available on the GitLab repository \cite{thesis_repo}.
 
@@ -135,7 +135,7 @@ with $\sigma$ being the electrical conductivity of each tissue. Finally, based o
 
 \pagebreak
 \subsection{Temporal Interference}
-The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced by Grossman et al.\cite{Grossman2017}. This technique takes advantage of the spatial electromagnetic wave interference, using frequencies at the \si{kHz} range, having almost no effect on neurons, which do not respond to higher than 1\si{kHz} frequencies \cite{Hutcheon2000}.
+The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced by \paper{Grossman}{Grossman2017}. This technique takes advantage of the spatial electromagnetic wave interference, using frequencies at the \si{kHz} range, having almost no effect on neurons, which do not respond to higher than 1\si{kHz} frequencies \cite{Hutcheon2000}.
 \\\vspace{1pt}
 
 \begin{wrapfigure}{r}{0.48\textwidth}
@@ -146,9 +146,9 @@ The utilization of \gls{tTIS} to achieve targeted \gls{DBS} was first introduced
     \label{fig:brain_elec_demo}
 \end{wrapfigure}
 
-Using two pairs of electrodes (\autoref{fig:brain_elec_demo}), with each pair having a slightly different frequency, an interference pattern can be generated in the conducting medium oscillating at the two frequencies' difference. Depending on the medium's nature, the pattern can vary, and as illustrated in Grossman et al.\cite{Grossman2017}, when a uniform medium is used, the pattern easily calculated.
+Using two pairs of electrodes (\autoref{fig:brain_elec_demo}), with each pair having a slightly different frequency, an interference pattern can be generated in the conducting medium oscillating at the two frequencies' difference. Depending on the medium's nature, the pattern can vary, and as illustrated in \paper{Grossman}{Grossman2017}, when a uniform medium is used, the pattern easily calculated.
 
-Since the modulation happens in the 3D space, there will be different patterns in the $x$, $y$ and $z$ directions. According to Grossman et al.\cite[page 20]{Grossman2017}, at any location $\vec{r} = (x,y,z)$ the envelope amplitude of the \gls{AM} of the electric field produced by the temporal interference is calculated as:
+Since the modulation happens in the 3D space, there will be different patterns in the $x$, $y$ and $z$ directions. According to Grossman et al. \cite[page 20]{Grossman2017}, at any location $\vec{r} = (x,y,z)$ the envelope amplitude of the \gls{AM} of the electric field produced by the temporal interference is calculated as:
 \begin{equation}
     \label{eq:directional_amplitude}
     \vec{E}(\vec{n},\vec{r}) = \Big|\big|(\vec{E_1} + \vec{E_2})\cdot\vec{n}\big| - \big|(\vec{E_1} - \vec{E_2})\cdot\vec{n}\big|\Big|
@@ -156,7 +156,7 @@ Since the modulation happens in the 3D space, there will be different patterns i
 where $\vec{E_1} = \vec{E_1}(\vec{r})$, $\vec{E_2} = \vec{E_2}(\vec{r})$ are the electric fields coming from the two electrodes and $\vec{n} = \vec{n}(\vec{r})$ is the unit vector at the direction of interest.
 \\\vspace{1pt}
 
-What is of interest is the maximum amplitude of modulation at a specific location because the modulation will vary with the time between zero and maximum. To calculate this amplitude across all directions, the analysis in Grossman et al.\cite[page 20]{Grossman2017} can be better supported by the analysis conducted in Rampersad et al.\cite[section 2.5]{Rampersad2019}. Based on the two publications mentioned above, a complete description will be given here. The formula to calculate the maximum modulation amplitude along all directions at a specific location, $\vec{r} = (x,y,z)$, is:
+What is of interest is the maximum amplitude of modulation at a specific location because the modulation will vary with the time between zero and maximum. To calculate this amplitude across all directions, the analysis in Grossman et al. \cite[page 20]{Grossman2017} can be better supported by the analysis conducted in Rampersad et al. \cite[section 2.5]{Rampersad2019}. Based on the two publications mentioned above, a complete description will be given here. The formula to calculate the maximum modulation amplitude along all directions at a specific location, $\vec{r} = (x,y,z)$, is:
 \begin{equation}
     \label{eq:max_mod_amplitude}
     \vec{E}_{AM}^{max}(\vec{r}) = \begin{cases}
